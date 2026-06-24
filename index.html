@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Environ Adapt Dashboard</title>
+  <style>
+    :root {
+      --green: #08A64B;
+      --green-2: #10c968;
+      --green-dark: #047A37;
+      --yellow: #f6c915;
+      --blue: #2692ff;
+      --red: #ff5c4d;
+      --orange: #ff9d2e;
+      --bg: #081016;
+      --bg-2: #0d171f;
+      --card: #121d26;
+      --card-2: #17232e;
+      --text: #edf7f1;
+      --muted: #9fb0aa;
+      --border: rgba(255,255,255,.09);
+      --shadow: 0 22px 70px rgba(0,0,0,.32);
+      --input: #0c151d;
+    }
+
+    [data-theme="light"] {
+      --bg: #f4f8f5;
+      --bg-2: #eaf3ee;
+      --card: #ffffff;
+      --card-2: #f7fbf8;
+      --text: #102018;
+      --muted: #5f6f67;
+      --border: rgba(7, 60, 30, .12);
+      --shadow: 0 18px 50px rgba(4, 122, 55, .13);
+      --input: #f5faf7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(8,166,75,.22), transparent 28%),
+        radial-gradient(circle at 90% 8%, rgba(16,201,104,.13), transparent 25%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    body[dir="ltr"] {
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    body[dir="ltr"] .app {
+      grid-template-columns: 280px 1fr;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 22px 18px;
+      border-inline-end: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(3,10,14,.82), rgba(4,18,23,.72));
+      backdrop-filter: blur(22px);
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    [data-theme="light"] .sidebar {
+      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(236,248,241,.82));
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+    }
+
+    .logo-mark {
+      width: 54px;
+      height: 54px;
+      border-radius: 17px;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 14px 36px rgba(8,166,75,.32);
+      color: #fff;
+      font-weight: 900;
+      font-size: 23px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 23px;
+      line-height: 1;
+      letter-spacing: .5px;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .nav button {
+      border: 0;
+      width: 100%;
+      cursor: pointer;
+      color: var(--muted);
+      background: transparent;
+      border-radius: 18px;
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      transition: .2s ease;
+    }
+
+    .nav button:hover, .nav button.active {
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      box-shadow: 0 16px 34px rgba(8,166,75,.23);
+    }
+
+    [data-theme="light"] .nav button:hover, [data-theme="light"] .nav button.active {
+      color: #fff;
+    }
+
+    .nav .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.07);
+      flex: 0 0 auto;
+    }
+
+    .planet-card {
+      margin-top: auto;
+      border: 1px solid rgba(8,166,75,.24);
+      border-radius: 24px;
+      padding: 20px;
+      background:
+        linear-gradient(135deg, rgba(8,166,75,.20), rgba(4,122,55,.08)),
+        var(--card);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .planet-card:before {
+      content: "♻";
+      position: absolute;
+      inset-inline-end: -16px;
+      bottom: -40px;
+      font-size: 120px;
+      opacity: .05;
+    }
+
+    .planet-card .leaf {
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--green-2), var(--green-dark));
+      margin-bottom: 14px;
+      font-size: 25px;
+    }
+
+    .planet-card h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+
+    .planet-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 22px 26px 36px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .page-title h2 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .page-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: end;
+    }
+
+    .pill, .primary-btn, .ghost-btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 11px 14px;
+      display: inline-flex;
+      gap: 9px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: none;
+      transition: .2s ease;
+    }
+
+    .primary-btn {
+      border: 0;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: #fff;
+      padding: 13px 20px;
+      font-weight: 800;
+      box-shadow: 0 16px 36px rgba(8,166,75,.25);
+    }
+
+    .primary-btn:hover, .pill:hover, .ghost-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .toggle {
+      width: 62px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(8,166,75,.45);
+      background: rgba(8,166,75,.18);
+      position: relative;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .toggle span {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: 3px;
+      inset-inline-start: 4px;
+      transition: .22s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,.25);
+    }
+
+    [data-theme="light"] .toggle span {
+      inset-inline-start: 31px;
+      background: var(--green);
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .kpis {
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      margin-bottom: 16px;
+    }
+
+    .kpi {
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02)), var(--card);
+      border: 1px solid var(--border);
+      border-radius: 23px;
+      padding: 18px;
+      min-height: 142px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi:before {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(8,166,75,.10);
+      inset-inline-end: -50px;
+      top: -50px;
+    }
+
+    .kpi-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .kpi-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(8,166,75,.96), rgba(4,122,55,.9));
+      color: #fff;
+      font-size: 19px;
+      box-shadow: 0 12px 25px rgba(8,166,75,.24);
+    }
+
+    .kpi-value {
+      font-size: 27px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: .2px;
+    }
+
+    .kpi small {
+      color: var(--muted);
+    }
+
+    .positive {
+      color: var(--green-2);
+      font-weight: 800;
+    }
+
+    .warning {
+      color: var(--yellow);
+      font-weight: 800;
+    }
+
+    .danger {
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .content-grid {
+      grid-template-columns: 1.35fr .85fr;
+      align-items: start;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015)), var(--card);
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      min-width: 0;
+    }
+
+    .card h3 {
+      margin: 0 0 4px;
+      font-size: 18px;
+    }
+
+    .card .sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .chart-bars {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      align-items: end;
+      gap: 10px;
+      height: 220px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .bar-wrap {
+      display: grid;
+      align-items: end;
+      gap: 8px;
+      height: 100%;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .bar {
+      border-radius: 999px 999px 10px 10px;
+      background: linear-gradient(180deg, var(--green-2), var(--green-dark));
+      min-height: 28px;
+      box-shadow: 0 10px 28px rgba(8,166,75,.24);
+    }
+
+    .two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .donut {
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: conic-gradient(var(--green) 0 54%, var(--blue) 54% 72%, var(--yellow) 72% 86%, #7b8790 86% 100%);
+      margin: 8px auto 18px;
+      position: relative;
+    }
+
+    .donut:after {
+      content: "";
+      position: absolute;
+      inset: 42px;
+      background: var(--card);
+      border-radius: 50%;
+      border: 1px solid var(--border);
+    }
+
+    .donut strong {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 1;
+      font-size: 23px;
+    }
+
+    .legend {
+      display: grid;
+      gap: 10px;
+    }
+
+    .legend-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-inline-end: 7px;
+    }
+
+    .info-grid {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 16px;
+    }
+
+    .info-card {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .info-card .kpi-icon {
+      flex: 0 0 auto;
+    }
+
+    .info-card h4 {
+      margin: 0 0 6px;
+    }
+
+    .info-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .shortcut-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .shortcut {
+      min-height: 132px;
+      padding: 18px;
+      text-align: start;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(8,166,75,.17), rgba(255,255,255,.03)), var(--card);
+      border: 1px solid rgba(8,166,75,.22);
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    .shortcut b {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .shortcut span {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      text-align: start;
+      font-size: 13px;
+    }
+
+    th {
+      color: var(--text);
+      background: rgba(8,166,75,.10);
+      font-weight: 800;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.58);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 50;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal {
+      width: min(960px, 100%);
+      max-height: 92vh;
+      overflow: auto;
+      border-radius: 28px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: 0 40px 110px rgba(0,0,0,.42);
+    }
+
+    .modal-header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: linear-gradient(180deg, var(--card), rgba(18,29,38,.94));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme="light"] .modal-header {
+      background: linear-gradient(180deg, #fff, rgba(255,255,255,.94));
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .close-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card-2);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      padding: 16px 22px 0;
+    }
+
+    .tab {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: var(--card-2);
+      color: var(--muted);
+      padding: 14px 18px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .modal-body {
+      padding: 20px 22px 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--input);
+      color: var(--text);
+      border-radius: 15px;
+      padding: 13px 14px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .field textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .form-tab {
+      display: none;
+    }
+
+    .form-tab.active {
+      display: block;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: end;
+      margin-top: 18px;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      inset-inline-start: 24px;
+      z-index: 80;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+      display: none;
+      max-width: min(420px, calc(100vw - 48px));
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    @media (max-width: 1160px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+      .kpis, .content-grid, .two-cols, .info-grid, .shortcut-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .main {
+        padding: 18px 14px 28px;
+      }
+      .kpis, .content-grid, .two-cols, .info-grid, .shortcut-grid, .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .top-actions {
+        justify-content: start;
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="dark" dir="rtl">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-mark">EA</div>
+        <div>
+          <h1>ENVIRON</h1>
+          <span>ADAPT</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="active" data-nav="dashboard"><span class="icon">▦</span><span data-i18n="nav_dashboard">لوحة التحكم</span></button>
+        <button data-nav="production"><span class="icon">🏭</span><span data-i18n="nav_production">الإنتاج</span></button>
+        <button data-nav="quality"><span class="icon">🛡</span><span data-i18n="nav_quality">الجودة</span></button>
+        <button data-nav="costing"><span class="icon">💰</span><span data-i18n="nav_costing">التكلفة</span></button>
+        <button data-nav="reports"><span class="icon">▥</span><span data-i18n="nav_reports">التقارير</span></button>
+        <button data-nav="settings"><span class="icon">⚙</span><span data-i18n="nav_settings">الإعدادات</span></button>
+      </nav>
+
+      <div class="planet-card">
+        <div class="leaf">🌿</div>
+        <h3 data-i18n="planet_title">معًا من أجل كوكب أنظف</h3>
+        <p data-i18n="planet_text">متابعة الإنتاج والجودة والتكلفة من مكان واحد.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="page-title">
+          <h2 id="pageTitle" data-i18n="dashboard_title">لوحة التحكم</h2>
+          <p data-i18n="dashboard_subtitle">ملخص شامل للإنتاج والجودة والتكلفة والهوالك.</p>
+        </div>
+
+        <div class="top-actions">
+          <button class="pill" id="langBtn">العربية</button>
+          <button class="pill" id="themeBtn"><span data-i18n="theme">الوضع</span><span class="toggle"><span></span></span></button>
+          <button class="pill">🔔 <b>3</b></button>
+          <button class="primary-btn" id="openAddModal">＋ <span data-i18n="add_data">إدخال بيانات</span></button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="section active">
+        <div class="grid kpis">
+          <div class="kpi">
+            <div class="kpi-head"><span data-i18n="cost_per_ton">تكلفة الطن</span><span class="kpi-icon">$</span></div>
+            <div class="kpi-value" id="costPerTon">0</div>
+            <small><span class="positive">●</span> <span data-i18n="updated_live">يتم التحديث من البيانات</span></small>
+          </div>
+          <div class="kpi">
+            <div class="kpi-head"><span data-i18n="total_production">إجمالي الإنتاج</span><span class="kpi-icon">🏭</span></div>
+            <div class="kpi-value" id="totalProduction">0</div>
+            <small data-i18n="kg_unit">كجم</small>
+          </div>
+          <div class="kpi">
+            <div class="kpi-head"><span data-i18n="total_waste">إجمالي الهوالك</span><span class="kpi-icon">🗑</span></div>
+            <div class="kpi-value" id="totalWaste">0</div>
+            <small data-i18n="kg_unit">كجم</small>
+          </div>
+          <div class="kpi">
+            <div class="kpi-head"><span>Actual Yield</span><span class="kpi-icon">◎</span></div>
+            <div class="kpi-value" id="actualYield">0%</div>
+            <small data-i18n="yield_desc">المردود الفعلي</small>
+          </div>
+        </div>
+
+        <div class="grid content-grid">
+          <div class="card">
+            <h3 data-i18n="production_trend">اتجاه الإنتاج</h3>
+            <p class="sub" data-i18n="production_trend_sub">عرض بصري مختصر لآخر أيام التشغيل.</p>
+            <div class="chart-bars" id="productionBars"></div>
+          </div>
+
+          <div class="card">
+            <h3 data-i18n="waste_breakdown">توزيع الهوالك</h3>
+            <p class="sub" data-i18n="waste_breakdown_sub">نسب أنواع الهوالك المسجلة.</p>
+            <div class="donut"><strong id="donutValue">0</strong></div>
+            <div class="legend">
+              <div class="legend-row"><span><span class="dot" style="background:var(--green)"></span>PP</span><b id="wastePP">0</b></div>
+              <div class="legend-row"><span><span class="dot" style="background:var(--blue)"></span><span data-i18n="chamber_bags">شمبر وأكياس</span></span><b id="wasteChamber">0</b></div>
+              <div class="legend-row"><span><span class="dot" style="background:var(--yellow)"></span>Dust</span><b id="wasteDust">0</b></div>
+              <div class="legend-row"><span><span class="dot" style="background:#7b8790"></span><span data-i18n="other">أخرى</span></span><b id="wasteOther">0</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid info-grid">
+          <div class="card info-card">
+            <span class="kpi-icon">$</span>
+            <div><h4 data-i18n="cost_per_ton">تكلفة الطن</h4><p data-i18n="cost_explain">إجمالي تكلفة الوردية مقسومًا على صافي وزن الفليكس المنتج بالطن.</p></div>
+          </div>
+          <div class="card info-card">
+            <span class="kpi-icon">🌿</span>
+            <div><h4>Material Yield</h4><p data-i18n="material_yield_explain">نسبة صافي الفليكس إلى صافي الخامة بعد الخصم.</p></div>
+          </div>
+          <div class="card info-card">
+            <span class="kpi-icon">⚙</span>
+            <div><h4>Operation Yield</h4><p data-i18n="operation_yield_explain">كفاءة التشغيل الفعلية مقارنة بإجمالي الإنتاج المسجل.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="production" class="section">
+        <div class="shortcut-grid">
+          <button class="shortcut" data-open-tab="shift"><b data-i18n="new_shift">وردية جديدة</b><span data-i18n="new_shift_desc">تسجيل بيانات الوردية والمورد والعدادات.</span></button>
+          <button class="shortcut" data-open-tab="hourly"><b data-i18n="hourly_production">إنتاج كل ساعة</b><span data-i18n="hourly_production_desc">إدخال استهلاك البالات والحرارة والجونيات.</span></button>
+          <button class="shortcut" data-open-tab="waste"><b data-i18n="waste_entry">هوالك آخر الوردية</b><span data-i18n="waste_entry_desc">تسجيل PP وDust والسورتكس والزجاجات.</span></button>
+        </div>
+        <div class="card">
+          <h3 data-i18n="production_records">سجلات الإنتاج</h3>
+          <p class="sub" data-i18n="production_records_sub">آخر البيانات التي يتم إرسالها إلى الشيت.</p>
+          <div class="table-wrap"><table><thead><tr><th>ID</th><th data-i18n="date">التاريخ</th><th data-i18n="supplier">المورد</th><th data-i18n="material">الخامة</th><th data-i18n="net_weight">الصافي</th></tr></thead><tbody id="productionRows"><tr><td colspan="5" data-i18n="no_data">لا توجد بيانات معروضة حتى الآن</td></tr></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="quality" class="section">
+        <div class="shortcut-grid">
+          <button class="shortcut" data-open-tab="water"><b data-i18n="water_quality">جودة المياه</b><span data-i18n="water_quality_desc">تسجيل جودة المياه و PH لكل ساعة.</span></button>
+          <button class="shortcut" data-open-tab="productQuality"><b data-i18n="product_quality">جودة المنتج</b><span data-i18n="product_quality_desc">تسجيل PVC و PO و Metal لكل عينة.</span></button>
+          <button class="shortcut" data-open-tab="stoppage"><b data-i18n="stoppage">التوقفات</b><span data-i18n="stoppage_desc">تسجيل وقت وسبب كل توقف.</span></button>
+        </div>
+        <div class="card">
+          <h3 data-i18n="quality_summary">ملخص الجودة</h3>
+          <p class="sub" data-i18n="quality_summary_sub">PH و PVC و PO و Metal يتم تسجيلهم من النماذج.</p>
+          <div class="chart-bars" id="qualityBars"></div>
+        </div>
+      </section>
+
+      <section id="costing" class="section">
+        <div class="card">
+          <h3 data-i18n="costing_title">التكلفة</h3>
+          <p class="sub" data-i18n="costing_sub">أضف بنود التكلفة للوردية حتى يتم حساب تكلفة الطن بدقة.</p>
+          <button class="primary-btn" data-open-tab="cost"><span data-i18n="add_cost">إضافة بند تكلفة</span></button>
+        </div>
+      </section>
+
+      <section id="reports" class="section">
+        <div class="card">
+          <h3 data-i18n="reports_title">التقارير</h3>
+          <p class="sub" data-i18n="reports_sub">مرحلة لاحقة: تصدير PDF و Excel حسب التاريخ والمورد والمشغل.</p>
+        </div>
+      </section>
+
+      <section id="settings" class="section">
+        <div class="card">
+          <h3 data-i18n="settings_title">الإعدادات</h3>
+          <p class="sub">API URL</p>
+          <div class="field"><input id="apiUrlInput" value="https://script.google.com/macros/s/AKfycbwHr0ph_UaNHQsVybe0NnXRzO9Hj1HI-zBCFKZcvviVQ2IzYnGqg2mALnyJpT3ZUgy7/exec" /></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 data-i18n="add_data">إدخال بيانات</h3>
+        <button class="close-btn" id="closeModal">×</button>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="shift" data-i18n="tab_shift">الوردية</button>
+        <button class="tab" data-tab="hourly" data-i18n="tab_hourly">إنتاج الساعة</button>
+        <button class="tab" data-tab="waste" data-i18n="tab_waste">الهوالك</button>
+        <button class="tab" data-tab="water" data-i18n="tab_water">جودة المياه</button>
+        <button class="tab" data-tab="productQuality" data-i18n="tab_product_quality">جودة المنتج</button>
+        <button class="tab" data-tab="stoppage" data-i18n="tab_stoppage">التوقفات</button>
+        <button class="tab" data-tab="cost" data-i18n="tab_cost">التكاليف</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="dataForm">
+          <div class="form-tab active" data-form="shift">
+            <div class="form-grid">
+              <div class="field"><label data-i18n="shift_date">تاريخ الوردية</label><input name="shift_date" type="date" /></div>
+              <div class="field"><label data-i18n="shift_type">نوع الوردية</label><select name="shift_type"><option value="morning">Morning</option><option value="evening">Evening</option><option value="night">Night</option></select></div>
+              <div class="field"><label data-i18n="factory_owner">اسم صاحب المصنع</label><input name="factory_owner" /></div>
+              <div class="field"><label data-i18n="operations_supervisor">اسم المسؤول عن التشغيل</label><input name="operations_supervisor" /></div>
+              <div class="field"><label data-i18n="operator_name">اسم المشغل</label><input name="operator_name" /></div>
+              <div class="field"><label data-i18n="supplier_name">اسم المورد</label><input name="supplier_name" /></div>
+              <div class="field"><label data-i18n="material_type">نوع الخامة</label><input name="material_type" placeholder="PET" /></div>
+              <div class="field"><label data-i18n="gross_weight">وزن العربية قائم / كجم</label><input name="truck_weight_gross_kg" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="tare_weight">وزن العربية فارغ / كجم</label><input name="truck_weight_tare_kg" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="discount_percent">نسبة الخصم %</label><input name="discount_percent" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="price_per_ton">سعر الطن</label><input name="price_per_ton" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="electricity_start">عداد الكهرباء بداية</label><input name="electricity_meter_start" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="electricity_end">عداد الكهرباء نهاية</label><input name="electricity_meter_end" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="water_start">عداد المياه بداية</label><input name="water_meter_start" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="water_end">عداد المياه نهاية</label><input name="water_meter_end" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="operation_start">وقت بدء التشغيل</label><input name="operation_start_time" type="time" /></div>
+              <div class="field"><label data-i18n="operation_end">وقت نهاية التشغيل</label><input name="operation_end_time" type="time" /></div>
+              <div class="field"><label data-i18n="operation_hours">ساعات التشغيل</label><input name="total_operation_hours" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="stoppage_hours">ساعات التوقف</label><input name="total_stoppage_hours" type="number" step="0.01" /></div>
+              <div class="field" style="grid-column:1/-1"><label data-i18n="notes">ملاحظات</label><textarea name="notes"></textarea></div>
+            </div>
+          </div>
+
+          <div class="form-tab" data-form="hourly">
+            <div class="form-grid">
+              <div class="field"><label>Shift ID</label><input name="shift_id" /></div>
+              <div class="field"><label data-i18n="hour_time">الساعة</label><input name="hour_time" type="time" /></div>
+              <div class="field"><label data-i18n="bales_consumption">استهلاك البالات</label><input name="bales_consumption_count" type="number" /></div>
+              <div class="field"><label data-i18n="boiler1">حرارة الغلاية الأولى</label><input name="boiler_1_temperature" type="number" /></div>
+              <div class="field"><label data-i18n="boiler2">حرارة الغلاية الثانية</label><input name="boiler_2_temperature" type="number" /></div>
+              <div class="field"><label data-i18n="bag_weight">وزن الجونية / كجم</label><input name="bag_weight_kg" type="number" step="0.01" value="4" /></div>
+              <div class="field"><label data-i18n="bags_count">عدد الجونيات</label><input name="bags_count" type="number" /></div>
+              <div class="field"><label data-i18n="net_flakes">صافي وزن الفليكس / كجم</label><input name="net_flakes_weight_kg" type="number" step="0.01" /></div>
+              <div class="field" style="grid-column:1/-1"><label data-i18n="notes">ملاحظات</label><textarea name="notes"></textarea></div>
+            </div>
+          </div>
+
+          <div class="form-tab" data-form="waste">
+            <div class="form-grid">
+              <div class="field"><label>Shift ID</label><input name="shift_id" /></div>
+              <div class="field"><label>PP / kg</label><input name="pp_kg" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="chamber_bags_kg">شمبر وأكياس / كجم</label><input name="chamber_bags_kg" type="number" step="0.01" /></div>
+              <div class="field"><label>Sortex / kg</label><input name="sortex_kg" type="number" step="0.01" /></div>
+              <div class="field"><label>Dust / kg</label><input name="dust_kg" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="green_bottles">زجاجات خضراء / كجم</label><input name="green_bottles_kg" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="colored_bottles">زجاجات ألوان / كجم</label><input name="colored_bottles_kg" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="other_waste">هالك آخر / كجم</label><input name="other_waste_kg" type="number" step="0.01" /></div>
+            </div>
+          </div>
+
+          <div class="form-tab" data-form="water">
+            <div class="form-grid">
+              <div class="field"><label>Shift ID</label><input name="shift_id" /></div>
+              <div class="field"><label data-i18n="hour_time">الساعة</label><input name="hour_time" type="time" /></div>
+              <div class="field"><label data-i18n="water_quality">جودة المياه</label><select name="water_quality_status"><option value="good">Good</option><option value="warning">Warning</option><option value="bad">Bad</option></select></div>
+              <div class="field"><label>PH</label><input name="ph_value" type="number" step="0.01" /></div>
+              <div class="field" style="grid-column:1/-1"><label data-i18n="notes">ملاحظات</label><textarea name="notes"></textarea></div>
+            </div>
+          </div>
+
+          <div class="form-tab" data-form="productQuality">
+            <div class="form-grid">
+              <div class="field"><label>Shift ID</label><input name="shift_id" /></div>
+              <div class="field"><label data-i18n="sample_no">رقم العينة</label><input name="sample_no" /></div>
+              <div class="field"><label data-i18n="bag_no">رقم الجونية</label><input name="bag_no" /></div>
+              <div class="field"><label>PVC / ppm</label><input name="pvc_ppm" type="number" step="0.01" /></div>
+              <div class="field"><label>PO / ppm</label><input name="po_ppm" type="number" step="0.01" /></div>
+              <div class="field"><label>Metal / ppm</label><input name="metal_ppm" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="quality_status">حالة الجودة</label><select name="quality_status"><option value="accepted">Accepted</option><option value="rejected">Rejected</option></select></div>
+              <div class="field" style="grid-column:1/-1"><label data-i18n="notes">ملاحظات</label><textarea name="notes"></textarea></div>
+            </div>
+          </div>
+
+          <div class="form-tab" data-form="stoppage">
+            <div class="form-grid">
+              <div class="field"><label>Shift ID</label><input name="shift_id" /></div>
+              <div class="field"><label data-i18n="stoppage_start">بداية التوقف</label><input name="stoppage_start_time" type="time" /></div>
+              <div class="field"><label data-i18n="stoppage_end">نهاية التوقف</label><input name="stoppage_end_time" type="time" /></div>
+              <div class="field"><label data-i18n="duration_minutes">المدة بالدقائق</label><input name="stoppage_duration_minutes" type="number" /></div>
+              <div class="field"><label data-i18n="reason_code">سبب التوقف</label><select name="reason_code"><option value="mechanical">Mechanical</option><option value="electrical">Electrical</option><option value="boiler">Boiler</option><option value="water">Water</option><option value="material">Material</option><option value="cleaning">Cleaning</option><option value="maintenance">Maintenance</option><option value="other">Other</option></select></div>
+              <div class="field" style="grid-column:1/-1"><label data-i18n="reason_notes">ملاحظات السبب</label><textarea name="reason_notes"></textarea></div>
+            </div>
+          </div>
+
+          <div class="form-tab" data-form="cost">
+            <div class="form-grid">
+              <div class="field"><label>Shift ID</label><input name="shift_id" /></div>
+              <div class="field"><label data-i18n="cost_item">بند التكلفة</label><select name="cost_item_code"><option value="electricity">Electricity</option><option value="water">Water</option><option value="labor">Labor</option><option value="chemicals">Chemicals</option><option value="maintenance">Maintenance</option><option value="packaging">Packaging</option><option value="transport">Transport</option><option value="other">Other</option></select></div>
+              <div class="field"><label data-i18n="quantity">الكمية</label><input name="quantity" type="number" step="0.01" /></div>
+              <div class="field"><label data-i18n="unit_price">سعر الوحدة</label><input name="unit_price" type="number" step="0.01" /></div>
+              <div class="field" style="grid-column:1/-1"><label data-i18n="notes">ملاحظات</label><textarea name="notes"></textarea></div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="ghost-btn" id="cancelBtn" data-i18n="cancel">إلغاء</button>
+            <button type="submit" class="primary-btn" id="saveBtn">✓ <span data-i18n="save_data">حفظ البيانات</span></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwHr0ph_UaNHQsVybe0NnXRzO9Hj1HI-zBCFKZcvviVQ2IzYnGqg2mALnyJpT3ZUgy7/exec";
+    let apiUrl = localStorage.getItem("environ_api_url") || DEFAULT_API_URL;
+    let currentLang = localStorage.getItem("environ_lang") || "ar";
+    let currentTheme = localStorage.getItem("environ_theme") || "dark";
+    let currentTab = "shift";
+
+    const ACTION_MAP = {
+      shift: "createShift",
+      hourly: "createHourlyProduction",
+      waste: "createWaste",
+      water: "createWaterQuality",
+      productQuality: "createProductQuality",
+      stoppage: "createStoppage",
+      cost: "createShiftCost"
+    };
+
+    const I18N = {
+      ar: {
+        nav_dashboard: "لوحة التحكم",
+        nav_production: "الإنتاج",
+        nav_quality: "الجودة",
+        nav_costing: "التكلفة",
+        nav_reports: "التقارير",
+        nav_settings: "الإعدادات",
+        planet_title: "معًا من أجل كوكب أنظف",
+        planet_text: "متابعة الإنتاج والجودة والتكلفة من مكان واحد.",
+        dashboard_title: "لوحة التحكم",
+        dashboard_subtitle: "ملخص شامل للإنتاج والجودة والتكلفة والهوالك.",
+        theme: "الوضع",
+        add_data: "إدخال بيانات",
+        cost_per_ton: "تكلفة الطن",
+        updated_live: "يتم التحديث من البيانات",
+        total_production: "إجمالي الإنتاج",
+        total_waste: "إجمالي الهوالك",
+        kg_unit: "كجم",
+        yield_desc: "المردود الفعلي",
+        production_trend: "اتجاه الإنتاج",
+        production_trend_sub: "عرض بصري مختصر لآخر أيام التشغيل.",
+        waste_breakdown: "توزيع الهوالك",
+        waste_breakdown_sub: "نسب أنواع الهوالك المسجلة.",
+        chamber_bags: "شمبر وأكياس",
+        other: "أخرى",
+        cost_explain: "إجمالي تكلفة الوردية مقسومًا على صافي وزن الفليكس المنتج بالطن.",
+        material_yield_explain: "نسبة صافي الفليكس إلى صافي الخامة بعد الخصم.",
+        operation_yield_explain: "كفاءة التشغيل الفعلية مقارنة بإجمالي الإنتاج المسجل.",
+        new_shift: "وردية جديدة",
+        new_shift_desc: "تسجيل بيانات الوردية والمورد والعدادات.",
+        hourly_production: "إنتاج كل ساعة",
+        hourly_production_desc: "إدخال استهلاك البالات والحرارة والجونيات.",
+        waste_entry: "هوالك آخر الوردية",
+        waste_entry_desc: "تسجيل PP وDust والسورتكس والزجاجات.",
+        production_records: "سجلات الإنتاج",
+        production_records_sub: "آخر البيانات التي يتم إرسالها إلى الشيت.",
+        date: "التاريخ",
+        supplier: "المورد",
+        material: "الخامة",
+        net_weight: "الصافي",
+        no_data: "لا توجد بيانات معروضة حتى الآن",
+        water_quality: "جودة المياه",
+        water_quality_desc: "تسجيل جودة المياه و PH لكل ساعة.",
+        product_quality: "جودة المنتج",
+        product_quality_desc: "تسجيل PVC و PO و Metal لكل عينة.",
+        stoppage: "التوقفات",
+        stoppage_desc: "تسجيل وقت وسبب كل توقف.",
+        quality_summary: "ملخص الجودة",
+        quality_summary_sub: "PH و PVC و PO و Metal يتم تسجيلهم من النماذج.",
+        costing_title: "التكلفة",
+        costing_sub: "أضف بنود التكلفة للوردية حتى يتم حساب تكلفة الطن بدقة.",
+        add_cost: "إضافة بند تكلفة",
+        reports_title: "التقارير",
+        reports_sub: "مرحلة لاحقة: تصدير PDF و Excel حسب التاريخ والمورد والمشغل.",
+        settings_title: "الإعدادات",
+        tab_shift: "الوردية",
+        tab_hourly: "إنتاج الساعة",
+        tab_waste: "الهوالك",
+        tab_water: "جودة المياه",
+        tab_product_quality: "جودة المنتج",
+        tab_stoppage: "التوقفات",
+        tab_cost: "التكاليف",
+        shift_date: "تاريخ الوردية",
+        shift_type: "نوع الوردية",
+        factory_owner: "اسم صاحب المصنع",
+        operations_supervisor: "اسم المسؤول عن التشغيل",
+        operator_name: "اسم المشغل",
+        supplier_name: "اسم المورد",
+        material_type: "نوع الخامة",
+        gross_weight: "وزن العربية قائم / كجم",
+        tare_weight: "وزن العربية فارغ / كجم",
+        discount_percent: "نسبة الخصم %",
+        price_per_ton: "سعر الطن",
+        electricity_start: "عداد الكهرباء بداية",
+        electricity_end: "عداد الكهرباء نهاية",
+        water_start: "عداد المياه بداية",
+        water_end: "عداد المياه نهاية",
+        operation_start: "وقت بدء التشغيل",
+        operation_end: "وقت نهاية التشغيل",
+        operation_hours: "ساعات التشغيل",
+        stoppage_hours: "ساعات التوقف",
+        notes: "ملاحظات",
+        hour_time: "الساعة",
+        bales_consumption: "استهلاك البالات",
+        boiler1: "حرارة الغلاية الأولى",
+        boiler2: "حرارة الغلاية الثانية",
+        bag_weight: "وزن الجونية / كجم",
+        bags_count: "عدد الجونيات",
+        net_flakes: "صافي وزن الفليكس / كجم",
+        chamber_bags_kg: "شمبر وأكياس / كجم",
+        green_bottles: "زجاجات خضراء / كجم",
+        colored_bottles: "زجاجات ألوان / كجم",
+        other_waste: "هالك آخر / كجم",
+        sample_no: "رقم العينة",
+        bag_no: "رقم الجونية",
+        quality_status: "حالة الجودة",
+        stoppage_start: "بداية التوقف",
+        stoppage_end: "نهاية التوقف",
+        duration_minutes: "المدة بالدقائق",
+        reason_code: "سبب التوقف",
+        reason_notes: "ملاحظات السبب",
+        cost_item: "بند التكلفة",
+        quantity: "الكمية",
+        unit_price: "سعر الوحدة",
+        cancel: "إلغاء",
+        save_data: "حفظ البيانات",
+        saved: "تم إرسال البيانات إلى الشيت.",
+        saving: "جاري الحفظ...",
+        error: "حدث خطأ أثناء الحفظ. راجع رابط الـ API أو صلاحيات النشر."
+      },
+      en: {
+        nav_dashboard: "Dashboard",
+        nav_production: "Production",
+        nav_quality: "Quality",
+        nav_costing: "Costing",
+        nav_reports: "Reports",
+        nav_settings: "Settings",
+        planet_title: "Together for a Cleaner Planet",
+        planet_text: "Track production, quality, cost, and waste in one place.",
+        dashboard_title: "Dashboard",
+        dashboard_subtitle: "A complete summary for production, quality, costing, and waste.",
+        theme: "Theme",
+        add_data: "Add Data",
+        cost_per_ton: "Cost per Ton",
+        updated_live: "Updated from submitted data",
+        total_production: "Total Production",
+        total_waste: "Total Waste",
+        kg_unit: "kg",
+        yield_desc: "Actual yield",
+        production_trend: "Production Trend",
+        production_trend_sub: "Quick visual summary for recent production days.",
+        waste_breakdown: "Waste Breakdown",
+        waste_breakdown_sub: "Share of registered waste categories.",
+        chamber_bags: "Chamber & Bags",
+        other: "Other",
+        cost_explain: "Total shift cost divided by net produced flakes in tons.",
+        material_yield_explain: "Net flakes compared with net material after discount.",
+        operation_yield_explain: "Actual operating efficiency compared with recorded total production.",
+        new_shift: "New Shift",
+        new_shift_desc: "Record shift, supplier, truck, and meter data.",
+        hourly_production: "Hourly Production",
+        hourly_production_desc: "Enter bales, temperature, bags, and flakes.",
+        waste_entry: "End Shift Waste",
+        waste_entry_desc: "Register PP, Dust, Sortex, and bottle waste.",
+        production_records: "Production Records",
+        production_records_sub: "Latest entries submitted to the sheet.",
+        date: "Date",
+        supplier: "Supplier",
+        material: "Material",
+        net_weight: "Net Weight",
+        no_data: "No displayed data yet",
+        water_quality: "Water Quality",
+        water_quality_desc: "Register water quality and PH every hour.",
+        product_quality: "Product Quality",
+        product_quality_desc: "Register PVC, PO, and Metal for each sample.",
+        stoppage: "Stoppages",
+        stoppage_desc: "Record time and reason for each stoppage.",
+        quality_summary: "Quality Summary",
+        quality_summary_sub: "PH, PVC, PO, and Metal are recorded from forms.",
+        costing_title: "Costing",
+        costing_sub: "Add shift costs to calculate cost per ton accurately.",
+        add_cost: "Add Cost Item",
+        reports_title: "Reports",
+        reports_sub: "Next phase: export PDF and Excel by date, supplier, and operator.",
+        settings_title: "Settings",
+        tab_shift: "Shift",
+        tab_hourly: "Hourly",
+        tab_waste: "Waste",
+        tab_water: "Water",
+        tab_product_quality: "Product Quality",
+        tab_stoppage: "Stoppages",
+        tab_cost: "Costs",
+        shift_date: "Shift Date",
+        shift_type: "Shift Type",
+        factory_owner: "Factory Owner",
+        operations_supervisor: "Operations Supervisor",
+        operator_name: "Operator Name",
+        supplier_name: "Supplier Name",
+        material_type: "Material Type",
+        gross_weight: "Truck Gross Weight / kg",
+        tare_weight: "Truck Tare Weight / kg",
+        discount_percent: "Discount %",
+        price_per_ton: "Price per Ton",
+        electricity_start: "Electricity Meter Start",
+        electricity_end: "Electricity Meter End",
+        water_start: "Water Meter Start",
+        water_end: "Water Meter End",
+        operation_start: "Operation Start Time",
+        operation_end: "Operation End Time",
+        operation_hours: "Operation Hours",
+        stoppage_hours: "Stoppage Hours",
+        notes: "Notes",
+        hour_time: "Hour Time",
+        bales_consumption: "Bales Consumption",
+        boiler1: "Boiler 1 Temperature",
+        boiler2: "Boiler 2 Temperature",
+        bag_weight: "Bag Weight / kg",
+        bags_count: "Bags Count",
+        net_flakes: "Net Flakes Weight / kg",
+        chamber_bags_kg: "Chamber & Bags / kg",
+        green_bottles: "Green Bottles / kg",
+        colored_bottles: "Colored Bottles / kg",
+        other_waste: "Other Waste / kg",
+        sample_no: "Sample No.",
+        bag_no: "Bag No.",
+        quality_status: "Quality Status",
+        stoppage_start: "Stoppage Start",
+        stoppage_end: "Stoppage End",
+        duration_minutes: "Duration in Minutes",
+        reason_code: "Reason",
+        reason_notes: "Reason Notes",
+        cost_item: "Cost Item",
+        quantity: "Quantity",
+        unit_price: "Unit Price",
+        cancel: "Cancel",
+        save_data: "Save Data",
+        saved: "Data was sent to the sheet.",
+        saving: "Saving...",
+        error: "Error while saving. Check API URL or deployment permissions."
+      }
+    };
+
+    function t(key) {
+      return (I18N[currentLang] && I18N[currentLang][key]) || key;
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = currentLang;
+      document.body.dir = currentLang === "ar" ? "rtl" : "ltr";
+      document.documentElement.dir = document.body.dir;
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = t(key);
+      });
+      document.getElementById("langBtn").textContent = currentLang === "ar" ? "English" : "العربية";
+      localStorage.setItem("environ_lang", currentLang);
+      drawCharts();
+    }
+
+    function applyTheme() {
+      document.body.setAttribute("data-theme", currentTheme);
+      localStorage.setItem("environ_theme", currentTheme);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3600);
+    }
+
+    function switchSection(id) {
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+      document.querySelector("#" + id).classList.add("active");
+      document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("active", b.dataset.nav === id));
+      const keyMap = {
+        dashboard: "dashboard_title",
+        production: "nav_production",
+        quality: "nav_quality",
+        costing: "nav_costing",
+        reports: "nav_reports",
+        settings: "nav_settings"
+      };
+      document.getElementById("pageTitle").textContent = t(keyMap[id] || "dashboard_title");
+    }
+
+    function openModal(tab = "shift") {
+      document.getElementById("modalBackdrop").classList.add("show");
+      activateTab(tab);
+    }
+
+    function closeModal() {
+      document.getElementById("modalBackdrop").classList.remove("show");
+      document.getElementById("dataForm").reset();
+      activateTab("shift");
+    }
+
+    function activateTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+      document.querySelectorAll(".form-tab").forEach(f => f.classList.toggle("active", f.dataset.form === tab));
+    }
+
+    function getActivePayload() {
+      const activeForm = document.querySelector(`.form-tab[data-form="${currentTab}"]`);
+      const payload = {};
+      activeForm.querySelectorAll("input, select, textarea").forEach(input => {
+        if (input.name) payload[input.name] = input.value;
+      });
+      return payload;
+    }
+
+    async function sendData(action, payload) {
+      apiUrl = document.getElementById("apiUrlInput")?.value || apiUrl;
+      localStorage.setItem("environ_api_url", apiUrl);
+
+      const body = JSON.stringify({ action, payload });
+
+      try {
+        // no-cors is used because Apps Script Web App redirects can block browser CORS in external hosting.
+        // Data is still submitted to Apps Script, but the browser cannot read the JSON response.
+        await fetch(apiUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body
+        });
+
+        showToast(t("saved"));
+        addLocalRecord(action, payload);
+        closeModal();
+      } catch (err) {
+        console.error(err);
+        showToast(t("error"));
+      }
+    }
+
+    function addLocalRecord(action, payload) {
+      if (action === "createShift") {
+        const tbody = document.getElementById("productionRows");
+        if (tbody.querySelector("[data-i18n='no_data']")) tbody.innerHTML = "";
+        const rawNet = Number(payload.truck_weight_gross_kg || 0) - Number(payload.truck_weight_tare_kg || 0);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>New</td><td>${payload.shift_date || ""}</td><td>${payload.supplier_name || ""}</td><td>${payload.material_type || ""}</td><td>${rawNet.toLocaleString()}</td>`;
+        tbody.prepend(tr);
+      }
+    }
+
+    function drawCharts() {
+      const daysAr = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
+      const daysEn = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+      const days = currentLang === "ar" ? daysAr : daysEn;
+      const values = [62, 70, 66, 81, 76, 88, 92];
+
+      const bars = document.getElementById("productionBars");
+      bars.innerHTML = values.map((v, i) => `<div class="bar-wrap"><div class="bar" style="height:${v}%"></div><span>${days[i]}</span></div>`).join("");
+
+      const q = document.getElementById("qualityBars");
+      q.innerHTML = [55, 73, 64, 82, 70, 84, 78].map((v, i) => `<div class="bar-wrap"><div class="bar" style="height:${v}%"></div><span>${days[i]}</span></div>`).join("");
+    }
+
+    function fillDemoKPIs() {
+      document.getElementById("costPerTon").textContent = "0 EGP";
+      document.getElementById("totalProduction").textContent = "0";
+      document.getElementById("totalWaste").textContent = "0";
+      document.getElementById("actualYield").textContent = "0%";
+      document.getElementById("donutValue").textContent = "0";
+      document.getElementById("wastePP").textContent = "0";
+      document.getElementById("wasteChamber").textContent = "0";
+      document.getElementById("wasteDust").textContent = "0";
+      document.getElementById("wasteOther").textContent = "0";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("apiUrlInput").value = apiUrl;
+      applyTheme();
+      applyLanguage();
+      drawCharts();
+      fillDemoKPIs();
+
+      document.querySelectorAll(".nav button").forEach(btn => {
+        btn.addEventListener("click", () => switchSection(btn.dataset.nav));
+      });
+
+      document.getElementById("langBtn").addEventListener("click", () => {
+        currentLang = currentLang === "ar" ? "en" : "ar";
+        applyLanguage();
+      });
+
+      document.getElementById("themeBtn").addEventListener("click", () => {
+        currentTheme = currentTheme === "dark" ? "light" : "dark";
+        applyTheme();
+      });
+
+      document.getElementById("openAddModal").addEventListener("click", () => openModal("shift"));
+      document.getElementById("closeModal").addEventListener("click", closeModal);
+      document.getElementById("cancelBtn").addEventListener("click", closeModal);
+      document.getElementById("modalBackdrop").addEventListener("click", e => {
+        if (e.target.id === "modalBackdrop") closeModal();
+      });
+
+      document.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", () => activateTab(tab.dataset.tab));
+      });
+
+      document.querySelectorAll("[data-open-tab]").forEach(btn => {
+        btn.addEventListener("click", () => openModal(btn.dataset.openTab));
+      });
+
+      document.getElementById("apiUrlInput").addEventListener("input", e => {
+        apiUrl = e.target.value.trim();
+        localStorage.setItem("environ_api_url", apiUrl);
+      });
+
+      document.getElementById("dataForm").addEventListener("submit", async e => {
+        e.preventDefault();
+        const action = ACTION_MAP[currentTab];
+        const payload = getActivePayload();
+        const saveBtn = document.getElementById("saveBtn");
+        const oldText = saveBtn.innerHTML;
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = "⏳ " + t("saving");
+
+        await sendData(action, payload);
+
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = oldText;
+      });
+    });
+  </script>
+</body>
+</html>
