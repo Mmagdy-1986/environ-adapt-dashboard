@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Environ Adapt Operations Dashboard</title>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#079d49" />
   <style>
     :root {
       --brand:#079d49;
@@ -901,6 +907,20 @@
       display: block;
     }
 
+
+    .boiler-batch{display:grid;gap:16px}
+    .temperature-common{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:16px}
+    .boiler-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .boiler-card{border:1px solid var(--line);background:radial-gradient(circle at 0 0,rgba(7,157,73,.14),transparent 34%),var(--surface2);border-radius:22px;padding:16px}
+    .boiler-card h4{margin:0 0 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:16px}
+    .zone-row{display:grid;grid-template-columns:84px 1fr 1fr 1fr;gap:10px;align-items:end;padding:10px 0;border-bottom:1px dashed var(--line)}
+    .zone-row:last-child{border-bottom:0}
+    .zone-label{min-height:46px;border-radius:14px;background:rgba(7,157,73,.12);color:var(--text);display:grid;place-items:center;font-weight:900;border:1px solid rgba(7,157,73,.18)}
+    .mini-field{display:grid;gap:5px}
+    .mini-field label{color:var(--muted);font-size:11px;font-weight:900}
+    .mini-field input{padding:11px 12px;border-radius:13px}
+    @media(max-width:900px){.temperature-common,.boiler-grid{grid-template-columns:1fr}.zone-row{grid-template-columns:1fr;border-bottom:1px solid var(--line);padding:12px 0}.zone-label{justify-content:start;padding:0 12px}}
+
     @media (max-width:1220px) {
       .layout, body[dir="rtl"] .layout {
         grid-template-columns:1fr;
@@ -1410,20 +1430,87 @@
               <div class="field" style="grid-column:1/-1"><label data-i18n="notes">ملاحظات</label><textarea name="reason_notes"></textarea></div>
             </div>
           </div>
-
-
           <div class="formtab" data-form="temperature">
-            <div class="form-help" data-i18n="temperature_help">سجل قراءة واحدة لكل Zone. كرر الحفظ لكل منطقة أو استخدم الإدخال السريع لكل المناطق لاحقًا. PV هي الحرارة الحالية، و SV هي الحرارة المطلوبة.</div>
-            <div class="form-grid">
-              <div class="field"><label>Shift ID</label><input name="shift_id" placeholder="SH-..."></div>
-              <div class="field"><label data-i18n="reading_date">Reading Date</label><input name="reading_date" type="date"></div>
-              <div class="field"><label data-i18n="reading_time">Reading Time</label><input name="reading_time" type="time"></div>
-              <div class="field"><label data-i18n="boiler_no">Boiler No.</label><select name="boiler_no"><option value="1">Boiler 1</option><option value="2">Boiler 2</option></select></div>
-              <div class="field"><label data-i18n="zone">Zone</label><select name="zone"><option value="Zone 1">Zone 1</option><option value="Zone 2">Zone 2</option><option value="Zone 3">Zone 3</option><option value="Zone 4">Zone 4</option><option value="Zone 5">Zone 5</option></select></div>
-              <div class="field"><label data-i18n="pv_temp">Current Temperature PV / °C</label><input name="pv_temperature_c" type="number" step="0.01"></div>
-              <div class="field"><label data-i18n="sv_temp">Set Temperature SV / °C</label><input name="sv_temperature_c" type="number" step="0.01"></div>
-              <div class="field"><label data-i18n="current_amp">Current / A</label><input name="current_amp" type="number" step="0.01" placeholder="Ampere reading"></div>
-              <div class="field" style="grid-column:1/-1"><label data-i18n="notes">Notes</label><textarea name="notes" placeholder="Optional"></textarea></div>
+            <div class="form-help" data-i18n="temperature_help">Save the full boiler temperature reading at once. Each boiler has 5 zones.</div>
+            <div class="boiler-batch">
+              <div class="temperature-common">
+                <div class="field"><label>Shift ID</label><input name="shift_id" placeholder="SH-..."></div>
+                <div class="field"><label data-i18n="reading_date">Reading Date</label><input name="reading_date" type="date"></div>
+                <div class="field"><label data-i18n="reading_time">Reading Time</label><input name="reading_time" type="time"></div>
+                <div class="field"><label data-i18n="notes">Notes</label><input name="notes" placeholder="Optional notes"></div>
+              </div>
+              <div class="boiler-grid">
+                
+                <div class="boiler-card">
+                  <h4><span>🌡 <span data-i18n="boiler_1">Boiler 1</span></span><span class="badge">5 Zones</span></h4>
+                  
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 1</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b1_z1_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b1_z1_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b1_z1_amp" type="number" step="0.01"></div>
+                  </div>
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 2</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b1_z2_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b1_z2_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b1_z2_amp" type="number" step="0.01"></div>
+                  </div>
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 3</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b1_z3_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b1_z3_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b1_z3_amp" type="number" step="0.01"></div>
+                  </div>
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 4</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b1_z4_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b1_z4_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b1_z4_amp" type="number" step="0.01"></div>
+                  </div>
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 5</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b1_z5_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b1_z5_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b1_z5_amp" type="number" step="0.01"></div>
+                  </div>
+                </div>
+                
+                <div class="boiler-card">
+                  <h4><span>🌡 <span data-i18n="boiler_2">Boiler 2</span></span><span class="badge">5 Zones</span></h4>
+                  
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 1</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b2_z1_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b2_z1_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b2_z1_amp" type="number" step="0.01"></div>
+                  </div>
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 2</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b2_z2_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b2_z2_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b2_z2_amp" type="number" step="0.01"></div>
+                  </div>
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 3</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b2_z3_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b2_z3_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b2_z3_amp" type="number" step="0.01"></div>
+                  </div>
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 4</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b2_z4_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b2_z4_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b2_z4_amp" type="number" step="0.01"></div>
+                  </div>
+                  <div class="zone-row">
+                    <div class="zone-label">Zone 5</div>
+                    <div class="mini-field"><label data-i18n="pv_short">PV Current °C</label><input name="b2_z5_pv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="sv_short">SV Set °C</label><input name="b2_z5_sv" type="number" step="0.01"></div>
+                    <div class="mini-field"><label data-i18n="current_short">Current A</label><input name="b2_z5_amp" type="number" step="0.01"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1465,7 +1552,7 @@ const ACTION = {
   productQuality:"createProductQuality",
   stoppage:"createStoppage",
   cost:"createShiftCost",
-  temperature:"createTemperatureReading"
+  temperature:"createTemperatureBatch"
 };
 
 let localStats = {
@@ -1482,7 +1569,7 @@ let localStats = {
 
 const I18N = {
 ar:{
-temperature_readings:"قراءات الحرارة",temperature_desc:"PV / SV لكل Zone ورقم الغلاية والأمبير.",tab_temperature:"الحرارة",temperature_help:"سجل قراءة واحدة لكل Zone. كرر الحفظ لكل منطقة. PV هي الحرارة الحالية، و SV هي الحرارة المطلوبة.",reading_date:"التاريخ",reading_time:"الوقت",boiler_no:"رقم الغلاية",zone:"المنطقة",pv_temp:"الحرارة الحالية PV / °C",sv_temp:"الحرارة المطلوبة SV / °C",current_amp:"Current / A",temperature_table_sub:"قراءات PV / SV حسب رقم الغلاية والمنطقة.",add_temperature:"إضافة قراءة حرارة",nav_dashboard:"لوحة التحكم",nav_production:"الإنتاج",nav_quality:"الجودة",nav_stoppages:"التوقفات",nav_costing:"التكلفة",nav_reports:"التقارير",nav_settings:"الإعدادات",menu:"القائمة",
+temperature_readings:"قراءات الحرارة",temperature_desc:"PV / SV لكل Zone ورقم الغلاية والأمبير.",tab_temperature:"الحرارة",temperature_help:"سجل الغلاية كاملة مرة واحدة: كل غلاية بها 5 Zones، ولكل Zone قراءة PV و SV والأمبير. التاريخ والوقت والملاحظات مشتركة لكل القراءات.",reading_date:"التاريخ",reading_time:"الوقت",boiler_no:"رقم الغلاية",zone:"المنطقة",pv_temp:"الحرارة الحالية PV / °C",sv_temp:"الحرارة المطلوبة SV / °C",current_amp:"Current / A",temperature_table_sub:"قراءات PV / SV حسب رقم الغلاية والمنطقة.",add_temperature:"إضافة قراءة حرارة",boiler_1:"الغلاية 1",boiler_2:"الغلاية 2",pv_short:"PV الحالي °C",sv_short:"SV المطلوب °C",current_short:"الأمبير A",nav_dashboard:"لوحة التحكم",nav_production:"الإنتاج",nav_quality:"الجودة",nav_stoppages:"التوقفات",nav_costing:"التكلفة",nav_reports:"التقارير",nav_settings:"الإعدادات",menu:"القائمة",
 planet_title:"معًا من أجل كوكب أنظف",planet_text:"لوحة تشغيل لإدارة التوريدات، الإنتاج، الجودة، التوقفات، والتكلفة.",
 dashboard_title:"لوحة التحكم",dashboard_sub:"ملخص إداري شامل للتوريدات والإنتاج والجودة والتوقفات وتكلفة الطن.",
 add_data:"إدخال بيانات",theme:"الوضع",cost_per_ton:"تكلفة الطن",updated_from_data:"يتم التحديث من البيانات",total_input:"إجمالي الخام الداخل",total_production:"إجمالي الإنتاج",kg_unit:"كجم",actual_yield:"Actual Yield",actual_yield_desc:"المردود الفعلي بعد كل الفواقد",suppliers_count:"عدد الموردين",suppliers_desc:"داخل نفس التشغيلة أو الفترة",trucks_count:"عدد العربيات",trucks_desc:"توريدات مسجلة",total_waste:"إجمالي الهوالك",downtime:"إجمالي التوقف",downtime_desc:"حسب التوقفات المسجلة",
@@ -1501,7 +1588,7 @@ shift_date:"تاريخ التشغيلة",shift_type:"نوع الوردية",fact
 receipt_date:"تاريخ التوريدة",driver:"اسم السائق",discount:"نسبة الخصم %",price:"سعر الطن",hour:"الساعة",bales:"استهلاك البالات",boiler1:"حرارة الغلاية الأولى",boiler2:"حرارة الغلاية الثانية",bag_weight:"وزن الجونية / كجم",bags:"عدد الجونيات",net_flakes:"صافي الفليكس / كجم",green_bottles:"زجاجات خضراء / كجم",colored_bottles:"زجاجات ألوان / كجم",other_waste:"هالك آخر / كجم",sample:"رقم العينة",bag_no:"رقم الجونية",quality_status:"حالة الجودة",stoppage_start:"بداية التوقف",stoppage_end:"نهاية التوقف",duration_minutes:"المدة بالدقائق",cost_item:"بند التكلفة",quantity:"الكمية",unit_price:"سعر الوحدة",cancel:"إلغاء",save:"حفظ البيانات",saved:"تم إرسال البيانات إلى الشيت.",saving:"جاري الحفظ..."
 },
 en:{
-temperature_readings:"Temperature Readings",temperature_desc:"PV / SV for each zone, boiler number, and current.",tab_temperature:"Temperature",temperature_help:"Save one reading per zone. Repeat for each zone. PV is current temperature and SV is set temperature.",reading_date:"Date",reading_time:"Time",boiler_no:"Boiler No.",zone:"Zone",pv_temp:"Current Temperature PV / °C",sv_temp:"Set Temperature SV / °C",current_amp:"Current / A",temperature_table_sub:"PV / SV readings by boiler and zone.",add_temperature:"Add Temperature",nav_dashboard:"Dashboard",nav_production:"Production",nav_quality:"Quality",nav_stoppages:"Stoppages",nav_costing:"Costing",nav_reports:"Reports",nav_settings:"Settings",menu:"Menu",
+temperature_readings:"Temperature Readings",temperature_desc:"PV / SV for each zone, boiler number, and current.",tab_temperature:"Temperature",temperature_help:"Save the full boiler temperature reading at once: each boiler has 5 zones, and every zone has PV, SV, and Current. Date, time, and notes apply to all readings.",reading_date:"Date",reading_time:"Time",boiler_no:"Boiler No.",zone:"Zone",pv_temp:"Current Temperature PV / °C",sv_temp:"Set Temperature SV / °C",current_amp:"Current / A",temperature_table_sub:"PV / SV readings by boiler and zone.",add_temperature:"Add Temperature",boiler_1:"Boiler 1",boiler_2:"Boiler 2",pv_short:"PV Current °C",sv_short:"SV Set °C",current_short:"Current A",nav_dashboard:"Dashboard",nav_production:"Production",nav_quality:"Quality",nav_stoppages:"Stoppages",nav_costing:"Costing",nav_reports:"Reports",nav_settings:"Settings",menu:"Menu",
 planet_title:"Together for a Cleaner Planet",planet_text:"Operations dashboard for receipts, production, quality, stoppages, and costing.",
 dashboard_title:"Dashboard",dashboard_sub:"Management summary for receipts, production, quality, stoppages, and cost per ton.",
 add_data:"Add Data",theme:"Theme",cost_per_ton:"Cost per Ton",updated_from_data:"Updated from data",total_input:"Total Input Material",total_production:"Total Production",kg_unit:"kg",actual_yield:"Actual Yield",actual_yield_desc:"Final yield after all losses",suppliers_count:"Suppliers Count",suppliers_desc:"within selected run or period",trucks_count:"Trucks Count",trucks_desc:"registered receipts",total_waste:"Total Waste",downtime:"Total Downtime",downtime_desc:"from stoppage records",
@@ -1573,6 +1660,36 @@ function activateTab(tab) {
 }
 
 function payload() {
+  if (currentTab === "temperature") {
+    const root = document.querySelector(`.formtab[data-form="temperature"]`);
+    const shiftId = root.querySelector('[name="shift_id"]').value;
+    const readingDate = root.querySelector('[name="reading_date"]').value;
+    const readingTime = root.querySelector('[name="reading_time"]').value;
+    const notes = root.querySelector('[name="notes"]').value;
+    const readings = [];
+    [1, 2].forEach(boilerNo => {
+      [1, 2, 3, 4, 5].forEach(zoneNo => {
+        const pv = root.querySelector(`[name="b${boilerNo}_z${zoneNo}_pv"]`).value;
+        const sv = root.querySelector(`[name="b${boilerNo}_z${zoneNo}_sv"]`).value;
+        const amp = root.querySelector(`[name="b${boilerNo}_z${zoneNo}_amp"]`).value;
+        if (pv !== "" || sv !== "" || amp !== "") {
+          readings.push({
+            shift_id: shiftId,
+            reading_date: readingDate,
+            reading_time: readingTime,
+            boiler_no: String(boilerNo),
+            zone: `Zone ${zoneNo}`,
+            pv_temperature_c: pv,
+            sv_temperature_c: sv,
+            current_amp: amp,
+            notes
+          });
+        }
+      });
+    });
+    return { shift_id: shiftId, reading_date: readingDate, reading_time: readingTime, notes, readings };
+  }
+
   const p = {};
   document.querySelector(`.formtab[data-form="${currentTab}"]`).querySelectorAll("input,select,textarea").forEach(input => {
     if (input.name) p[input.name] = input.value;
@@ -1646,9 +1763,12 @@ function addTemperatureRow(p) {
   const tb = document.getElementById("temperatureRows");
   if (!tb) return;
   clearNoData(tb);
-  const tr = document.createElement("tr");
-  tr.innerHTML = `<td>${p.shift_id||""}</td><td>${p.reading_date||""}</td><td>${p.reading_time||""}</td><td>${p.boiler_no||""}</td><td>${p.zone||""}</td><td>${p.pv_temperature_c||""}</td><td>${p.sv_temperature_c||""}</td><td>${p.current_amp||""}</td>`;
-  tb.prepend(tr);
+  const readings = p.readings || [p];
+  readings.forEach(item => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${item.shift_id||""}</td><td>${item.reading_date||""}</td><td>${item.reading_time||""}</td><td>${item.boiler_no||""}</td><td>${item.zone||""}</td><td>${item.pv_temperature_c||""}</td><td>${item.sv_temperature_c||""}</td><td>${item.current_amp||""}</td>`;
+    tb.prepend(tr);
+  });
 }
 
 function updateKPIs() {
