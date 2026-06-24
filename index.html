@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -922,6 +922,13 @@
     @media(max-width:900px){.temperature-common,.boiler-grid{grid-template-columns:1fr}.zone-row{grid-template-columns:1fr;border-bottom:1px solid var(--line);padding:12px 0}.zone-label{justify-content:start;padding:0 12px}}
 
 
+
+    #langToggle {
+      min-width: 44px;
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+
     /* V11 Compact Pro Design System */
     :root {
       --radius: 16px;
@@ -1500,7 +1507,7 @@
     }
   </style>
 </head>
-<body data-theme="dark" dir="rtl">
+<body data-theme="dark" dir="ltr">
   <div class="layout">
     <aside class="sidebar">
       <div class="brand">
@@ -2028,7 +2035,7 @@
 // Fixed Apps Script API URL. Change here only if you publish a new deployment URL.
 const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwHr0ph_UaNHQsVybe0NnXRzO9Hj1HI-zBCFKZcvviVQ2IzYnGqg2mALnyJpT3ZUgy7/exec";
 let apiUrl = localStorage.getItem("environ_api_url") || DEFAULT_API_URL;
-let lang = localStorage.getItem("environ_lang") || "ar";
+let lang = localStorage.getItem("environ_lang") || "en";
 let theme = localStorage.getItem("environ_theme") || "dark";
 let currentTab = "shift";
 
@@ -2517,6 +2524,65 @@ document.addEventListener("DOMContentLoaded", () => {
   loadDashboardData();
   setInterval(loadDashboardData, 60000);
 });
+</script>
+<script>
+
+/* V12 guaranteed language controller */
+(function(){
+  function safeDict() {
+    if (typeof translations === "undefined") return {};
+    return translations[window.lang || lang] || translations.en || {};
+  }
+
+  window.forceApplyLanguage = function(nextLang) {
+    if (nextLang) {
+      try { lang = nextLang; } catch(e) { window.lang = nextLang; }
+    }
+    const activeLang = (typeof lang !== "undefined" ? lang : (localStorage.getItem("environ_lang") || "en"));
+    localStorage.setItem("environ_lang", activeLang);
+
+    document.documentElement.lang = activeLang;
+    document.documentElement.dir = activeLang === "ar" ? "rtl" : "ltr";
+    document.body.dir = activeLang === "ar" ? "rtl" : "ltr";
+    document.body.setAttribute("dir", activeLang === "ar" ? "rtl" : "ltr");
+
+    const dict = (typeof translations !== "undefined" && translations[activeLang]) ? translations[activeLang] : {};
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (dict[key]) el.textContent = dict[key];
+    });
+
+    const btn = document.getElementById("langToggle");
+    if (btn) {
+      btn.textContent = activeLang === "ar" ? "EN" : "AR";
+      btn.title = activeLang === "ar" ? "Switch to English" : "Switch to Arabic";
+    }
+
+    if (typeof currentPage !== "undefined" && typeof setPage === "function") {
+      try { setPage(currentPage || "dashboard"); } catch(e) {}
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", function(){
+    const btn = document.getElementById("langToggle");
+    const stored = localStorage.getItem("environ_lang") || "en";
+    try { lang = stored; } catch(e) { window.lang = stored; }
+    window.forceApplyLanguage(stored);
+
+    if (btn && !btn.dataset.v12LangFixed) {
+      btn.dataset.v12LangFixed = "1";
+      btn.addEventListener("click", function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        const current = localStorage.getItem("environ_lang") || (typeof lang !== "undefined" ? lang : "en");
+        const next = current === "ar" ? "en" : "ar";
+        try { lang = next; } catch(e) { window.lang = next; }
+        window.forceApplyLanguage(next);
+      }, true);
+    }
+  });
+})();
+
 </script>
 </body>
 </html>
