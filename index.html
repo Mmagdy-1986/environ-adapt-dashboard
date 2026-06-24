@@ -921,6 +921,493 @@
     .mini-field input{padding:11px 12px;border-radius:13px}
     @media(max-width:900px){.temperature-common,.boiler-grid{grid-template-columns:1fr}.zone-row{grid-template-columns:1fr;border-bottom:1px solid var(--line);padding:12px 0}.zone-label{justify-content:start;padding:0 12px}}
 
+
+    /* V11 Compact Pro Design System */
+    :root {
+      --radius: 16px;
+      --shadow: 0 10px 28px rgba(0,0,0,.18);
+      --surface: #0f181f;
+      --surface2: #131f27;
+      --surface3: #0b141a;
+      --line: rgba(255,255,255,.075);
+    }
+
+    [data-theme="light"] {
+      --surface: #ffffff;
+      --surface2: #f6faf7;
+      --surface3: #eef6f1;
+      --shadow: 0 8px 24px rgba(5,70,35,.08);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 9% 0%, rgba(7,157,73,.13), transparent 26%),
+        var(--bg);
+    }
+
+    .layout {
+      grid-template-columns: 248px minmax(0,1fr);
+    }
+
+    body[dir="rtl"] .layout {
+      grid-template-columns: minmax(0,1fr) 248px;
+    }
+
+    .sidebar {
+      padding: 16px 13px;
+      gap: 14px;
+    }
+
+    .brand {
+      padding: 0 2px 12px;
+      gap: 9px;
+    }
+
+    .brand-logo {
+      height: 48px;
+      max-width: 138px;
+    }
+
+    .ea-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      font-size: 17px;
+      box-shadow: 0 10px 22px rgba(7,157,73,.22);
+    }
+
+    .nav {
+      gap: 5px;
+    }
+
+    .nav button {
+      padding: 10px 11px;
+      border-radius: 13px;
+      font-size: 13px;
+      min-height: 44px;
+    }
+
+    .nav-icon {
+      width: 29px;
+      height: 29px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .planet {
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .planet .leaf {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      font-size: 19px;
+      margin-bottom: 9px;
+    }
+
+    .planet h3 {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .planet p {
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .main {
+      padding: 18px 20px 26px;
+    }
+
+    .topbar {
+      margin-bottom: 14px;
+      align-items: center;
+    }
+
+    .page-heading {
+      gap: 10px;
+    }
+
+    .page-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      font-size: 18px;
+      box-shadow: 0 10px 22px rgba(7,157,73,.18);
+    }
+
+    .page-title h1 {
+      font-size: 22px;
+      letter-spacing: -.2px;
+    }
+
+    .page-title p {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .top-actions {
+      gap: 7px;
+    }
+
+    .btn {
+      padding: 9px 12px;
+      font-size: 12px;
+      min-height: 36px;
+      border-radius: 12px;
+    }
+
+    .btn-primary {
+      padding: 10px 14px;
+      box-shadow: 0 10px 22px rgba(7,157,73,.20);
+    }
+
+    .theme-switch {
+      width: 45px;
+      height: 24px;
+    }
+
+    .theme-switch:before {
+      width: 18px;
+      height: 18px;
+      top: 2px;
+    }
+
+    [data-theme="light"] .theme-switch:before {
+      inset-inline-start: 24px;
+    }
+
+    .api-note,
+    #dashboardSyncStatus {
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      margin-top: 0;
+    }
+
+    .grid {
+      gap: 10px;
+    }
+
+    .kpi-grid {
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .kpi {
+      min-height: 104px;
+      padding: 13px;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi-head {
+      font-size: 11px;
+      gap: 8px;
+    }
+
+    .kpi-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      font-size: 14px;
+      box-shadow: 0 8px 16px rgba(7,157,73,.18);
+    }
+
+    .kpi-value {
+      margin-top: 11px;
+      font-size: 21px;
+      line-height: 1.1;
+      letter-spacing: -.25px;
+    }
+
+    .kpi-foot {
+      margin-top: 6px;
+      font-size: 11px;
+    }
+
+    .dashboard-grid {
+      grid-template-columns: 1.35fr .9fr;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .card {
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .card h2,
+    .card h3 {
+      font-size: 16px;
+    }
+
+    .card p.sub {
+      margin-top: 3px;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .badge {
+      padding: 6px 9px;
+      font-size: 10px;
+    }
+
+    .bars {
+      height: 154px;
+      gap: 8px;
+      padding-top: 10px;
+    }
+
+    .bar-wrap {
+      gap: 6px;
+      font-size: 10px;
+    }
+
+    .donut-row {
+      grid-template-columns: 150px 1fr;
+      gap: 10px;
+    }
+
+    .donut {
+      width: 140px;
+      height: 140px;
+    }
+
+    .donut:after {
+      inset: 33px;
+    }
+
+    .donut strong {
+      font-size: 20px;
+    }
+
+    .legend {
+      gap: 7px;
+    }
+
+    .legend-row {
+      font-size: 11px;
+      padding-bottom: 6px;
+    }
+
+    .management-grid {
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric-box {
+      gap: 10px;
+    }
+
+    .metric-box .kpi-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+    }
+
+    .metric-box h4 {
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .metric-box p {
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .split {
+      gap: 10px;
+    }
+
+    .shortcuts {
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .shortcut {
+      border-radius: 16px;
+      padding: 13px;
+      min-height: 100px;
+      box-shadow: var(--shadow);
+    }
+
+    .shortcut .shortcut-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      font-size: 16px;
+      margin-bottom: 9px;
+    }
+
+    .shortcut b {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .shortcut span {
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .table-wrap {
+      border-radius: 12px;
+      max-height: 330px;
+    }
+
+    th, td {
+      padding: 9px 10px;
+      font-size: 11px;
+    }
+
+    .modal {
+      width: min(980px, 96vw);
+      border-radius: 20px;
+    }
+
+    .modal-header {
+      padding: 12px 16px;
+    }
+
+    .modal-brand img {
+      height: 34px;
+      max-width: 118px;
+    }
+
+    .modal-title h3 {
+      font-size: 17px;
+    }
+
+    .modal-title p {
+      font-size: 11px;
+    }
+
+    .close {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      font-size: 18px;
+    }
+
+    .tabs {
+      gap: 6px;
+      padding: 12px 16px 0;
+    }
+
+    .tab {
+      min-height: 56px;
+      border-radius: 12px;
+      padding: 8px 6px;
+      font-size: 10px;
+    }
+
+    .tab .tab-icon {
+      font-size: 16px;
+    }
+
+    .modal-body {
+      padding: 14px 16px 16px;
+    }
+
+    .form-help {
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      line-height: 1.45;
+      margin-bottom: 12px;
+    }
+
+    .form-grid {
+      gap: 10px;
+    }
+
+    .field {
+      gap: 5px;
+    }
+
+    .field label {
+      font-size: 11px;
+    }
+
+    input, select, textarea {
+      border-radius: 11px;
+      padding: 10px 11px;
+      font-size: 12px;
+      min-height: 38px;
+    }
+
+    textarea {
+      min-height: 64px;
+    }
+
+    .modal-actions {
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    .boiler-grid {
+      gap: 10px;
+    }
+
+    .temperature-common {
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .boiler-card {
+      border-radius: 15px;
+      padding: 12px;
+    }
+
+    .boiler-card h4 {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .zone-row {
+      grid-template-columns: 70px 1fr 1fr 1fr;
+      gap: 7px;
+      padding: 7px 0;
+    }
+
+    .zone-label {
+      min-height: 38px;
+      border-radius: 11px;
+      font-size: 12px;
+    }
+
+    .mini-field label {
+      font-size: 10px;
+    }
+
+    .mini-field input {
+      padding: 8px 9px;
+      border-radius: 10px;
+      min-height: 34px;
+    }
+
+    body.sidebar-collapsed .layout {
+      grid-template-columns: 74px minmax(0,1fr);
+    }
+
+    body[dir="rtl"].sidebar-collapsed .layout {
+      grid-template-columns: minmax(0,1fr) 74px;
+    }
+
+    body.sidebar-collapsed .sidebar {
+      width: 74px;
+    }
+
     @media (max-width:1220px) {
       .layout, body[dir="rtl"] .layout {
         grid-template-columns:1fr;
@@ -1064,12 +1551,14 @@
           <button class="btn" id="sidebarToggle">☰ <span data-i18n="menu">القائمة</span></button>
           <button class="btn btn-primary" onclick="openModal('shift')">＋ <span data-i18n="add_data">إدخال بيانات</span></button>
           <button class="btn notification"><b>3</b> 🔔</button>
+          <button class="btn" id="refreshDashboardBtn">↻ <span data-i18n="refresh">Refresh</span></button>
           <button class="btn" id="themeBtn"><span class="theme-switch"></span><span data-i18n="theme">الوضع</span></button>
           <button class="btn" id="langBtn">English</button>
         </div>
       </header>
 
       <section id="dashboard" class="section active">
+        <div class="api-note" id="dashboardSyncStatus" data-i18n="dashboard_loading">Loading dashboard data from Google Sheets...</div>
         <div class="grid kpi-grid">
           <div class="kpi">
             <div class="kpi-head"><span data-i18n="cost_per_ton">تكلفة الطن</span><span class="kpi-icon">$</span></div>
@@ -1569,7 +2058,7 @@ let localStats = {
 
 const I18N = {
 ar:{
-temperature_readings:"قراءات الحرارة",temperature_desc:"PV / SV لكل Zone ورقم الغلاية والأمبير.",tab_temperature:"الحرارة",temperature_help:"سجل الغلاية كاملة مرة واحدة: كل غلاية بها 5 Zones، ولكل Zone قراءة PV و SV والأمبير. التاريخ والوقت والملاحظات مشتركة لكل القراءات.",reading_date:"التاريخ",reading_time:"الوقت",boiler_no:"رقم الغلاية",zone:"المنطقة",pv_temp:"الحرارة الحالية PV / °C",sv_temp:"الحرارة المطلوبة SV / °C",current_amp:"Current / A",temperature_table_sub:"قراءات PV / SV حسب رقم الغلاية والمنطقة.",add_temperature:"إضافة قراءة حرارة",boiler_1:"الغلاية 1",boiler_2:"الغلاية 2",pv_short:"PV الحالي °C",sv_short:"SV المطلوب °C",current_short:"الأمبير A",nav_dashboard:"لوحة التحكم",nav_production:"الإنتاج",nav_quality:"الجودة",nav_stoppages:"التوقفات",nav_costing:"التكلفة",nav_reports:"التقارير",nav_settings:"الإعدادات",menu:"القائمة",
+temperature_readings:"قراءات الحرارة",temperature_desc:"PV / SV لكل Zone ورقم الغلاية والأمبير.",tab_temperature:"الحرارة",temperature_help:"سجل الغلاية كاملة مرة واحدة: كل غلاية بها 5 Zones، ولكل Zone قراءة PV و SV والأمبير. التاريخ والوقت والملاحظات مشتركة لكل القراءات.",reading_date:"التاريخ",reading_time:"الوقت",boiler_no:"رقم الغلاية",zone:"المنطقة",pv_temp:"الحرارة الحالية PV / °C",sv_temp:"الحرارة المطلوبة SV / °C",current_amp:"Current / A",temperature_table_sub:"قراءات PV / SV حسب رقم الغلاية والمنطقة.",add_temperature:"إضافة قراءة حرارة",boiler_1:"الغلاية 1",boiler_2:"الغلاية 2",pv_short:"PV الحالي °C",sv_short:"SV المطلوب °C",current_short:"الأمبير A",refresh:"تحديث",dashboard_loading:"جاري تحميل بيانات الداش بورد من الشيت...",dashboard_loaded:"تم تحديث الداش بورد من الشيت",dashboard_load_error:"تعذر تحميل بيانات الداش بورد من الشيت",nav_dashboard:"لوحة التحكم",nav_production:"الإنتاج",nav_quality:"الجودة",nav_stoppages:"التوقفات",nav_costing:"التكلفة",nav_reports:"التقارير",nav_settings:"الإعدادات",menu:"القائمة",
 planet_title:"معًا من أجل كوكب أنظف",planet_text:"لوحة تشغيل لإدارة التوريدات، الإنتاج، الجودة، التوقفات، والتكلفة.",
 dashboard_title:"لوحة التحكم",dashboard_sub:"ملخص إداري شامل للتوريدات والإنتاج والجودة والتوقفات وتكلفة الطن.",
 add_data:"إدخال بيانات",theme:"الوضع",cost_per_ton:"تكلفة الطن",updated_from_data:"يتم التحديث من البيانات",total_input:"إجمالي الخام الداخل",total_production:"إجمالي الإنتاج",kg_unit:"كجم",actual_yield:"Actual Yield",actual_yield_desc:"المردود الفعلي بعد كل الفواقد",suppliers_count:"عدد الموردين",suppliers_desc:"داخل نفس التشغيلة أو الفترة",trucks_count:"عدد العربيات",trucks_desc:"توريدات مسجلة",total_waste:"إجمالي الهوالك",downtime:"إجمالي التوقف",downtime_desc:"حسب التوقفات المسجلة",
@@ -1588,7 +2077,7 @@ shift_date:"تاريخ التشغيلة",shift_type:"نوع الوردية",fact
 receipt_date:"تاريخ التوريدة",driver:"اسم السائق",discount:"نسبة الخصم %",price:"سعر الطن",hour:"الساعة",bales:"استهلاك البالات",boiler1:"حرارة الغلاية الأولى",boiler2:"حرارة الغلاية الثانية",bag_weight:"وزن الجونية / كجم",bags:"عدد الجونيات",net_flakes:"صافي الفليكس / كجم",green_bottles:"زجاجات خضراء / كجم",colored_bottles:"زجاجات ألوان / كجم",other_waste:"هالك آخر / كجم",sample:"رقم العينة",bag_no:"رقم الجونية",quality_status:"حالة الجودة",stoppage_start:"بداية التوقف",stoppage_end:"نهاية التوقف",duration_minutes:"المدة بالدقائق",cost_item:"بند التكلفة",quantity:"الكمية",unit_price:"سعر الوحدة",cancel:"إلغاء",save:"حفظ البيانات",saved:"تم إرسال البيانات إلى الشيت.",saving:"جاري الحفظ..."
 },
 en:{
-temperature_readings:"Temperature Readings",temperature_desc:"PV / SV for each zone, boiler number, and current.",tab_temperature:"Temperature",temperature_help:"Save the full boiler temperature reading at once: each boiler has 5 zones, and every zone has PV, SV, and Current. Date, time, and notes apply to all readings.",reading_date:"Date",reading_time:"Time",boiler_no:"Boiler No.",zone:"Zone",pv_temp:"Current Temperature PV / °C",sv_temp:"Set Temperature SV / °C",current_amp:"Current / A",temperature_table_sub:"PV / SV readings by boiler and zone.",add_temperature:"Add Temperature",boiler_1:"Boiler 1",boiler_2:"Boiler 2",pv_short:"PV Current °C",sv_short:"SV Set °C",current_short:"Current A",nav_dashboard:"Dashboard",nav_production:"Production",nav_quality:"Quality",nav_stoppages:"Stoppages",nav_costing:"Costing",nav_reports:"Reports",nav_settings:"Settings",menu:"Menu",
+temperature_readings:"Temperature Readings",temperature_desc:"PV / SV for each zone, boiler number, and current.",tab_temperature:"Temperature",temperature_help:"Save the full boiler temperature reading at once: each boiler has 5 zones, and every zone has PV, SV, and Current. Date, time, and notes apply to all readings.",reading_date:"Date",reading_time:"Time",boiler_no:"Boiler No.",zone:"Zone",pv_temp:"Current Temperature PV / °C",sv_temp:"Set Temperature SV / °C",current_amp:"Current / A",temperature_table_sub:"PV / SV readings by boiler and zone.",add_temperature:"Add Temperature",boiler_1:"Boiler 1",boiler_2:"Boiler 2",pv_short:"PV Current °C",sv_short:"SV Set °C",current_short:"Current A",refresh:"Refresh",dashboard_loading:"Loading dashboard data from Google Sheets...",dashboard_loaded:"Dashboard updated from Google Sheets",dashboard_load_error:"Could not load dashboard data from Google Sheets",nav_dashboard:"Dashboard",nav_production:"Production",nav_quality:"Quality",nav_stoppages:"Stoppages",nav_costing:"Costing",nav_reports:"Reports",nav_settings:"Settings",menu:"Menu",
 planet_title:"Together for a Cleaner Planet",planet_text:"Operations dashboard for receipts, production, quality, stoppages, and costing.",
 dashboard_title:"Dashboard",dashboard_sub:"Management summary for receipts, production, quality, stoppages, and cost per ton.",
 add_data:"Add Data",theme:"Theme",cost_per_ton:"Cost per Ton",updated_from_data:"Updated from data",total_input:"Total Input Material",total_production:"Total Production",kg_unit:"kg",actual_yield:"Actual Yield",actual_yield_desc:"Final yield after all losses",suppliers_count:"Suppliers Count",suppliers_desc:"within selected run or period",trucks_count:"Trucks Count",trucks_desc:"registered receipts",total_waste:"Total Waste",downtime:"Total Downtime",downtime_desc:"from stoppage records",
@@ -1817,10 +2306,153 @@ function updateSupplierTable() {
   tb.innerHTML = rows.map(([name, s]) => `<tr><td>${name}</td><td>${format(s.trucks)}</td><td>${format(s.net)}</td><td>EGP ${format(s.cost)}</td></tr>`).join("");
 }
 
-function drawBars() {
-  const days = lang === "ar" ? ["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"] : ["Sat","Sun","Mon","Tue","Wed","Thu","Fri"];
-  const values = [63,78,67,85,71,82,74];
-  document.getElementById("productionBars").innerHTML = values.map((v,i) => `<div class="bar-wrap"><div class="bar" style="height:${v}%"></div><span>${days[i]}</span></div>`).join("");
+function drawBars(trend) {
+  const values = trend && trend.length ? trend.map(x => Number(x.total || 0)) : [63,78,67,85,71,82,74];
+  const max = Math.max(...values, 1);
+  const labels = trend && trend.length
+    ? trend.map(x => x.date || "")
+    : (lang === "ar" ? ["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"] : ["Sat","Sun","Mon","Tue","Wed","Thu","Fri"]);
+  document.getElementById("productionBars").innerHTML = values.map((v,i) => `<div class="bar-wrap"><div class="bar" style="height:${Math.max(12, (v / max) * 92)}%"></div><span>${labels[i]}</span></div>`).join("");
+}
+
+
+function jsonpRequest(params = {}) {
+  return new Promise((resolve, reject) => {
+    const callbackName = "environJsonp_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+    const url = new URL(apiUrl);
+    Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+    url.searchParams.set("callback", callbackName);
+
+    const script = document.createElement("script");
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error("Dashboard request timeout"));
+    }, 18000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      if (script.parentNode) script.parentNode.removeChild(script);
+      delete window[callbackName];
+    }
+
+    window[callbackName] = data => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("Dashboard request failed"));
+    };
+
+    script.src = url.toString();
+    document.body.appendChild(script);
+  });
+}
+
+function setSyncStatus(key) {
+  const el = document.getElementById("dashboardSyncStatus");
+  if (!el) return;
+  el.textContent = t(key);
+  el.dataset.i18n = key;
+}
+
+function applyDashboardData(data) {
+  if (!data || !data.ok) throw new Error(data && data.error ? data.error : "Invalid dashboard response");
+
+  const s = data.summary || {};
+  const waste = data.waste || {};
+  const supplierRows = data.suppliers || [];
+  const stoppageRows = data.stoppages || [];
+  const tempRows = data.temperatures || [];
+  const trucks = data.trucks || [];
+
+  localStats.trucks = Number(s.trucks_count || 0);
+  localStats.suppliers = new Set((supplierRows || []).map(x => x.supplier).filter(Boolean));
+  localStats.inputKg = Number(s.total_input_kg || 0);
+  localStats.productionKg = Number(s.net_flakes_kg || s.total_production_kg || 0);
+  localStats.wasteKg = Number(s.total_waste_kg || 0);
+  localStats.rawCost = Number(s.raw_material_cost || 0);
+  localStats.extraCost = Number(s.extra_cost || 0);
+  localStats.downtimeMin = Number(s.total_downtime_minutes || 0);
+  localStats.supplierMap = {};
+
+  updateKPIs();
+
+  if (s.cost_per_ton !== undefined) {
+    document.getElementById("kpiCost").textContent = "EGP " + format(Number(s.cost_per_ton || 0));
+  }
+  if (s.actual_yield_percent !== undefined) {
+    document.getElementById("kpiYield").textContent = Number(s.actual_yield_percent || 0).toFixed(1) + "%";
+  }
+
+  document.getElementById("wPP").textContent = format(Number(waste.pp_kg || 0));
+  document.getElementById("wChamber").textContent = format(Number(waste.chamber_bags_kg || 0));
+  document.getElementById("wDust").textContent = format(Number(waste.dust_kg || 0));
+  document.getElementById("wOther").textContent = format(Number(waste.other_kg || 0));
+  document.getElementById("donutValue").textContent = format(Number(s.total_waste_kg || 0));
+
+  renderSupplierRows(supplierRows);
+  renderTruckRows(trucks);
+  renderStoppageRows(stoppageRows);
+  renderTemperatureRows(tempRows);
+  drawBars(data.production_trend || null);
+
+  setSyncStatus("dashboard_loaded");
+}
+
+function renderSupplierRows(rows) {
+  const tb = document.getElementById("supplierRows");
+  if (!tb) return;
+  if (!rows || !rows.length) {
+    tb.innerHTML = `<tr><td colspan="4">${t("no_data")}</td></tr>`;
+    return;
+  }
+  tb.innerHTML = rows.map(r => `<tr><td>${r.supplier || "-"}</td><td>${format(Number(r.trucks_count || 0))}</td><td>${format(Number(r.net_after_discount_kg || 0))}</td><td>EGP ${format(Number(r.raw_material_cost || 0))}</td></tr>`).join("");
+}
+
+function renderTruckRows(rows) {
+  const tb = document.getElementById("truckRows");
+  if (!tb) return;
+  if (!rows || !rows.length) {
+    tb.innerHTML = `<tr><td colspan="7">${t("no_data")}</td></tr>`;
+    return;
+  }
+  tb.innerHTML = rows.slice(-20).reverse().map(r => `<tr><td>${r.shift_id || ""}</td><td>${r.supplier_name || ""}</td><td>${r.truck_no || ""}</td><td>${r.material_type || ""}</td><td>${format(Number(r.truck_weight_gross_kg || 0))}</td><td>${format(Number(r.truck_weight_tare_kg || 0))}</td><td>${format(Number(r.net_after_discount_kg || 0))}</td></tr>`).join("");
+}
+
+function renderStoppageRows(rows) {
+  const tb1 = document.getElementById("stoppageRows");
+  const tb2 = document.getElementById("stoppageRows2");
+  const simple = !rows || !rows.length
+    ? `<tr><td colspan="4">${t("no_data")}</td></tr>`
+    : rows.slice(-12).reverse().map(r => `<tr><td>${r.shift_id || ""}</td><td>${r.reason_code || ""}</td><td>${format(Number(r.stoppage_duration_minutes || 0))}m</td><td>${r.reason_notes || ""}</td></tr>`).join("");
+  const detailed = !rows || !rows.length
+    ? `<tr><td colspan="6">${t("no_data")}</td></tr>`
+    : rows.slice(-20).reverse().map(r => `<tr><td>${r.shift_id || ""}</td><td>${r.stoppage_start_time || ""}</td><td>${r.stoppage_end_time || ""}</td><td>${r.reason_code || ""}</td><td>${format(Number(r.stoppage_duration_minutes || 0))}m</td><td>${r.reason_notes || ""}</td></tr>`).join("");
+  if (tb1) tb1.innerHTML = simple;
+  if (tb2) tb2.innerHTML = detailed;
+}
+
+function renderTemperatureRows(rows) {
+  const tb = document.getElementById("temperatureRows");
+  if (!tb) return;
+  if (!rows || !rows.length) {
+    tb.innerHTML = `<tr><td colspan="8">${t("no_data")}</td></tr>`;
+    return;
+  }
+  tb.innerHTML = rows.slice(-30).reverse().map(r => `<tr><td>${r.shift_id || ""}</td><td>${r.reading_date || ""}</td><td>${r.reading_time || ""}</td><td>${r.boiler_no || ""}</td><td>${r.zone || ""}</td><td>${r.pv_temperature_c || ""}</td><td>${r.sv_temperature_c || ""}</td><td>${r.current_amp || ""}</td></tr>`).join("");
+}
+
+async function loadDashboardData() {
+  setSyncStatus("dashboard_loading");
+  try {
+    const data = await jsonpRequest({ action: "getDashboardData" });
+    applyDashboardData(data);
+  } catch (err) {
+    console.error(err);
+    setSyncStatus("dashboard_load_error");
+  }
 }
 
 async function submitData(e) {
@@ -1842,6 +2474,7 @@ async function submitData(e) {
     });
     updateLocalStats(currentTab, p);
     toast(t("saved"));
+    setTimeout(loadDashboardData, 1200);
     closeModal();
   } catch(err) {
     console.error(err);
@@ -1880,6 +2513,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => activateTab(tab.dataset.tab)));
   document.getElementById("modalBackdrop").addEventListener("click", e => { if (e.target.id === "modalBackdrop") closeModal(); });
   document.getElementById("dataForm").addEventListener("submit", submitData);
+  document.getElementById("refreshDashboardBtn")?.addEventListener("click", loadDashboardData);
+  loadDashboardData();
+  setInterval(loadDashboardData, 60000);
 });
 </script>
 </body>
