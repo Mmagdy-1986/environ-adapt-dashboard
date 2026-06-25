@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec'; 
+const API_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec';
 
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -36,7 +36,7 @@ const entryTypes = {
   saveShift: { labelAr:'بيانات وردية', labelEn:'Shift', sheet:'Shift Entries', fields:[['date','date'],['shiftType','select:Day,Night'],['shiftStart','time'],['shiftEnd','time'],['workersCount','number'],['factoryName','text'],['factoryOwner','text'],['consumedBalesCount','number'],['producedBagsCount','number'],['avgBagWeightKg','number'],['notes','text']] },
   saveReceiving: { labelAr:'توريد', labelEn:'Receiving', sheet:'Receiving Entries', fields:[['date','date'],['supplierName','text'],['region','text'],['vehicleNumber','text'],['driverName','text'],['balesCount','number'],['pricePerTonThousand','number'],['karteNumber','text'],['grossWeightKg','number'],['tareWeightKg','number'],['discountPercent','number'],['notes','text']] },
   saveDowntime: { labelAr:'توقف', labelEn:'Downtime', sheet:'Downtime Entries', fields:[['date','date'],['stopFromTime','time'],['stopToTime','time'],['downtimeReason','text'],['notes','text']] },
-  saveBoiler: { labelAr:'قراءة غلاية', labelEn:'Boiler', sheet:'Boiler Readings', fields:[['date','date'],['entryTime','time'],['boilerNumber','select:1,2'],['meterNumber','select:1,2,3,4,5,6'],['currentTemperaturePv','number'],['setTemperatureSv','number'],['currentAmpere','number'],['notes','text']] },
+  saveBoiler: { labelAr:'قراءة غلاية', labelEn:'Boiler Batch', sheet:'Boiler Readings', batch:true, fields:[['date','date'],['entryTime','time'],['notes','text']] },
   savePH: { labelAr:'قراءة PH', labelEn:'PH', sheet:'PH Readings', fields:[['date','date'],['entryTime','time'],['area','select:Boiler,Sand Filter,Rinse Tank'],['phValue','number'],['notes','text']] },
   saveWaste: { labelAr:'هالك', labelEn:'Waste', sheet:'Waste Entries', fields:[['date','date'],['sortexWeightKg','number'],['sortexCount','number'],['bigFlexWeightKg','number'],['bigFlexCount','number'],['wireBagWeightKg','number'],['wireBagCount','number'],['brokenCapsLabelsWeightKg','number'],['brokenCapsLabelsCount','number'],['notes','text']] },
   saveSale: { labelAr:'بيع', labelEn:'Sales', sheet:'Sales Entries', fields:[['date','date'],['buyerFactoryName','text'],['buyerFactoryLocation','text'],['vehicleNumber','text'],['driverName','text'],['netTripWeightKg','number'],['discountPercent','number'],['flexPricePerTonThousand','number'],['notes','text']] }
@@ -392,17 +392,104 @@ function closeEntryModal(){ $('#entryModal').classList.remove('open'); $('#formR
 function buildEntryTabs(){ $('#entryTabs').innerHTML = Object.entries(entryTypes).map(([k,e])=>`<button type="button" class="entry-tab ${k===app.activeEntry?'active':''}" data-type="${k}">${app.lang==='ar'?e.labelAr:e.labelEn}</button>`).join(''); $$('.entry-tab').forEach(b=>b.onclick=()=>{app.activeEntry=b.dataset.type; buildEntryTabs(); buildForm();}); }
 function buildForm(){
   const cfg=entryTypes[app.activeEntry];
+  if(app.activeEntry === 'saveBoiler') {
+    buildBoilerBatchForm();
+    return;
+  }
   $('#entryForm').innerHTML = cfg.fields.map(([name,type])=>fieldHtml(name,type)).join('');
   $$('[name=date]').forEach(i=>i.value=today()); $$('[name=entryTime]').forEach(i=>i.value=nowTime());
 }
+
+function buildBoilerBatchForm(){
+  const isAr = app.lang === 'ar';
+  const labels = {
+    date: isAr ? 'التاريخ' : 'Date',
+    time: isAr ? 'الوقت' : 'Time',
+    notes: isAr ? 'ملاحظات' : 'Notes',
+    boiler1: isAr ? 'Boiler 1 / الغلاية 1' : 'Boiler 1',
+    boiler2: isAr ? 'Boiler 2 / الغلاية 2' : 'Boiler 2',
+    meter: isAr ? 'Meter No.' : 'Meter No.',
+    pv: isAr ? 'Current Temperature PV' : 'Current Temperature PV',
+    sv: isAr ? 'Set Temperature SV' : 'Set Temperature SV',
+    current: isAr ? 'Current A' : 'Current A'
+  };
+  const table = (boiler)=>`
+    <div class="boiler-batch-panel ${boiler===1?'active':''}" data-boiler-panel="${boiler}">
+      <div class="boiler-table-title">${boiler===1?labels.boiler1:labels.boiler2}</div>
+      <div class="boiler-table-wrap">
+        <table class="boiler-entry-table">
+          <thead><tr><th>${labels.meter}</th><th>${labels.pv}</th><th>${labels.sv}</th><th>${labels.current}</th></tr></thead>
+          <tbody>
+            ${[1,2,3,4,5,6].map(m=>`
+              <tr>
+                <td class="meter-cell">${m}<input type="hidden" name="boiler${boiler}_meter_${m}" value="${m}"></td>
+                <td><input inputmode="decimal" name="boiler${boiler}_pv_${m}" type="number" step="any"></td>
+                <td><input inputmode="decimal" name="boiler${boiler}_sv_${m}" type="number" step="any"></td>
+                <td><input inputmode="decimal" name="boiler${boiler}_amp_${m}" type="number" step="any"></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  $('#entryForm').innerHTML = `
+    <div class="boiler-fixed-fields">
+      ${fieldHtml('date','date')}
+      ${fieldHtml('entryTime','time')}
+    </div>
+    <div class="boiler-batch-tabs">
+      <button type="button" class="boiler-tab active" data-boiler-tab="1">${labels.boiler1}</button>
+      <button type="button" class="boiler-tab" data-boiler-tab="2">${labels.boiler2}</button>
+    </div>
+    <div class="boiler-batch-grid">${table(1)}${table(2)}</div>
+    <div class="boiler-batch-note">${fieldHtml('notes','text')}</div>
+  `;
+  $$('[name=date]').forEach(i=>i.value=today());
+  $$('[name=entryTime]').forEach(i=>i.value=nowTime());
+  $$('.boiler-tab').forEach(btn=>btn.onclick=()=>{
+    const boiler=btn.dataset.boilerTab;
+    $$('.boiler-tab').forEach(b=>b.classList.toggle('active', b===btn));
+    $$('.boiler-batch-panel').forEach(p=>p.classList.toggle('active', p.dataset.boilerPanel===boiler));
+  });
+}
+
 function fieldHtml(name,type){
   const label=(fieldLabels[name]||[name,name])[app.lang==='ar'?1:0];
   if(type.startsWith('select:')) return `<label class="form-field"><span>${label}</span><select name="${name}">${type.split(':')[1].split(',').map(x=>`<option value="${x}">${x}</option>`).join('')}</select></label>`;
   return `<label class="form-field"><span>${label}</span><input name="${name}" type="${type}" ${type==='number'?'step="any"':''}></label>`;
 }
+function collectBoilerBatchData(){
+  const form = $('#entryForm');
+  const fd = new FormData(form);
+  const date = fd.get('date') || today();
+  const entryTime = fd.get('entryTime') || nowTime();
+  const notes = fd.get('notes') || '';
+  const readings = [];
+  [1,2].forEach(boilerNumber=>{
+    [1,2,3,4,5,6].forEach(meterNumber=>{
+      const pv = fd.get(`boiler${boilerNumber}_pv_${meterNumber}`);
+      const sv = fd.get(`boiler${boilerNumber}_sv_${meterNumber}`);
+      const amp = fd.get(`boiler${boilerNumber}_amp_${meterNumber}`);
+      const hasValue = [pv,sv,amp].some(v=>String(v||'').trim() !== '');
+      if(hasValue){
+        readings.push({
+          boilerNumber, meterNumber,
+          currentTemperaturePv: pv === '' ? '' : Number(pv),
+          setTemperatureSv: sv === '' ? '' : Number(sv),
+          currentAmpere: amp === '' ? '' : Number(amp)
+        });
+      }
+    });
+  });
+  return { date, entryTime, notes, readings };
+}
 async function saveEntry(){
-  const data={}; new FormData($('#entryForm')).forEach((v,k)=>data[k]=v);
+  const data = app.activeEntry === 'saveBoiler' ? collectBoilerBatchData() : {};
+  if(app.activeEntry !== 'saveBoiler') new FormData($('#entryForm')).forEach((v,k)=>data[k]=v);
   Object.keys(data).forEach(k=>{ if(data[k]!=='' && !isNaN(data[k]) && !['vehicleNumber','karteNumber','driverName','factoryName','factoryOwner','supplierName','region','buyerFactoryName','buyerFactoryLocation','downtimeReason','notes','area'].includes(k)) data[k]=Number(data[k]); });
+  if(app.activeEntry === 'saveBoiler' && (!data.readings || !data.readings.length)) {
+    toast(app.lang==='ar' ? 'أدخل قراءة واحدة على الأقل' : 'Enter at least one boiler reading', 'error');
+    return;
+  }
   enrich(app.activeEntry, data);
   setStatus('loading','Uploading...'); $('#saveEntry').disabled=true;
   try{
@@ -422,13 +509,27 @@ function enrich(action,data){
     data.netWeightKg = n(data.grossWeightKg)-n(data.tareWeightKg); data.discountWeightKg=data.netWeightKg*n(data.discountPercent)/100; data.netWeightAfterDiscountKg=data.netWeightKg-data.discountWeightKg; data.tripPriceBeforeDiscount=data.netWeightKg/1000*n(data.pricePerTonThousand)*1000; data.tripPriceAfterDiscount=data.netWeightAfterDiscountKg/1000*n(data.pricePerTonThousand)*1000; data.avgBaleWeightKg=n(data.balesCount)?data.netWeightKg/n(data.balesCount):0;
   }
   if(action==='saveDowntime') data.downtimeMinutes = minutesBetween(data.stopFromTime,data.stopToTime);
-  if(action==='saveBoiler') data.temperatureDifference = n(data.currentTemperaturePv)-n(data.setTemperatureSv);
+  if(action==='saveBoiler') {
+    if(Array.isArray(data.readings)) {
+      data.readings = data.readings.map(r=>({...r, temperatureDifference:n(r.currentTemperaturePv)-n(r.setTemperatureSv)}));
+    } else {
+      data.temperatureDifference = n(data.currentTemperaturePv)-n(data.setTemperatureSv);
+    }
+  }
   if(action==='saveWaste') { data.totalWasteWeightKg=n(data.sortexWeightKg)+n(data.bigFlexWeightKg)+n(data.wireBagWeightKg)+n(data.brokenCapsLabelsWeightKg); data.totalWasteCount=n(data.sortexCount)+n(data.bigFlexCount)+n(data.wireBagCount)+n(data.brokenCapsLabelsCount); }
   if(action==='saveSale') { data.discountWeightKg=n(data.netTripWeightKg)*n(data.discountPercent)/100; data.netWeightAfterDiscountKg=n(data.netTripWeightKg)-data.discountWeightKg; data.salePriceBeforeDiscount=n(data.netTripWeightKg)/1000*n(data.flexPricePerTonThousand)*1000; data.salePriceAfterDiscount=data.netWeightAfterDiscountKg/1000*n(data.flexPricePerTonThousand)*1000; data.priceDifference=data.salePriceBeforeDiscount-data.salePriceAfterDiscount; }
   if(action==='saveShift') data.netProductionKg=n(data.producedBagsCount)*n(data.avgBagWeightKg);
 }
 function minutesBetween(a,b){ if(!a||!b) return 0; const [ah,am]=a.split(':').map(Number), [bh,bm]=b.split(':').map(Number); let s=ah*60+am, e=bh*60+bm; if(e<s)e+=1440; return e-s; }
-function addLocal(action,data,id){ const map={saveShift:'shifts',saveReceiving:'receivings',saveDowntime:'downtimes',saveBoiler:'boilers',savePH:'ph',saveWaste:'waste',saveSale:'sales'}; app.data[map[action]].push({...data, id:id||data.id}); saveLocal(); }
+function addLocal(action,data,id){
+  const map={saveShift:'shifts',saveReceiving:'receivings',saveDowntime:'downtimes',saveBoiler:'boilers',savePH:'ph',saveWaste:'waste',saveSale:'sales'};
+  if(action==='saveBoiler' && Array.isArray(data.readings)){
+    data.readings.forEach((r,idx)=>app.data.boilers.push({...r, date:data.date, entryTime:data.entryTime, notes:data.notes||'', id:`${id||data.id||'LOCAL'}-${idx+1}`}));
+  } else {
+    app.data[map[action]].push({...data, id:id||data.id});
+  }
+  saveLocal();
+}
 function queuePending(action,data){ const q=JSON.parse(localStorage.getItem('flakes_pending')||'[]'); q.push({action,data,createdAt:new Date().toISOString()}); localStorage.setItem('flakes_pending',JSON.stringify(q)); }
 async function loadFromApi(){
   try{
