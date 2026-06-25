@@ -1,21 +1,29 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flakes Dashboard | Environ Adapt</title>
-  <meta name="description" content="Professional PET flakes washing line dashboard for Environ Adapt: shifts, receiving, production, yield, boilers, PH, waste, downtime, and sales synced with Google Sheets." />
+  <title>Environ Adapt Operations Dashboard</title>
+  <meta name="description" content="Professional PET flakes washing operations dashboard for receiving, production, yield, waste, downtime, PH and boiler monitoring, fully synced with Google Sheets." />
   <meta name="theme-color" content="#00c853" />
-  <meta property="og:title" content="Flakes Dashboard | Environ Adapt" />
-  <meta property="og:description" content="Interactive PET Flex washing dashboard connected to Google Sheets with production, yield, waste, downtime, PH, boiler readings, receiving and sales analytics." />
+  <link rel="canonical" href="https://mmagdy-1986.github.io/environ-adapt-dashboard/" />
+
+  <meta property="og:title" content="Environ Adapt Operations Dashboard" />
+  <meta property="og:description" content="Professional PET flakes washing operations dashboard for receiving, production, yield, waste, downtime, PH and boiler monitoring, fully synced with Google Sheets." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://USERNAME.github.io/flakes-dashboard/assets/hero-environ.jpg" />
+  <meta property="og:url" content="https://mmagdy-1986.github.io/environ-adapt-dashboard/" />
+  <meta property="og:image" content="https://mmagdy-1986.github.io/environ-adapt-dashboard/assets/preview.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Flakes Dashboard | Environ Adapt" />
-  <meta name="twitter:description" content="Interactive PET Flex washing dashboard connected to Google Sheets." />
-  <meta name="twitter:image" content="assets/hero-environ.jpg" />
-  <link rel="icon" type="image/png" href="assets/dawar-icon.jpg" />
-  <link rel="apple-touch-icon" href="assets/dawar-icon.jpg" />
+  <meta name="twitter:title" content="Environ Adapt Operations Dashboard" />
+  <meta name="twitter:description" content="Professional PET flakes washing operations dashboard for receiving, production, yield, waste, downtime, PH and boiler monitoring, fully synced with Google Sheets." />
+  <meta name="twitter:image" content="https://mmagdy-1986.github.io/environ-adapt-dashboard/assets/preview.jpg" />
+
+  <link rel="icon" type="image/png" href="assets/favicon-32.png" />
+  <link rel="apple-touch-icon" href="assets/favicon-180.png" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -24,7 +32,7 @@
   <div id="app" class="app-shell">
     <aside class="sidebar" id="sidebar">
       <div class="brand-box">
-        <img src="assets/logo-environ-adapt.png" alt="Environ Adapt" class="brand-logo" />
+        <img src="assets/logo-environ-adapt-light.png" data-light-logo="assets/logo-environ-adapt-light.png" data-dark-logo="assets/logo-environ-adapt-white.png" alt="Environ Adapt" class="brand-logo" />
         <div class="brand-text">
           <strong>Flakes</strong>
           <span data-i18n="sidebarSubtitle">PET Washing Dashboard</span>
@@ -32,10 +40,10 @@
       </div>
       <button class="side-toggle" id="toggleSidebar" title="Toggle sidebar">☰</button>
       <nav class="nav-list">
-        <button class="nav-item active" data-page="overview"><span>📊</span><b data-i18n="overview">الملخص العام</b></button>
-        <button class="nav-item" data-page="supply"><span>🚚</span><b data-i18n="supply">التوريد والإنتاج</b></button>
-        <button class="nav-item" data-page="process"><span>🌡️</span><b data-i18n="process">التشغيل و PH والغلايات</b></button>
-        <button class="nav-item" data-page="waste"><span>♻️</span><b data-i18n="waste">الهالك والتوقفات</b></button>
+        <button class="nav-item active" data-page="overview"><span>📊</span><b data-i18n="overview">Overview</b></button>
+        <button class="nav-item" data-page="supply"><span>🚚</span><b data-i18n="supply">Receiving & Production</b></button>
+        <button class="nav-item" data-page="process"><span>🌡️</span><b data-i18n="process">Process, PH & Boilers</b></button>
+        <button class="nav-item" data-page="waste"><span>♻️</span><b data-i18n="waste">Waste & Downtime</b></button>
       </nav>
       <div class="sidebar-footer">
         <img src="assets/dawar-logo.jpg" alt="Dawar by Environ Adapt" />
@@ -46,36 +54,36 @@
     <main class="main">
       <header class="topbar">
         <div>
-          <h1 id="pageTitle" data-i18n="overview">الملخص العام</h1>
+          <h1 id="pageTitle" data-i18n="overview">Overview</h1>
           <p data-i18n="pageDescription">Dashboard for PET flakes washing line operations</p>
         </div>
         <div class="top-actions">
           <button class="ghost-btn" id="languageBtn">AR | EN</button>
           <button class="ghost-btn" id="themeBtn">🌙</button>
-          <button class="primary-btn" id="openEntryBtn">+ <span data-i18n="entry">إدخال</span></button>
-          <button class="ghost-btn" id="exportBtn" data-i18n="exportExcel">تصدير Excel</button>
+          <button class="primary-btn" id="openEntryBtn">+ <span data-i18n="entry">Entry</span></button>
+          <button class="ghost-btn" id="exportBtn" data-i18n="exportExcel">Export Excel</button>
         </div>
       </header>
 
       <section class="filters-card">
         <div class="filter-group">
-          <label data-i18n="fromDate">من تاريخ</label>
+          <label data-i18n="fromDate">From Date</label>
           <input type="date" id="dateFrom" />
         </div>
         <div class="filter-group">
-          <label data-i18n="toDate">إلى تاريخ</label>
+          <label data-i18n="toDate">To Date</label>
           <input type="date" id="dateTo" />
         </div>
         <div class="filter-group">
-          <label data-i18n="shift">الوردية</label>
+          <label data-i18n="shift">Shift</label>
           <select id="shiftFilter">
-            <option value="all" data-i18n="all">الكل</option>
-            <option value="Day" data-i18n="day">نهار</option>
-            <option value="Night" data-i18n="night">ليل</option>
+            <option value="all" data-i18n="all">All</option>
+            <option value="Day" data-i18n="day">Day</option>
+            <option value="Night" data-i18n="night">Night</option>
           </select>
         </div>
-        <button class="ghost-btn" id="refreshBtn" data-i18n="refresh">تحديث</button>
-        <div class="sync-status" id="syncStatus"><span class="dot"></span><span data-i18n="ready">جاهز</span></div>
+        <button class="ghost-btn" id="refreshBtn" data-i18n="refresh">Refresh</button>
+        <div class="sync-status" id="syncStatus"><span class="dot"></span><span data-i18n="ready">Ready</span></div>
       </section>
 
       <section id="overview" class="page active-page"></section>
@@ -89,16 +97,16 @@
     <div class="modal">
       <div class="modal-head">
         <div>
-          <h2 data-i18n="newEntry">إدخال بيانات جديدة</h2>
-          <p data-i18n="entryHelp">اختر نوع الإدخال وسيتم رفع البيانات إلى Google Sheets.</p>
+          <h2 data-i18n="newEntry">New Data Entry</h2>
+          <p data-i18n="entryHelp">Choose the entry type. Data will be uploaded to Google Sheets.</p>
         </div>
         <button class="close-btn" id="closeEntry">×</button>
       </div>
       <div class="entry-tabs" id="entryTabs"></div>
       <form id="entryForm" class="entry-form"></form>
       <div class="modal-actions">
-        <button class="ghost-btn" id="cancelEntry" type="button" data-i18n="cancel">إلغاء</button>
-        <button class="primary-btn" id="saveEntry" type="button"><span data-i18n="save">حفظ</span></button>
+        <button class="ghost-btn" id="cancelEntry" type="button" data-i18n="cancel">Cancel</button>
+        <button class="primary-btn" id="saveEntry" type="button"><span data-i18n="save">Save</span></button>
       </div>
       <div id="formResult" class="form-result"></div>
     </div>
