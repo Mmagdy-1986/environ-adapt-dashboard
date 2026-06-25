@@ -344,3 +344,88 @@ body.dark .panel table tbody tr:hover { background: rgba(0, 230, 118, .12); }
 .active-filter-chip { border: 1px solid rgba(0,200,83,.28); box-shadow: 0 8px 18px rgba(0,120,50,.08); }
 .empty-state { min-height: 170px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-weight:700; border:1px dashed var(--border); border-radius:18px; background:rgba(0,200,83,.035); }
 body.dark .empty-state { background:rgba(0,230,118,.045); }
+
+/* v7 boiler batch entry form */
+.boiler-fixed-fields {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 12px;
+}
+.boiler-batch-tabs {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.boiler-tab {
+  border: 1px solid var(--line);
+  background: var(--card-2);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.boiler-tab.active {
+  border-color: rgba(0, 200, 83, .45);
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #041109;
+}
+.boiler-batch-grid,
+.boiler-batch-note {
+  grid-column: 1 / -1;
+}
+.boiler-batch-panel { display: none; }
+.boiler-batch-panel.active { display: block; }
+.boiler-table-title {
+  font-weight: 900;
+  margin: 8px 0 10px;
+  color: var(--text);
+}
+.boiler-table-wrap {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--card);
+}
+.boiler-entry-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.boiler-entry-table th,
+.boiler-entry-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 10px;
+  text-align: center;
+}
+.boiler-entry-table th {
+  font-size: 12px;
+  color: var(--muted);
+  background: rgba(0, 200, 83, .07);
+}
+body.dark .boiler-entry-table th { background: rgba(0, 230, 118, .08); }
+.boiler-entry-table tr:last-child td { border-bottom: 0; }
+.boiler-entry-table input {
+  width: 100%;
+  min-width: 90px;
+  border: 1px solid var(--line);
+  background: var(--input);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+  font-weight: 700;
+}
+.meter-cell {
+  width: 90px;
+  font-weight: 900;
+  color: var(--primary);
+}
+@media (max-width: 760px) {
+  .boiler-fixed-fields { grid-template-columns: 1fr; }
+  .boiler-entry-table th,
+  .boiler-entry-table td { padding: 7px; }
+  .boiler-entry-table input { min-width: 70px; padding: 9px 8px; }
+}
