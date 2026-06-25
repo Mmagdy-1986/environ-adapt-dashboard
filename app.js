@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec'; 
 const STORAGE_KEY = 'environAdaptDashboardStateV9';
 const DATE_FMT = new Intl.DateTimeFormat('en-CA');
 const COLORS = { green:'#08a653', green2:'#39f76c', dark:'#04733d', danger:'#ef4444', warn:'#f59e0b', blue:'#1e88e5', grey:'#cbd5e1' };
