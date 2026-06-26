@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec'; 
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec';
 const STORAGE_KEY = 'environAdaptDashboardStateV9';
 const DATE_FMT = new Intl.DateTimeFormat('en-CA');
 const COLORS = { green:'#08a653', green2:'#39f76c', dark:'#04733d', danger:'#ef4444', warn:'#f59e0b', blue:'#1e88e5', grey:'#cbd5e1' };
@@ -78,17 +78,29 @@ function applyState(){
 }
 
 async function loadFromSheets(){
-  setStatus('Loading...', 'pending');
+  setStatus('Checking Google Sheets...', 'pending');
   try{
-    const data = await jsonp(`${APPS_SCRIPT_URL}?action=getDashboardData`);
-    raw = normalizePayload(data && data.data ? data.data : data);
-    setStatus('Ready', 'ok'); toast('Data synced from Google Sheets','good');
+    const test = await apiRequest('testConnection', {});
+    if(!test || !test.ok) throw new Error((test && test.error) || 'Connection test failed');
+    const data = await apiRequest('getDashboardData', {});
+    if(!data || !data.ok) throw new Error((data && data.error) || 'Could not read dashboard data');
+    raw = normalizePayload(data.data || data);
+    setStatus('Ready', 'ok');
+    toast(`Synced with Google Sheets (${test.spreadsheet || 'connected'})`, 'good');
   }catch(err){
-    console.warn(err); setStatus('Offline / local mode','bad'); toast('Could not read Google Sheets. Check Web App deployment.','bad');
+    console.error('Google Sheets read failed:', err);
+    setStatus('Google Sheets error', 'bad');
+    toast('Google Sheets connection failed. Open Apps Script deployment and permissions.', 'bad');
     raw = readLocalFallback();
   }
   renderAll();
 }
+function apiRequest(action, data){
+  const payload = encodeURIComponent(JSON.stringify({ action, data: data || {} }));
+  const url = `${APPS_SCRIPT_URL}?payload=${payload}`;
+  return jsonp(url);
+}
+
 function jsonp(url){
   return new Promise((resolve,reject)=>{
     const cb = `jsonp_${Date.now()}_${Math.round(Math.random()*9999)}`; const sep=url.includes('?')?'&':'?';
@@ -242,9 +254,20 @@ async function saveEntry(e){ e.preventDefault(); const fd=new FormData(e.target)
   catch(err){ console.error(err); writeLocalFallback(action,payload); toast('Google Sheets save failed. Saved locally as backup.','bad'); raw=readLocalFallback(); renderAll(); }
 }
 async function saveToSheets(action,data){
-  const body={action,data};
-  try{ const res=await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}); const txt=await res.text(); const json=JSON.parse(txt); if(!json.ok) throw new Error(json.error||'Save failed'); return json; }catch(e){
-    const payload=encodeURIComponent(JSON.stringify(body)); const json=await jsonp(`${APPS_SCRIPT_URL}?action=${encodeURIComponent(action)}&payload=${payload}`); if(!json.ok) throw new Error(json.error||'Save failed'); return json;
+  // CORS-safe Google Apps Script connector.
+  // We use JSONP GET for GitHub Pages compatibility.
+  // Boiler batch is split into single-row saves to avoid long URL limits.
+  if(action === 'saveBoilerBatch' && Array.isArray(data)){
+    const ids = [];
+    for(const item of data){
+      const res = await apiRequest('saveBoiler', item);
+      if(!res || !res.ok) throw new Error((res && res.error) || 'Boiler save failed');
+      if(res.id) ids.push(res.id);
+    }
+    return { ok:true, count:ids.length, ids };
   }
+  const json = await apiRequest(action, data);
+  if(!json || !json.ok) throw new Error((json && json.error) || 'Save failed');
+  return json;
 }
 function exportCurrentPage(){ const tables={overview:$('#insightsTable'),receiving:$('#receivingTable'),process:$('#processTable'),waste:$('#wasteTable'),sales:$('#salesTable'),reports:$('#reportsTable')}; const table=tables[state.page]||$('#reportsTable'); const rows=[...table.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>`"${td.textContent.replace(/"/g,'""')}"`).join(',')); const blob=new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`environ-adapt-${state.page}.csv`; a.click(); URL.revokeObjectURL(a.href); }
