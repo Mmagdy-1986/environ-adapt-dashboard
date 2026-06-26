@@ -183,7 +183,7 @@ function cd(){
   Chart.defaults.borderColor=state.dark?'#1e3327':'#e0ebe3';
   Chart.defaults.plugins.legend.labels.usePointStyle=true;
   Chart.defaults.plugins.legend.labels.pointStyle='circle';
-  Chart.defaults.plugins.legend.labels.padding=14;
+  Chart.defaults.plugins.legend.labels.padding=100;
   Chart.defaults.plugins.tooltip.backgroundColor=state.dark?'#0e1a12':'#0a1a10';
   Chart.defaults.plugins.tooltip.titleColor='#fff';
   Chart.defaults.plugins.tooltip.bodyColor='rgba(255,255,255,0.75)';
@@ -663,11 +663,11 @@ function renderQuality(){
       ${gauge('Metal / Wire',metalPct,1)}
       ${gauge('Color / Big Flex',colorPct,3)}
       ${gauge('Other / Caps',otherPct,2)}
-      ${gauge('Boiler PH',phAvg(phByArea.Boiler),14,'pH')}
+      ${gauge('Boiler PH',phAvg(phByArea.Boiler),100,'pH')}
     </div>
     <div class="gauge-grid" style="grid-template-columns:repeat(3,1fr)">
-      ${gauge('Sand Filter PH',phAvg(phByArea.Sand),14,'pH')}
-      ${gauge('Rinse Tank PH',phAvg(phByArea.Rinse),14,'pH')}
+      ${gauge('Sand Filter PH',phAvg(phByArea.Sand),100,'pH')}
+      ${gauge('Rinse Tank PH',phAvg(phByArea.Rinse),100,'pH')}
       ${gauge('Total Contamination %',sortexPct+metalPct+colorPct+otherPct,10)}
     </div>
   </div>
@@ -774,7 +774,7 @@ function drawPHTrendInto(chartId,area='all'){
   if(!rows.length||!labels.length){ec(chartId,'No PH readings');return;}
   const colors=[C.green,C.blue,C.amber];
   const ds=areas.map((a,i)=>({label:a,data:labels.map(l=>{const v=rows.filter(r=>timeLabel(rowVal(r,['Entry Time']))===l&&String(rowVal(r,['Area'])).toLowerCase()===a.toLowerCase()).map(r=>num(rowVal(r,['PH Reading'])));return v.length?v.reduce((x,y)=>x+y)/v.length:null;}),color:colors[i]}));
-  drawLine(chartId,labels,ds,{yOpts:{min:0,max:14}});
+  drawLine(chartId,labels,ds,{yOpts:{min:0,max:100}});
 }
 function drawBoilerTrendInto(chartId){
   const bs=$('#boilerSel')?.value||'all',ms=$('#meterSel')?.value||'all';
@@ -880,7 +880,7 @@ function phBatchForm(d,t){
   <label>Time<input name="phTime" type="time" value="${state.phDraft.entryTime}"></label>
   <div class="boiler-batch"><table class="boiler-table">
     <thead><tr><th>Area</th><th>PH Reading</th><th>Notes</th></tr></thead>
-    <tbody>${areas.map(a=>{const v=(state.phDraft[a]||{});return `<tr><td><b>${a}</b></td><td><input data-ph-area="${a}" data-ph-field="phReading" type="number" step="0.01" min="0" max="14" placeholder="0–14" value="${v.phReading||''}"></td><td><input data-ph-area="${a}" data-ph-field="notes" type="text" placeholder="Optional…" value="${v.notes||''}"></td></tr>`;}).join('')}</tbody>
+    <tbody>${areas.map(a=>{const v=(state.phDraft[a]||{});return `<tr><td><b>${a}</b></td><td><input data-ph-area="${a}" data-ph-field="phReading" type="number" step="0.01" min="0" max="100" placeholder="0–100" value="${v.phReading||''}"></td><td><input data-ph-area="${a}" data-ph-field="notes" type="text" placeholder="Optional…" value="${v.notes||''}"></td></tr>`;}).join('')}</tbody>
   </table></div>`;
 }
 function utilitiesForm(d,t){
