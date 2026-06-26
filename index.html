@@ -1,105 +1,101 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Environ Adapt Operations Dashboard</title>
-  <meta name="description" content="Premium PET flakes washing operations dashboard for receiving, production, yield, PH, boilers, waste, downtime and sales tracking." />
+  <meta name="description" content="PET flakes washing operations dashboard for receiving, production, yield, waste, downtime, PH and boiler monitoring." />
   <meta property="og:title" content="Environ Adapt Operations Dashboard" />
-  <meta property="og:description" content="Professional PET flakes washing intelligence dashboard connected to Google Sheets." />
-  <meta property="og:image" content="https://mmagdy-1986.github.io/environ-adapt-dashboard/assets/preview.jpg" />
-  <meta property="og:url" content="https://mmagdy-1986.github.io/environ-adapt-dashboard/" />
+  <meta property="og:description" content="Live PET flakes washing operations dashboard connected to Google Sheets." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mmagdy-1986.github.io/environ-adapt-dashboard/" />
+  <meta property="og:image" content="https://mmagdy-1986.github.io/environ-adapt-dashboard/assets/preview.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Environ Adapt Operations Dashboard" />
-  <meta name="twitter:description" content="PET flakes washing, yield, PH, boilers, waste and downtime intelligence." />
   <meta name="twitter:image" content="https://mmagdy-1986.github.io/environ-adapt-dashboard/assets/preview.jpg" />
-  <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" href="assets/favicon-32.png" />
   <link rel="apple-touch-icon" href="assets/favicon-180.png" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
-  <div class="app-shell" id="appShell">
-    <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+  <div id="app" class="app-shell">
+    <aside id="sidebar" class="sidebar">
+      <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">‹</button>
       <div class="brand-block">
-        <img class="brand-logo light-logo" src="assets/logo-environ-adapt-light.png" alt="Environ Adapt" />
-        <img class="brand-logo dark-logo" src="assets/logo-environ-adapt-white.png" alt="Environ Adapt" />
-        <button class="collapse-btn" id="collapseBtn" type="button" aria-label="Collapse sidebar">‹</button>
-        <div class="brand-text">
+        <picture>
+          <source srcset="assets/logo-environ-adapt-white.png" media="(prefers-color-scheme: dark)">
+          <img id="brandLogo" class="brand-logo" src="assets/logo-environ-adapt-light.png" alt="Environ Adapt" />
+        </picture>
+        <div class="brand-copy">
           <h2>Flakes</h2>
           <p>PET Washing Line Dashboard</p>
         </div>
       </div>
-      <nav class="nav-list" id="navList">
-        <button class="nav-item active" data-page="overview"><span>⌂</span><b data-i18n="navOverview">Overview</b></button>
-        <button class="nav-item" data-page="receiving"><span>▣</span><b data-i18n="navReceiving">Receiving & Production</b></button>
-        <button class="nav-item" data-page="process"><span>◌</span><b data-i18n="navProcess">Process, PH & Boilers</b></button>
-        <button class="nav-item" data-page="waste"><span>♻</span><b data-i18n="navWaste">Waste & Downtime</b></button>
-        <button class="nav-item" data-page="sales"><span>↗</span><b data-i18n="navSales">Sales & Export</b></button>
-        <button class="nav-item" data-page="reports"><span>▤</span><b data-i18n="navReports">Reports</b></button>
+      <nav class="nav-list" aria-label="Dashboard sections">
+        <button class="nav-item active" data-page="overview"><span>⌂</span><b data-i18n="overview">Overview</b></button>
+        <button class="nav-item" data-page="receiving"><span>▣</span><b data-i18n="receiving">Receiving & Production</b></button>
+        <button class="nav-item" data-page="process"><span>◌</span><b data-i18n="process">Process, PH & Boilers</b></button>
+        <button class="nav-item" data-page="waste"><span>♻</span><b data-i18n="waste">Waste & Downtime</b></button>
+        <button class="nav-item" data-page="sales"><span>↗</span><b data-i18n="sales">Sales & Export</b></button>
+        <button class="nav-item" data-page="reports"><span>▤</span><b data-i18n="reports">Reports</b></button>
       </nav>
       <div class="mission-card">
-        <div class="mission-art"><img src="assets/hero-environ.jpg" alt="Sustainable operations" /></div>
-        <h3 data-i18n="missionTitle">Reducing waste, maximizing recovery</h3>
-        <p data-i18n="missionBody">Sustainable solutions for cleaner PET washing operations.</p>
-      </div>
-      <div class="dawar-block">
+        <div class="mission-art"></div>
         <img class="dawar-logo" src="assets/dawar-icon-green.png" alt="Dawar" />
-        <div><strong>DAWAR</strong><small data-i18n="dawarLine">Turning waste into measurable value</small></div>
+        <h3>DAWAR</h3>
+        <p>Turning waste into measurable value</p>
       </div>
-      <div class="sync-row"><span class="dot online"></span><span id="syncLabel">Live from Google Sheets</span></div>
+      <div class="sidebar-status"><span class="dot"></span><span id="sideStatus">Synced with Google Sheets</span></div>
     </aside>
 
-    <main class="main" id="main">
+    <main class="main-content">
       <header class="topbar">
         <div class="title-area">
           <h1 id="pageTitle">Environ Adapt Operations Dashboard</h1>
-          <p id="pageSubtitle">PET Flakes Washing Intelligence</p>
-          <span class="live-pill"><span class="dot online"></span><span data-i18n="liveFromSheets">Live from Google Sheets</span></span>
+          <p id="pageSubTitle">PET Flakes Washing Intelligence</p>
+          <span class="live-pill"><span class="dot"></span> <span id="liveText">Live from Google Sheets</span></span>
         </div>
         <div class="toolbar">
-          <label><span data-i18n="dateFrom">Date From</span><input type="date" id="dateFrom" /></label>
-          <label><span data-i18n="dateTo">Date To</span><input type="date" id="dateTo" /></label>
-          <label><span data-i18n="shift">Shift</span><select id="shiftFilter"><option value="all">All Shifts</option><option value="Day">Day</option><option value="Night">Night</option></select></label>
-          <button class="btn ghost" id="refreshBtn" type="button">⟳ <span data-i18n="refresh">Refresh</span></button>
-          <button class="btn primary" id="entryBtn" type="button">+ <span data-i18n="newEntry">New Entry</span></button>
-          <button class="btn ghost" id="exportBtn" type="button">▣ <span data-i18n="exportExcel">Export Excel</span></button>
-          <button class="btn icon" id="themeBtn" type="button" aria-label="Toggle dark mode">☾</button>
-          <button class="btn ghost" id="langBtn" type="button">AR | <b>EN</b></button>
-          <span class="status-pill"><span class="dot online"></span><span id="connectionStatus">Ready</span></span>
+          <label>Date From<input id="dateFrom" type="date" /></label>
+          <label>Date To<input id="dateTo" type="date" /></label>
+          <label>Shift<select id="shiftFilter"><option value="all">All Shifts</option><option value="Day">Day</option><option value="Night">Night</option></select></label>
+          <button id="refreshBtn" class="btn ghost">⟳ Refresh</button>
+          <button id="newEntryBtn" class="btn primary">+ New Entry</button>
+          <button id="exportBtn" class="btn ghost">▣ Export Excel</button>
+          <button id="themeBtn" class="btn icon">☾</button>
+          <button id="langBtn" class="btn ghost">AR | EN</button>
+          <span id="connectionState" class="state-pill"><span class="dot"></span> Ready</span>
         </div>
       </header>
 
-      <div class="active-filter hidden" id="activeFilter"><span id="activeFilterText"></span><button id="clearFilterBtn" type="button">Clear Filter</button></div>
-
-      <section class="page active" id="page-overview">
-        <div class="kpi-grid" id="overviewKpis"></div>
-        <div class="content-grid overview-grid">
-          <article class="panel span-4"><div class="panel-head"><h3>Production Balance (MT)</h3></div><div class="flow-balance" id="productionFlow"></div></article>
-          <article class="panel span-4"><div class="panel-head"><h3>Production Trend (MT)</h3><select id="prodTrendRange"><option>Daily</option><option>Weekly</option></select></div><canvas id="productionTrendChart"></canvas></article>
-          <article class="panel span-4"><div class="panel-head"><h3>Waste by Type (MT)</h3></div><canvas id="wasteTypeChart"></canvas></article>
-          <article class="panel span-6"><div class="panel-head"><h3>PH Trend by Area (by Hour)</h3><div class="chip-row" id="phChips"></div></div><canvas id="phTrendChart"></canvas></article>
-          <article class="panel span-6"><div class="panel-head"><h3>Boiler Monitoring (PV / SV)</h3><div class="boiler-filters"><select id="boilerFilter"><option value="all">All Boilers</option><option value="1">Boiler 1</option><option value="2">Boiler 2</option></select><select id="meterFilter"><option value="all">All Meters</option></select><div class="chip-row"><button class="mini-chip active" data-signal="pv">PV</button><button class="mini-chip active" data-signal="sv">SV</button><button class="mini-chip" data-signal="a">Current A</button></div></div></div><div class="meter-cards" id="meterCards"></div><canvas id="boilerChart"></canvas></article>
-          <article class="panel span-8"><div class="panel-head"><h3>Waste & Downtime Insights</h3></div><div class="table-wrap"><table id="insightsTable"></table></div></article>
-          <article class="panel goal span-4"><div class="goal-icon">♻</div><h3>Our Goal</h3><p>Maximize resource efficiency, ensure quality, and minimize environmental impact through intelligent operations.</p><div class="mini-metrics" id="bottomMetrics"></div></article>
-        </div>
+      <section id="activeFilterBar" class="filter-bar hidden">
+        <span id="activeFilterText"></span>
+        <button id="clearChartFilter" class="btn small">Clear Filter</button>
       </section>
 
-      <section class="page" id="page-receiving"><div class="kpi-grid" id="receivingKpis"></div><div class="content-grid"><article class="panel span-6"><div class="panel-head"><h3>Receiving by Supplier</h3></div><canvas id="supplierChart"></canvas></article><article class="panel span-6"><div class="panel-head"><h3>Production by Shift</h3></div><canvas id="productionShiftChart"></canvas></article><article class="panel span-12"><div class="panel-head"><h3>Receiving & Production Table</h3></div><div class="table-wrap"><table id="receivingTable"></table></div></article></div></section>
-      <section class="page" id="page-process"><div class="kpi-grid" id="processKpis"></div><div class="content-grid"><article class="panel span-12"><div class="panel-head"><h3>Boiler PV / SV / Current A Trend</h3><div class="boiler-filters"><select id="processBoilerFilter"><option value="all">All Boilers</option><option value="1">Boiler 1</option><option value="2">Boiler 2</option></select><select id="processMeterFilter"><option value="all">All Meters</option></select></div></div><div class="boiler-split" id="boilerSplit"></div><canvas id="processBoilerChart"></canvas></article><article class="panel span-12"><div class="panel-head"><h3>PH Trend by Hour</h3><div class="chip-row" id="processPhChips"></div></div><canvas id="processPhChart"></canvas></article><article class="panel span-12"><div class="panel-head"><h3>Process Readings Table</h3></div><div class="table-wrap"><table id="processTable"></table></div></article></div></section>
-      <section class="page" id="page-waste"><div class="kpi-grid" id="wasteKpis"></div><div class="content-grid"><article class="panel span-5"><div class="panel-head"><h3>Waste by Type</h3></div><canvas id="wasteDonutPageChart"></canvas></article><article class="panel span-7"><div class="panel-head"><h3>Downtime by Reason</h3></div><canvas id="downtimeReasonChart"></canvas></article><article class="panel span-12"><div class="panel-head"><h3>Waste & Downtime Table</h3></div><div class="table-wrap"><table id="wasteTable"></table></div></article></div></section>
-      <section class="page" id="page-sales"><div class="kpi-grid" id="salesKpis"></div><div class="content-grid"><article class="panel span-12"><div class="panel-head"><h3>Sales Entries</h3></div><div class="table-wrap"><table id="salesTable"></table></div></article></div></section>
-      <section class="page" id="page-reports"><div class="content-grid"><article class="panel span-12"><div class="panel-head"><h3>All Exportable Data</h3></div><div class="table-wrap"><table id="reportsTable"></table></div></article></div></section>
+      <section id="page-overview" class="page active"></section>
+      <section id="page-receiving" class="page"></section>
+      <section id="page-process" class="page"></section>
+      <section id="page-waste" class="page"></section>
+      <section id="page-sales" class="page"></section>
+      <section id="page-reports" class="page"></section>
     </main>
   </div>
 
-  <div class="toast-stack" id="toastStack"></div>
-  <div class="modal-backdrop hidden" id="entryModal"><div class="modal"><div class="modal-head"><div><h2 id="modalTitle">New Entry</h2><p>Choose entry type and save directly to Google Sheets.</p></div><button id="closeModal" type="button">×</button></div><div class="entry-tabs" id="entryTabs"></div><form id="entryForm" class="entry-form"></form></div></div>
+  <div id="entryModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button id="modalClose" class="modal-close">×</button>
+      <div class="modal-head">
+        <h2>New Entry</h2>
+        <p>Choose entry type and save directly to Google Sheets.</p>
+      </div>
+      <div id="entryTypeTabs" class="entry-tabs"></div>
+      <form id="entryForm" class="entry-form"></form>
+    </div>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <div id="toast" class="toast hidden"></div>
   <script src="app.js"></script>
 </body>
 </html>
