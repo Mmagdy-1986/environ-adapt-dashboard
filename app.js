@@ -885,7 +885,7 @@ function phBatchForm(d,t){
 }
 function utilitiesForm(d,t){
   return `
-  <label>Date<input name="date" type="date" value="${d}"></label>
+  <label>Date<input name="date" type="date" value="${d}"></label> 
   <label>Time<input name="entryTime" type="time" value="${t}"></label>
   ${sel('shiftType','Shift Type',['Day','Night'])}
   <div class="boiler-batch" style="grid-column:1/-1">
