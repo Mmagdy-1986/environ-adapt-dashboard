@@ -1,15 +1,342 @@
-:root{
-  --bg:#f4fbf6;--surface:#ffffff;--surface2:#f8fcfa;--text:#0f172a;--muted:#64748b;--line:#dfeee5;
-  --green:#0bae55;--green2:#39ff74;--darkgreen:#006e3a;--softgreen:#e7faee;--danger:#ef4444;--warn:#f59e0b;--blue:#1e88e5;
-  --shadow:0 18px 45px rgba(7,43,25,.08);--r:22px;--sidebar:286px;--gap:14px;
-}
-*{box-sizing:border-box}html,body{height:100%}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(120deg,#f5fbf7 0%,#eef8f1 100%);color:var(--text);overflow-x:hidden}body[dir=rtl]{font-family:"Segoe UI",Tahoma,Arial,sans-serif}.app-shell{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:18px 18px 14px;background:rgba(255,255,255,.78);backdrop-filter:blur(18px);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:18px;transition:.25s ease;z-index:5}.brand-block{position:relative}.brand-logo{display:block;max-width:205px;height:auto;margin:4px 0 22px}.dark-logo{display:none}.brand-text h2{font-size:26px;margin:0 0 2px}.brand-text p{margin:0;color:var(--muted);line-height:1.45}.collapse-btn{position:absolute;right:-34px;top:36px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);font-size:24px;color:var(--text);cursor:pointer}.nav-list{display:flex;flex-direction:column;gap:8px}.nav-item{border:1px solid transparent;background:transparent;color:#111827;border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:13px;text-align:left;font-size:15px;cursor:pointer;transition:.2s ease}.nav-item span{width:26px;height:26px;display:grid;place-items:center;color:var(--darkgreen)}.nav-item:hover{background:#f4fbf6;border-color:#e0f2e8}.nav-item.active{background:linear-gradient(135deg,#058b47,#0aae55);color:white;box-shadow:0 14px 32px rgba(11,174,85,.22)}.nav-item.active span{color:white}.mission-card{margin-top:auto;padding:16px;border-radius:18px;background:linear-gradient(180deg,#eefaf1,#fff);border:1px solid var(--line);overflow:hidden}.mission-art{height:145px;border-radius:14px;overflow:hidden;background:#f2faf4;margin-bottom:12px}.mission-art img{width:100%;height:100%;object-fit:cover;object-position:left center;opacity:.9}.mission-card h3{font-size:18px;color:#08723e;margin:0 0 6px}.mission-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.dawar-block{display:flex;gap:12px;align-items:center;padding:10px 8px}.dawar-logo{width:58px;height:58px;object-fit:contain}.dawar-block strong{display:block;font-size:22px;letter-spacing:2px}.dawar-block small{display:block;color:var(--muted);font-size:12px;line-height:1.35}.sync-row{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:13px}.dot{width:10px;height:10px;border-radius:50%;display:inline-block}.online{background:#11c35a;box-shadow:0 0 16px rgba(17,195,90,.7)}.main{padding:22px 24px 28px;min-width:0}.topbar{background:rgba(255,255,255,.82);border:1px solid var(--line);border-radius:24px;padding:18px 22px;box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:16px}.title-area h1{font-size:24px;line-height:1.15;margin:0 0 6px}.title-area p{margin:0 0 10px;color:var(--muted)}.live-pill,.status-pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:#edf9f1;color:#236343;padding:7px 11px;font-size:12px}.toolbar{display:flex;flex-wrap:wrap;align-items:end;gap:10px;justify-content:flex-end}.toolbar label{display:flex;flex-direction:column;gap:5px;color:var(--muted);font-size:11px}.toolbar input,.toolbar select{height:42px;border:1px solid var(--line);border-radius:11px;padding:0 12px;background:#fff;color:var(--text);min-width:128px}.btn{height:42px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--text);padding:0 15px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(15,23,42,.04)}.btn.primary{background:linear-gradient(135deg,#09a653,#009448);color:white;border-color:#09a653}.btn.icon{width:42px;padding:0}.page{display:none}.page.active{display:block}.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:var(--gap);margin-bottom:14px}.kpi{background:linear-gradient(135deg,#fff 0%,#fff 64%,#ecfff1 100%);border:1px solid var(--line);border-radius:18px;padding:15px 16px;box-shadow:0 12px 30px rgba(7,43,25,.06);min-height:104px;display:flex;gap:14px;align-items:flex-start;cursor:pointer;transition:.18s ease}.kpi:hover{transform:translateY(-2px);border-color:#9edeb8}.kpi-icon{width:44px;height:44px;border-radius:16px;background:#e7f7ec;display:grid;place-items:center;color:var(--darkgreen);font-size:22px;flex:none}.kpi small{color:var(--muted);display:block;margin-bottom:8px;font-weight:600}.kpi .value{font-size:27px;font-weight:900;letter-spacing:-.04em;line-height:1}.kpi .value .unit{font-size:14px;margin-left:5px;color:var(--darkgreen);letter-spacing:0}.kpi .sub{font-size:13px;color:var(--muted);margin-top:8px}.yield-pair{display:flex;align-items:baseline;gap:13px}.yield-pair .ratio{font-size:25px;font-weight:900;color:var(--darkgreen)}.yield-pair .percent{font-size:16px;font-weight:800}.content-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap)}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}.panel{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:22px;padding:17px;box-shadow:var(--shadow);min-width:0}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.panel-head h3{margin:0;font-size:17px}.panel select{height:36px;border:1px solid var(--line);border-radius:10px;background:white;padding:0 10px}.panel canvas{width:100%;height:280px!important}.flow-balance{height:280px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:center}.flow-node{border-radius:16px;padding:18px;background:linear-gradient(135deg,#08733d,#0bae55);color:white;text-align:center;position:relative}.flow-node.secondary{background:linear-gradient(135deg,#a8e7b4,#49d866);color:#06351e}.flow-node.warn{background:linear-gradient(135deg,#ffb13a,#f59e0b);color:#2d1b00}.flow-node.danger{background:linear-gradient(135deg,#ff6b6b,#ef4444)}.flow-node b{display:block;font-size:21px;margin:8px 0}.flow-node small{opacity:.9}.flow-stack{display:grid;gap:12px}.chip-row,.boiler-filters{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.mini-chip{height:32px;border-radius:999px;border:1px solid var(--line);background:#fff;padding:0 12px;cursor:pointer}.mini-chip.active{background:#0bae55;color:white;border-color:#0bae55}.meter-cards,.boiler-split{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px}.meter-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fbfffc;font-size:12px;cursor:pointer}.meter-card b{display:block;color:#08723e;margin-bottom:5px}.meter-card .delta.good{color:#0bae55}.meter-card .delta.bad{color:#ef4444}.table-wrap{overflow:auto}.table-wrap table{width:100%;border-collapse:collapse;font-size:13px}.table-wrap th,.table-wrap td{padding:10px 12px;border-bottom:1px solid #edf2f0;text-align:left;white-space:nowrap}.table-wrap th{background:#f6fbf8;color:#475569;font-size:12px;text-transform:uppercase}.table-wrap tr{cursor:pointer}.table-wrap tbody tr:hover{background:#f2fbf5}.goal{background:linear-gradient(135deg,#fff,#f3fff6)}.goal-icon{width:52px;height:52px;border-radius:18px;background:#e2f7e8;display:grid;place-items:center;font-size:24px;color:#0b7d43}.mini-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.mini-metric{padding:10px;border-radius:12px;background:white;border:1px solid var(--line)}.mini-metric b{display:block;font-size:16px}.active-filter{display:flex;justify-content:space-between;align-items:center;background:#ecfff1;border:1px solid #b9eac8;color:#0a6538;border-radius:14px;padding:10px 12px;margin-bottom:14px}.hidden{display:none!important}.toast-stack{position:fixed;right:20px;bottom:20px;display:grid;gap:10px;z-index:30}.toast{background:#111827;color:white;border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);max-width:360px}.toast.good{background:#0b7d43}.toast.bad{background:#b91c1c}.modal-backdrop{position:fixed;inset:0;background:rgba(6,18,14,.38);z-index:20;display:grid;place-items:center;padding:18px}.modal{width:min(1120px,96vw);max-height:92vh;overflow:auto;background:var(--surface);border-radius:24px;padding:20px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.22)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}.modal-head h2{margin:0}.modal-head p{margin:6px 0 0;color:var(--muted)}#closeModal{border:0;background:#f1f5f9;border-radius:12px;width:38px;height:38px;font-size:24px;cursor:pointer}.entry-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.entry-tab{border:1px solid var(--line);background:#f8fffb;border-radius:999px;padding:10px 15px;font-weight:800;cursor:pointer}.entry-tab.active{background:#0bae55;color:#fff;border-color:#0bae55}.entry-form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:13px;color:var(--muted);font-weight:700}.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;color:var(--text);min-height:44px}.field textarea{resize:vertical}.form-actions{grid-column:1/-1;display:flex;gap:10px;justify-content:flex-end}.boiler-table{grid-column:1/-1;border:1px solid var(--line);border-radius:16px;overflow:hidden}.boiler-tabs{grid-column:1/-1;display:flex;gap:8px}.boiler-tab{border:1px solid var(--line);background:white;border-radius:999px;padding:9px 16px;cursor:pointer}.boiler-tab.active{background:#0bae55;color:white}.boiler-row{display:grid;grid-template-columns:90px repeat(3,1fr);gap:0;border-bottom:1px solid var(--line)}.boiler-row.header{background:#eefaf1;font-weight:900}.boiler-row>*{padding:9px;border-right:1px solid var(--line)}.boiler-row input{width:100%;border:1px solid #d8eadf;border-radius:8px;padding:8px}.collapsed{--sidebar:92px}.collapsed .sidebar{padding-left:12px;padding-right:12px}.collapsed .brand-logo,.collapsed .brand-text,.collapsed .mission-card,.collapsed .dawar-block div,.collapsed .sync-row span:not(.dot),.collapsed .nav-item b{display:none}.collapsed .sidebar:before{content:"";width:56px;height:56px;background:url('assets/dawar-icon-green.png') center/contain no-repeat;display:block;margin:10px auto 18px}.collapsed .nav-item{justify-content:center;padding:13px}.collapsed .dawar-block{justify-content:center}.collapsed .dawar-logo{width:48px;height:48px}.collapsed .collapse-btn{right:-30px;transform:rotate(180deg)}.dark{--bg:#07120e;--surface:#0d1a15;--surface2:#101f19;--text:#eefdf3;--muted:#9bb1a4;--line:#1d352a;--shadow:0 18px 45px rgba(0,0,0,.22);background:#07120e}.dark body,.dark{color:var(--text)}.dark .sidebar,.dark .topbar,.dark .panel,.dark .modal{background:rgba(13,26,21,.88)}.dark .light-logo{display:none}.dark .dark-logo{display:block}.dark .kpi,.dark .mission-card,.dark .goal{background:linear-gradient(135deg,#0d1a15 0%,#0d1a15 65%,#113c23 100%)}.dark input,.dark select,.dark .btn,.dark .mini-chip,.dark .field input,.dark .field select,.dark .field textarea{background:#0b1712;color:var(--text);border-color:var(--line)}.dark .nav-item{color:var(--text)}.dark .table-wrap th{background:#11221a}.dark .meter-card,.dark .mini-metric{background:#0b1712}.dark .collapsed .sidebar:before{background-image:url('assets/dawar-icon-white.png')}body[dir=rtl] .sidebar{border-right:0;border-left:1px solid var(--line)}body[dir=rtl] .table-wrap th,body[dir=rtl] .table-wrap td{text-align:right}body[dir=rtl] .nav-item{text-align:right}@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}.meter-cards,.boiler-split{grid-template-columns:repeat(3,1fr)}}@media(max-width:860px){.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.topbar{flex-direction:column}.toolbar{justify-content:flex-start}.kpi-grid{grid-template-columns:1fr}.entry-form{grid-template-columns:1fr}.boiler-row{grid-template-columns:70px 1fr}.boiler-row.header{display:none}.boiler-row>*{border-right:0}.meter-cards,.boiler-split{grid-template-columns:1fr}.mission-card{display:none}}
+'use strict';
 
-/* v11 stable entry modal fixes */
-.entry-tabs:empty::before{content:'Entry types are loading...';color:var(--muted);font-weight:700;padding:8px 0;display:block}
-.entry-error{background:#fff1f2;color:#991b1b;border:1px solid #fecdd3;border-radius:12px;padding:12px;font-weight:800}
-.boiler-tabs{align-items:center}
-.boiler-hint{color:var(--muted);font-size:12px;font-weight:700;margin-inline-start:8px}
-.boiler-row input:focus,.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid rgba(11,174,85,.25);border-color:#0bae55}
-.modal{scrollbar-width:thin}
-@media(max-width:860px){.boiler-hint{display:block;width:100%;margin:4px 0 0}.entry-tabs{gap:6px}.entry-tab{padding:9px 12px}}
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec';
+const STORAGE_KEY = 'environAdaptDashboardStateV9';
+const DATE_FMT = new Intl.DateTimeFormat('en-CA');
+const COLORS = { green:'#08a653', green2:'#39f76c', dark:'#04733d', danger:'#ef4444', warn:'#f59e0b', blue:'#1e88e5', grey:'#cbd5e1' };
+let raw = emptyData();
+let state = { page:'overview', lang:'en', theme:'light', collapsed:false, dateFrom:'', dateTo:'', shift:'all', chartFilter:null, phArea:'all', boiler:'all', meter:'all', signal:{pv:true,sv:true,a:false} };
+let charts = {};
+let entryType = 'shift';
+let boilerTab = 1;
+let boilerDraft = { 1: {}, 2: {} };
+
+const i18n = {
+  en: { navOverview:'Overview', navReceiving:'Receiving & Production', navProcess:'Process, PH & Boilers', navWaste:'Waste & Downtime', navSales:'Sales & Export', navReports:'Reports', missionTitle:'Reducing waste, maximizing recovery', missionBody:'Sustainable solutions for cleaner PET washing operations.', dawarLine:'Turning waste into measurable value', liveFromSheets:'Live from Google Sheets', dateFrom:'Date From', dateTo:'Date To', shift:'Shift', refresh:'Refresh', newEntry:'New Entry', exportExcel:'Export Excel' },
+  ar: { navOverview:'الملخص العام', navReceiving:'التوريد والإنتاج', navProcess:'التشغيل و PH والغلايات', navWaste:'الهالك والتوقفات', navSales:'المبيعات والتصدير', navReports:'التقارير', missionTitle:'تقليل الهالك وتعظيم الاسترداد', missionBody:'حلول مستدامة لتشغيل أنظف وأكثر كفاءة.', dawarLine:'تحويل المخلفات إلى قيمة قابلة للقياس', liveFromSheets:'مباشر من Google Sheets', dateFrom:'من تاريخ', dateTo:'إلى تاريخ', shift:'الوردية', refresh:'تحديث', newEntry:'إدخال', exportExcel:'تصدير Excel' }
+};
+
+function emptyData(){ return { shifts:[], receivings:[], downtimes:[], boilers:[], ph:[], waste:[], sales:[] }; }
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+const n = v => Number(String(v ?? '').replace(/,/g,'').replace('%','')) || 0;
+const today = () => DATE_FMT.format(new Date());
+const fmt = (v,d=0) => Number.isFinite(Number(v)) ? Number(v).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d}) : '0';
+const pct = v => `${fmt(v,1)}%`;
+const kg = v => `${fmt(v,0)} kg`;
+const mt = v => `${fmt(v/1000,2)} MT`;
+
+init();
+function init(){
+  loadState();
+  setDefaultDates();
+  bindUI();
+  applyState();
+  renderAll();
+  loadFromSheets();
+}
+function loadState(){ try{ state = {...state, ...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}; }catch(e){} }
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function setDefaultDates(){
+  if(!state.dateTo) state.dateTo = today();
+  if(!state.dateFrom){ const d=new Date(); d.setDate(d.getDate()-30); state.dateFrom = DATE_FMT.format(d); }
+}
+function bindUI(){
+  $('#dateFrom').value=state.dateFrom; $('#dateTo').value=state.dateTo; $('#shiftFilter').value=state.shift;
+  $('#dateFrom').addEventListener('change', e=>{state.dateFrom=e.target.value; saveState(); renderAll();});
+  $('#dateTo').addEventListener('change', e=>{state.dateTo=e.target.value; saveState(); renderAll();});
+  $('#shiftFilter').addEventListener('change', e=>{state.shift=e.target.value; saveState(); renderAll();});
+  $('#refreshBtn').addEventListener('click', loadFromSheets);
+  $('#entryBtn').addEventListener('click', openEntryModal);
+  $('#closeModal').addEventListener('click', closeEntryModal);
+  $('#entryModal').addEventListener('click', e=>{ if(e.target.id==='entryModal') closeEntryModal(); });
+  $('#exportBtn').addEventListener('click', exportCurrentPage);
+  $('#themeBtn').addEventListener('click', ()=>{ state.theme = state.theme==='dark'?'light':'dark'; saveState(); applyState(); updateChartsTheme(); });
+  $('#langBtn').addEventListener('click', ()=>{ state.lang = state.lang==='en'?'ar':'en'; saveState(); applyState(); renderAll(); });
+  $('#collapseBtn').addEventListener('click', ()=>{ state.collapsed=!state.collapsed; saveState(); applyState(); });
+  $$('.nav-item').forEach(btn=> btn.addEventListener('click', ()=>{ state.page=btn.dataset.page; saveState(); applyState(); renderAll(); }));
+  $('#clearFilterBtn').addEventListener('click', ()=>{ state.chartFilter=null; saveState(); renderAll(); });
+  $('#boilerFilter').addEventListener('change', e=>{ state.boiler=e.target.value; saveState(); renderAll(); });
+  $('#meterFilter').addEventListener('change', e=>{ state.meter=e.target.value; saveState(); renderAll(); });
+  $('#processBoilerFilter').addEventListener('change', e=>{ state.boiler=e.target.value; $('#boilerFilter').value=e.target.value; saveState(); renderAll(); });
+  $('#processMeterFilter').addEventListener('change', e=>{ state.meter=e.target.value; $('#meterFilter').value=e.target.value; saveState(); renderAll(); });
+  document.addEventListener('click', e=>{ const chip=e.target.closest('[data-ph-area]'); if(chip){ state.phArea=chip.dataset.phArea; saveState(); renderAll(); } const sig=e.target.closest('[data-signal]'); if(sig){ state.signal[sig.dataset.signal]=!state.signal[sig.dataset.signal]; saveState(); renderAll(); }});
+}
+function applyState(){
+  document.documentElement.lang=state.lang; document.documentElement.dir=state.lang==='ar'?'rtl':'ltr'; document.body.dir=document.documentElement.dir;
+  document.documentElement.classList.toggle('dark', state.theme==='dark'); document.body.classList.toggle('dark', state.theme==='dark');
+  $('#themeBtn').textContent=state.theme==='dark'?'☀':'☾';
+  $('#appShell').classList.toggle('collapsed', state.collapsed);
+  $$('.nav-item').forEach(b=>b.classList.toggle('active', b.dataset.page===state.page));
+  $$('.page').forEach(p=>p.classList.toggle('active', p.id===`page-${state.page}`));
+  $('#dateFrom').value=state.dateFrom; $('#dateTo').value=state.dateTo; $('#shiftFilter').value=state.shift;
+  if($('#boilerFilter')) $('#boilerFilter').value=state.boiler; if($('#meterFilter')) $('#meterFilter').value=state.meter;
+  if($('#processBoilerFilter')) $('#processBoilerFilter').value=state.boiler; if($('#processMeterFilter')) $('#processMeterFilter').value=state.meter;
+  $('#langBtn').innerHTML = state.lang==='en' ? 'AR | <b>EN</b>' : '<b>AR</b> | EN';
+  Object.entries(i18n[state.lang]).forEach(([k,v])=>$$(`[data-i18n="${k}"]`).forEach(el=>el.textContent=v));
+  const titles={overview:'Environ Adapt Operations Dashboard',receiving:'Receiving & Production',process:'Process, PH & Boilers',waste:'Waste & Downtime',sales:'Sales & Export',reports:'Reports'};
+  $('#pageTitle').textContent=titles[state.page]||titles.overview; $('#pageSubtitle').textContent='PET Flakes Washing Intelligence';
+}
+
+async function loadFromSheets(){
+  setStatus('Checking Google Sheets...', 'pending');
+  try{
+    const test = await apiRequest('testConnection', {});
+    if(!test || !test.ok) throw new Error((test && test.error) || 'Connection test failed');
+    const data = await apiRequest('getDashboardData', {});
+    if(!data || !data.ok) throw new Error((data && data.error) || 'Could not read dashboard data');
+    raw = normalizePayload(data.data || data);
+    setStatus('Ready', 'ok');
+    toast(`Synced with Google Sheets (${test.spreadsheet || 'connected'})`, 'good');
+  }catch(err){
+    console.error('Google Sheets read failed:', err);
+    setStatus('Google Sheets error', 'bad');
+    toast('Google Sheets connection failed. Open Apps Script deployment and permissions.', 'bad');
+    raw = readLocalFallback();
+  }
+  renderAll();
+}
+function apiRequest(action, data){
+  const payload = encodeURIComponent(JSON.stringify({ action, data: data || {} }));
+  const url = `${APPS_SCRIPT_URL}?payload=${payload}`;
+  return jsonp(url);
+}
+
+function jsonp(url){
+  return new Promise((resolve,reject)=>{
+    const cb = `jsonp_${Date.now()}_${Math.round(Math.random()*9999)}`; const sep=url.includes('?')?'&':'?';
+    const s=document.createElement('script'); const timer=setTimeout(()=>{ cleanup(); reject(new Error('JSONP timeout')); },15000);
+    window[cb]=payload=>{ cleanup(); resolve(payload); };
+    function cleanup(){ clearTimeout(timer); delete window[cb]; s.remove(); }
+    s.src=`${url}${sep}callback=${cb}&v=${Date.now()}`; s.onerror=()=>{ cleanup(); reject(new Error('JSONP failed')); };
+    document.body.appendChild(s);
+  });
+}
+function normalizePayload(d){
+  d=d||{};
+  return { shifts: d.shifts||d['Shift Entries']||[], receivings:d.receivings||d.receiving||d['Receiving Entries']||[], downtimes:d.downtimes||d['Downtime Entries']||[], boilers:d.boilers||d['Boiler Readings']||[], ph:d.ph||d['PH Readings']||[], waste:d.waste||d['Waste Entries']||[], sales:d.sales||d['Sales Entries']||[] };
+}
+function readLocalFallback(){ try{return normalizePayload(JSON.parse(localStorage.getItem('localDashboardData')||'{}'));}catch(e){return emptyData();} }
+function writeLocalFallback(action, data){ const local=readLocalFallback(); const map={saveShift:'shifts',saveReceiving:'receivings',saveDowntime:'downtimes',saveBoiler:'boilers',saveBoilerBatch:'boilers',savePH:'ph',saveWaste:'waste',saveSale:'sales'}; const key=map[action]; if(!key)return; if(Array.isArray(data)) local[key].push(...data); else local[key].push(data); localStorage.setItem('localDashboardData', JSON.stringify(local)); }
+function setStatus(t, type){ $('#connectionStatus').textContent=t; const dot=$('.status-pill .dot'); dot.className=`dot ${type==='bad'?'':'online'}`; }
+function toast(msg,type='good'){ const el=document.createElement('div'); el.className=`toast ${type}`; el.textContent=msg; $('#toastStack').appendChild(el); setTimeout(()=>el.remove(),4200); }
+
+function filtered(){
+  const inRange = row => { const d = get(row,'Date','date'); if(!d) return true; return (!state.dateFrom || d>=state.dateFrom) && (!state.dateTo || d<=state.dateTo); };
+  const shiftOk = row => state.shift==='all' || get(row,'Shift Type','shiftType')===state.shift || get(row,'Shift ID','shiftId')?.includes(state.shift);
+  const f = arr => (arr||[]).filter(r=>inRange(r) && shiftOk(r));
+  let data={ shifts:f(raw.shifts), receivings:f(raw.receivings), downtimes:f(raw.downtimes), boilers:f(raw.boilers), ph:f(raw.ph), waste:f(raw.waste), sales:f(raw.sales) };
+  if(state.chartFilter){ data = applyChartFilter(data, state.chartFilter); $('#activeFilter').classList.remove('hidden'); $('#activeFilterText').textContent=`Filter: ${state.chartFilter.type} = ${state.chartFilter.value}`; } else $('#activeFilter').classList.add('hidden');
+  return data;
+}
+function applyChartFilter(data, filter){
+  const v=String(filter.value).toLowerCase();
+  if(filter.type==='Waste Type') data.waste = data.waste.map(r=>({...r, _focusWaste:v}));
+  if(filter.type==='PH Area') data.ph = data.ph.filter(r=>String(get(r,'Area','area')).toLowerCase()===v);
+  if(filter.type==='Boiler') data.boilers = data.boilers.filter(r=>String(get(r,'Boiler Number','boilerNumber'))===String(filter.value));
+  if(filter.type==='Downtime Reason') data.downtimes = data.downtimes.filter(r=>String(get(r,'Reason','reason')).toLowerCase()===v);
+  return data;
+}
+function get(row, ...keys){ for(const k of keys){ if(row && row[k]!=null && row[k] !== '') return row[k]; } return ''; }
+function compute(data=filtered()){
+  const receivingAfter = sum(data.receivings, r=>getNum(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg'));
+  const trips=data.receivings.length;
+  const balesReceived=sum(data.receivings, r=>getNum(r,'Bales Count','balesCount'));
+  const avgBale=balesReceived?receivingAfter/balesReceived:0;
+  const consumedBales=sum(data.shifts, r=>getNum(r,'Consumed Bales Count','consumedBalesCount'));
+  const consumed=consumedBales&&avgBale?consumedBales*avgBale:receivingAfter;
+  const producedBags=sum(data.shifts, r=>getNum(r,'Produced Bags Count','producedBagsCount'));
+  const netProduction=sum(data.shifts, r=> getNum(r,'Net Production Kg','netProductionKg') || (getNum(r,'Produced Bags Count','producedBagsCount')*getNum(r,'Avg Bag Weight Kg','avgBagWeightKg')) );
+  const wasteRows=data.waste; const waste=sum(wasteRows, r=>getNum(r,'Total Waste Kg','totalWasteKg') || wasteTypeTotals([r]).total);
+  const actualLoss=Math.max(0, consumed - (netProduction+waste));
+  const downtime=sum(data.downtimes, r=>getNum(r,'Downtime Minutes','downtimeMinutes'));
+  const stops=data.downtimes.length;
+  const avgStop=stops?downtime/stops:0;
+  const avgPh=avg(data.ph, r=>getNum(r,'PH Reading','phReading'));
+  const avgPv=avg(data.boilers, r=>getNum(r,'Current Temperature PV','currentTemperaturePV'));
+  const avgSv=avg(data.boilers, r=>getNum(r,'Set Temperature SV','setTemperatureSV'));
+  return { receivingAfter,trips,balesReceived,avgBale,consumedBales,consumed,producedBags,netProduction,waste,actualLoss,downtime,stops,avgStop,avgPh,avgPv,avgSv,
+    materialRatio: netProduction? consumed/netProduction:0, materialPercent: consumed? netProduction/consumed*100:0,
+    operationRatio: netProduction? receivingAfter/netProduction:0, operationPercent: receivingAfter? netProduction/receivingAfter*100:0,
+    actualRatio: netProduction? (netProduction+waste)/netProduction:0, actualPercent: (netProduction+waste)? netProduction/(netProduction+waste)*100:0,
+    wastePercent: consumed? waste/consumed*100:0, actualLossPercent: consumed? actualLoss/consumed*100:0,
+    operationLossPercent: 720? downtime/720*100:0 };
+}
+function getNum(r,...keys){ return n(get(r,...keys)); }
+function sum(arr, fn){ return (arr||[]).reduce((a,r)=>a+n(fn(r)),0); }
+function avg(arr, fn){ const vals=(arr||[]).map(fn).map(n).filter(v=>v); return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0; }
+
+function renderAll(){ applyState(); updateMeterOptions(); renderKpis(); renderCharts(); renderTables(); }
+function kpiHtml(items){ return items.map(i=>`<div class="kpi" data-filter-type="${i.filterType||''}" data-filter-value="${i.filterValue||''}"><div class="kpi-icon">${i.icon||'◌'}</div><div><small>${i.title}</small>${i.isYield?`<div class="yield-pair"><span class="ratio">${i.ratio}</span><span class="percent">${i.percent}</span></div>`:`<div class="value">${i.value}<span class="unit">${i.unit||''}</span></div>`}<div class="sub">${i.sub||''}</div></div></div>`).join(''); }
+function renderKpis(){
+  const d=filtered(), c=compute(d);
+  const overview=[
+    {icon:'⇩',title:'Consumed Weight',value:fmt(c.consumed/1000,2),unit:'MT',sub:`${fmt(c.consumedBales,0)} bales | avg ${fmt(c.avgBale,1)} kg`},
+    {icon:'✓',title:'Net Production',value:fmt(c.netProduction/1000,2),unit:'MT',sub:`${fmt(c.producedBags,0)} bags`},
+    {icon:'♻',title:'Total Waste',value:fmt(c.waste/1000,2),unit:'MT',sub:`${pct(c.wastePercent)} of consumed`,filterType:'Waste Type',filterValue:'all'},
+    {icon:'↘',title:'Actual Loss',value:fmt(c.actualLoss/1000,2),unit:'MT',sub:`${pct(c.actualLossPercent)} of consumed`},
+    {icon:'☘',title:'Material Yield',isYield:true,ratio:`${fmt(c.materialRatio,2)} kg/kg`,percent:pct(c.materialPercent),sub:'Production / Consumed'},
+    {icon:'⚙',title:'Operation Yield',isYield:true,ratio:`${fmt(c.operationRatio,2)} kg/kg`,percent:pct(c.operationPercent),sub:'Production / Receiving after discount'},
+    {icon:'◎',title:'Actual Yield',isYield:true,ratio:`${fmt(c.actualRatio,2)} kg/kg`,percent:pct(c.actualPercent),sub:'Production / Production + Waste'},
+    {icon:'pH',title:'Average PH',value:fmt(c.avgPh,2),unit:'',sub:`PV ${fmt(c.avgPv,1)}°C | Δ ${fmt(c.avgPv-c.avgSv,1)}`}
+  ];
+  $('#overviewKpis').innerHTML=kpiHtml(overview); $('#receivingKpis').innerHTML=kpiHtml([
+    {icon:'▣',title:'Receiving After Discount',value:fmt(c.receivingAfter/1000,2),unit:'MT',sub:`${c.trips} trips`},{icon:'▥',title:'Avg Bale Weight',value:fmt(c.avgBale,1),unit:'kg',sub:`${fmt(c.balesReceived,0)} received bales`},{icon:'▦',title:'Net Production',value:fmt(c.netProduction/1000,2),unit:'MT',sub:`${fmt(c.producedBags,0)} bags`},{icon:'☘',title:'Material Yield',isYield:true,ratio:`${fmt(c.materialRatio,2)}`,percent:pct(c.materialPercent),sub:'Consumed / Production'}]);
+  $('#processKpis').innerHTML=kpiHtml([{icon:'pH',title:'Average PH',value:fmt(c.avgPh,2),sub:'All areas'},{icon:'℃',title:'Average PV',value:fmt(c.avgPv,1),unit:'°C',sub:'Current temperature'},{icon:'℃',title:'Average SV',value:fmt(c.avgSv,1),unit:'°C',sub:'Set temperature'},{icon:'Δ',title:'PV / SV Difference',value:fmt(c.avgPv-c.avgSv,1),unit:'°C',sub:'Average deviation'}]);
+  const wt=wasteTypeTotals(d.waste);
+  $('#wasteKpis').innerHTML=kpiHtml([{icon:'♻',title:'Sortex',value:fmt(wt.sortex/1000,2),unit:'MT',sub:'Weight',filterType:'Waste Type',filterValue:'Sortex'},{icon:'▧',title:'Big Flex',value:fmt(wt.bigFlex/1000,2),unit:'MT',sub:'Weight',filterType:'Waste Type',filterValue:'Big Flex'},{icon:'▨',title:'Wire & Bag',value:fmt(wt.wireBag/1000,2),unit:'MT',sub:'Weight',filterType:'Waste Type',filterValue:'Wire & Bag'},{icon:'◉',title:'Caps & Labels',value:fmt(wt.capsLabels/1000,2),unit:'MT',sub:'Weight',filterType:'Waste Type',filterValue:'Caps & Labels'},{icon:'⏱',title:'Downtime Minutes',value:fmt(c.downtime,0),unit:'min',sub:'Total stop time'},{icon:'□',title:'Stops Count',value:fmt(c.stops,0),sub:'Records'},{icon:'↘',title:'Actual Loss',value:fmt(c.actualLoss/1000,2),unit:'MT',sub:pct(c.actualLossPercent)},{icon:'◴',title:'Operation Loss Time',value:pct(c.operationLossPercent),sub:'Assuming 12h shift'}]);
+  $('#salesKpis').innerHTML=kpiHtml(renderSalesKpis(d.sales));
+  $$('.kpi[data-filter-type]').forEach(k=>k.addEventListener('click',()=>{ if(k.dataset.filterType){ state.chartFilter={type:k.dataset.filterType,value:k.dataset.filterValue}; saveState(); renderAll(); }}));
+}
+function wasteTypeTotals(rows){ return { sortex:sum(rows,r=>getNum(r,'Sortex Weight Kg','sortexWeightKg')), bigFlex:sum(rows,r=>getNum(r,'Big Flex Weight Kg','bigFlexWeightKg')), wireBag:sum(rows,r=>getNum(r,'Wire Bag Weight Kg','wireBagWeightKg')), capsLabels:sum(rows,r=>getNum(r,'Caps Labels Weight Kg','capsLabelsWeightKg')), get total(){return this.sortex+this.bigFlex+this.wireBag+this.capsLabels;} }; }
+function renderSalesKpis(sales){ const net=sum(sales,r=>getNum(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg')); const before=sum(sales,r=>getNum(r,'Sale Price Before Discount','salePriceBeforeDiscount')); const after=sum(sales,r=>getNum(r,'Sale Price After Discount','salePriceAfterDiscount')); return [{icon:'↗',title:'Sales Weight',value:fmt(net/1000,2),unit:'MT',sub:`${sales.length} sales trips`},{icon:'£',title:'Before Discount',value:fmt(before,0),sub:'Total value'},{icon:'£',title:'After Discount',value:fmt(after,0),sub:'Total value'},{icon:'−',title:'Difference',value:fmt(before-after,0),sub:'Discount effect'}]; }
+function renderCharts(){ const d=filtered(), c=compute(d); renderProductionFlow(c); renderPhChips(); renderMeterCards(d.boilers); renderBottomMetrics(c); createOrUpdateCharts(d,c); }
+function renderProductionFlow(c){ $('#productionFlow').innerHTML=`<div class="flow-node"><small>Consumed</small><b>${fmt(c.consumed/1000,2)} MT</b><small>100%</small></div><div class="flow-node secondary"><small>Net Production</small><b>${fmt(c.netProduction/1000,2)} MT</b><small>${pct(c.materialPercent)}</small></div><div class="flow-stack"><div class="flow-node warn"><small>Waste</small><b>${fmt(c.waste/1000,2)} MT</b><small>${pct(c.wastePercent)}</small></div><div class="flow-node danger"><small>Actual Loss</small><b>${fmt(c.actualLoss/1000,2)} MT</b><small>${pct(c.actualLossPercent)}</small></div></div>`; }
+function renderPhChips(){ const areas=['all','Boiler','Sand Filter','Rinse Tank']; const html=areas.map(a=>`<button class="mini-chip ${state.phArea===a?'active':''}" data-ph-area="${a}">${a==='all'?'All Areas':a}</button>`).join(''); $('#phChips').innerHTML=html; $('#processPhChips').innerHTML=html; }
+function updateMeterOptions(){ const opts='<option value="all">All Meters</option>'+[1,2,3,4,5,6].map(i=>`<option value="${i}">Meter ${i}</option>`).join(''); ['meterFilter','processMeterFilter'].forEach(id=>{ const el=$('#'+id); if(el && el.innerHTML!==opts) el.innerHTML=opts; el.value=state.meter; }); }
+function renderMeterCards(boilers){ const rows=filterBoilers(boilers); const latest={}; rows.forEach(r=>{ const key=`${get(r,'Boiler Number','boilerNumber')}-${get(r,'Meter Number','meterNumber')}`; latest[key]=r; }); let html=''; const b = state.boiler==='all'?[1,2]:[Number(state.boiler)]; b.forEach(bo=>{ [1,2,3,4,5,6].forEach(m=>{ if(state.meter!=='all' && String(m)!==String(state.meter)) return; const r=latest[`${bo}-${m}`]||{}; const pv=getNum(r,'Current Temperature PV','currentTemperaturePV'), sv=getNum(r,'Set Temperature SV','setTemperatureSV'), a=getNum(r,'Current A','currentA'), delta=pv-sv; html += `<div class="meter-card" data-filter-type="Boiler" data-filter-value="${bo}"><b>B${bo} • Meter ${m}</b><div>PV <strong>${fmt(pv,0)}°C</strong></div><div>SV <strong>${fmt(sv,0)}°C</strong></div><div>Current <strong>${fmt(a,1)} A</strong></div><div class="delta ${Math.abs(delta)<=5?'good':'bad'}">Δ ${fmt(delta,0)}°C</div></div>`; }); }); $('#meterCards').innerHTML=html||'<p class="empty">No boiler readings yet.</p>'; $('#boilerSplit').innerHTML=html; }
+function filterBoilers(boilers){ return boilers.filter(r=>(state.boiler==='all'||String(get(r,'Boiler Number','boilerNumber'))===String(state.boiler)) && (state.meter==='all'||String(get(r,'Meter Number','meterNumber'))===String(state.meter))); }
+function renderBottomMetrics(c){ $('#bottomMetrics').innerHTML=[['Operating',`${fmt(c.downtime?720-c.downtime:0,0)} min`],['Avg Stop',`${fmt(c.avgStop,1)} min`],['Stops',fmt(c.stops,0)],['Efficiency',pct(Math.max(0,100-c.operationLossPercent))]].map(x=>`<div class="mini-metric"><small>${x[0]}</small><b>${x[1]}</b></div>`).join(''); }
+const labelPlugin={id:'labels',afterDatasetsDraw(chart){const{ctx}=chart;ctx.save();ctx.font='700 12px Inter,Arial';ctx.fillStyle=getCss('--text');ctx.textAlign='center';chart.data.datasets.forEach((ds,di)=>{const meta=chart.getDatasetMeta(di); if(meta.hidden)return; meta.data.forEach((el,i)=>{const val=ds.data[i]; if(!val)return; const p=el.tooltipPosition(); ctx.fillText((ds.label&&ds.label.includes('%'))?pct(val):fmt(val, val<10?1:0),p.x,p.y-8);});});ctx.restore();}};
+function getCss(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function chartOptions(extra={}){ return {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:getCss('--text'),boxWidth:14}},tooltip:{enabled:true}},scales:{x:{ticks:{color:getCss('--muted')},grid:{color:'rgba(100,116,139,.13)'}},y:{ticks:{color:getCss('--muted')},grid:{color:'rgba(100,116,139,.13)'}}},onClick:(evt, els, chart)=>{ if(els.length){ const i=els[0].index; const label=chart.data.labels[i]; toast(`Selected: ${label}`); if(chart.canvas.id.toLowerCase().includes('waste')) state.chartFilter={type:'Waste Type',value:label}; if(chart.canvas.id.toLowerCase().includes('ph')) state.chartFilter={type:'PH Area',value:label}; saveState(); renderAll(); }},...extra}; }
+function makeChart(id,type,data,options={}){ if(charts[id]){ charts[id].data=data; charts[id].options={...charts[id].options,...options}; charts[id].update(); return charts[id]; } const ctx=$('#'+id); if(!ctx) return null; charts[id]=new Chart(ctx,{type,data,options:chartOptions(options),plugins:[labelPlugin]}); return charts[id]; }
+function createOrUpdateCharts(d,c){
+  makeChart('productionTrendChart','line',{labels:dailyLabels(),datasets:[{label:'Consumed',data:seriesDaily(d.shifts,()=>c.consumed/1000),borderColor:COLORS.dark,backgroundColor:'transparent',tension:.35},{label:'Production',data:seriesDaily(d.shifts,()=>c.netProduction/1000),borderColor:COLORS.green2,tension:.35},{label:'Actual Loss',data:seriesDaily(d.shifts,()=>c.actualLoss/1000),borderColor:COLORS.danger,tension:.35}]});
+  const wt=wasteTypeTotals(d.waste); const wLabels=['Big Flex','Sortex','Wire & Bag','Caps & Labels']; const wData=[wt.bigFlex/1000,wt.sortex/1000,wt.wireBag/1000,wt.capsLabels/1000];
+  makeChart('wasteTypeChart','doughnut',{labels:wLabels,datasets:[{data:wData,backgroundColor:[COLORS.dark,COLORS.green,COLORS.green2,COLORS.warn],borderWidth:3,borderColor:getCss('--surface')}]},{cutout:'65%',scales:{}});
+  makeChart('wasteDonutPageChart','doughnut',{labels:wLabels,datasets:[{data:wData,backgroundColor:[COLORS.dark,COLORS.green,COLORS.green2,COLORS.warn],borderWidth:3,borderColor:getCss('--surface')}]},{cutout:'60%',scales:{}});
+  renderPhChart('phTrendChart',d.ph); renderPhChart('processPhChart',d.ph); renderBoilerChart('boilerChart',d.boilers); renderBoilerChart('processBoilerChart',d.boilers);
+  makeChart('supplierChart','bar',{labels:groupLabels(d.receivings,'Supplier Name','supplierName'),datasets:[{label:'MT',data:groupSum(d.receivings,'Supplier Name','supplierName','Net Weight After Discount Kg','netWeightAfterDiscountKg').map(v=>v/1000),backgroundColor:COLORS.green,borderRadius:12}]});
+  makeChart('productionShiftChart','bar',{labels:['Day','Night'],datasets:[{label:'MT',data:['Day','Night'].map(s=>sum(d.shifts.filter(r=>get(r,'Shift Type','shiftType')===s),r=>getNum(r,'Net Production Kg','netProductionKg'))/1000),backgroundColor:[COLORS.green,COLORS.green2],borderRadius:12}]});
+  const reasons=group(d.downtimes,r=>get(r,'Reason','reason')||'Unknown'); makeChart('downtimeReasonChart','bar',{labels:Object.keys(reasons),datasets:[{label:'Minutes',data:Object.values(reasons).map(arr=>sum(arr,r=>getNum(r,'Downtime Minutes','downtimeMinutes'))),backgroundColor:COLORS.green,borderRadius:10}]},{indexAxis:'y'});
+}
+function renderPhChart(id, rows){ const areas=['Boiler','Sand Filter','Rinse Tank'].filter(a=>state.phArea==='all'||state.phArea===a); const labels=hourLabels(); const ds=areas.map((a,i)=>({label:a,data:labels.map(h=>avg(rows.filter(r=>String(get(r,'Area','area'))===a && String(get(r,'Entry Time','entryTime')).slice(0,2)===h.slice(0,2)),r=>getNum(r,'PH Reading','phReading'))),borderColor:[COLORS.dark,COLORS.blue,COLORS.green2][i],backgroundColor:'transparent',tension:.35})); ds.push({label:'Target Range (6.5 - 8.5)',data:labels.map(()=>8.5),borderColor:'#94a3b8',borderDash:[5,5],pointRadius:0}); makeChart(id,'line',{labels,datasets:ds},{scales:{y:{min:0,max:14,ticks:{color:getCss('--muted')},grid:{color:'rgba(100,116,139,.13)'},title:{display:true,text:'pH'}}}}); }
+function renderBoilerChart(id, rows){ rows=filterBoilers(rows); const labels=hourLabels(); const ds=[]; if(state.signal.pv) ds.push({label:'PV (°C)',data:labels.map(h=>avg(rows.filter(r=>String(get(r,'Entry Time','entryTime')).slice(0,2)===h.slice(0,2)),r=>getNum(r,'Current Temperature PV','currentTemperaturePV'))),borderColor:COLORS.green,backgroundColor:'transparent',tension:.35}); if(state.signal.sv) ds.push({label:'SV (°C)',data:labels.map(h=>avg(rows.filter(r=>String(get(r,'Entry Time','entryTime')).slice(0,2)===h.slice(0,2)),r=>getNum(r,'Set Temperature SV','setTemperatureSV'))),borderColor:COLORS.green2,borderDash:[6,4],backgroundColor:'transparent',tension:.35}); if(state.signal.a) ds.push({label:'Current A',data:labels.map(h=>avg(rows.filter(r=>String(get(r,'Entry Time','entryTime')).slice(0,2)===h.slice(0,2)),r=>getNum(r,'Current A','currentA'))),borderColor:COLORS.warn,backgroundColor:'transparent',tension:.35}); makeChart(id,'line',{labels,datasets:ds}); }
+function dailyLabels(){ return ['Jun 19','Jun 20','Jun 21','Jun 22','Jun 23','Jun 24','Jun 25']; }
+function hourLabels(){ return ['00 AM','03 AM','06 AM','09 AM','12 PM','03 PM','06 PM','09 PM']; }
+function seriesDaily(rows, fn){ const val=fn(); return dailyLabels().map((_,i)=> Math.max(0,val*(.88+((i%4)*.04)))); }
+function group(arr, fn){ return (arr||[]).reduce((o,r)=>{ const k=fn(r); (o[k]=o[k]||[]).push(r); return o; },{}); }
+function groupLabels(arr,...keys){ return Object.keys(group(arr,r=>get(r,...keys)||'Unknown')); }
+function groupSum(arr,k1,k2,v1,v2){ const g=group(arr,r=>get(r,k1,k2)||'Unknown'); return Object.values(g).map(rows=>sum(rows,r=>getNum(r,v1,v2))); }
+function updateChartsTheme(){ Object.values(charts).forEach(c=>{ if(c){ c.options=chartOptions(c.options); c.update(); }}); }
+
+function renderTables(){ const d=filtered(); renderInsights(d); renderReceivingTable(d); renderProcessTable(d); renderWasteTable(d); renderSalesTable(d); renderReportsTable(d); }
+function renderTable(el, headers, rows, rowClick){ const h=headers.map(x=>`<th>${x}</th>`).join(''); const b=rows.length?rows.map((r,idx)=>`<tr data-idx="${idx}">${headers.map(k=>`<td>${r[k]??''}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${headers.length}">No data yet</td></tr>`; el.innerHTML=`<thead><tr>${h}</tr></thead><tbody>${b}</tbody>`; if(rowClick) $$('tbody tr',el).forEach(tr=>tr.addEventListener('click',()=>rowClick(rows[tr.dataset.idx]))); }
+function renderInsights(d){ const c=compute(d); const rows=[{Date:state.dateTo,'Total Waste (MT)':fmt(c.waste/1000,2),'% of Input':pct(c.wastePercent),'Actual Loss (MT)':fmt(c.actualLoss/1000,2),'Downtime (Min)':fmt(c.downtime,0),'Stops Count':fmt(c.stops,0),'Trend':'⌁⌁⌁'}]; renderTable($('#insightsTable'),Object.keys(rows[0]),rows); }
+function renderReceivingTable(d){ const rows=d.receivings.map(r=>({'Date':get(r,'Date','date'),'Supplier':get(r,'Supplier Name','supplierName'),'Region':get(r,'Region','region'),'Vehicle':get(r,'Vehicle Number','vehicleNumber'),'Bales':get(r,'Bales Count','balesCount'),'Net Kg':fmt(getNum(r,'Net Weight Kg','netWeightKg'),0),'After Discount Kg':fmt(getNum(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg'),0),'Avg Bale Kg':fmt(getNum(r,'Avg Bale Weight Kg','avgBaleWeightKg'),1)})); renderTable($('#receivingTable'),['Date','Supplier','Region','Vehicle','Bales','Net Kg','After Discount Kg','Avg Bale Kg'],rows); }
+function renderProcessTable(d){ const rows=[...d.boilers.map(r=>({'Type':'Boiler','Date':get(r,'Date','date'),'Time':get(r,'Entry Time','entryTime'),'Area':`B${get(r,'Boiler Number','boilerNumber')} M${get(r,'Meter Number','meterNumber')}`,'PV / PH':fmt(getNum(r,'Current Temperature PV','currentTemperaturePV'),1),'SV':fmt(getNum(r,'Set Temperature SV','setTemperatureSV'),1),'Current A':fmt(getNum(r,'Current A','currentA'),1)})),...d.ph.map(r=>({'Type':'PH','Date':get(r,'Date','date'),'Time':get(r,'Entry Time','entryTime'),'Area':get(r,'Area','area'),'PV / PH':fmt(getNum(r,'PH Reading','phReading'),2),'SV':'','Current A':''}))]; renderTable($('#processTable'),['Type','Date','Time','Area','PV / PH','SV','Current A'],rows); }
+function renderWasteTable(d){ const rows=d.waste.map(r=>({'Date':get(r,'Date','date'),'Sortex Kg':fmt(getNum(r,'Sortex Weight Kg','sortexWeightKg'),0),'Big Flex Kg':fmt(getNum(r,'Big Flex Weight Kg','bigFlexWeightKg'),0),'Wire & Bag Kg':fmt(getNum(r,'Wire Bag Weight Kg','wireBagWeightKg'),0),'Caps & Labels Kg':fmt(getNum(r,'Caps Labels Weight Kg','capsLabelsWeightKg'),0),'Total Kg':fmt(getNum(r,'Total Waste Kg','totalWasteKg'),0)})); const down=d.downtimes.map(r=>({'Date':get(r,'Date','date'),'Sortex Kg':'Stop','Big Flex Kg':get(r,'Reason','reason'),'Wire & Bag Kg':get(r,'Stop From','stopFrom'),'Caps & Labels Kg':get(r,'Stop To','stopTo'),'Total Kg':fmt(getNum(r,'Downtime Minutes','downtimeMinutes'),0)+' min'})); renderTable($('#wasteTable'),['Date','Sortex Kg','Big Flex Kg','Wire & Bag Kg','Caps & Labels Kg','Total Kg'],[...rows,...down]); }
+function renderSalesTable(d){ const rows=d.sales.map(r=>({'Date':get(r,'Date','date'),'Factory':get(r,'Buyer Factory Name','buyerFactoryName'),'Location':get(r,'Buyer Factory Location','buyerFactoryLocation'),'Vehicle':get(r,'Vehicle Number','vehicleNumber'),'Driver':get(r,'Driver Name','driverName'),'Net Kg':fmt(getNum(r,'Net Trip Weight Kg','netTripWeightKg'),0),'After Discount':fmt(getNum(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg'),0),'Price After':fmt(getNum(r,'Sale Price After Discount','salePriceAfterDiscount'),0)})); renderTable($('#salesTable'),['Date','Factory','Location','Vehicle','Driver','Net Kg','After Discount','Price After'],rows); }
+function renderReportsTable(d){ const rows=[...d.shifts.map(r=>({Table:'Shift',Date:get(r,'Date','date'),Info:get(r,'Shift Type','shiftType'),Value:get(r,'Net Production Kg','netProductionKg')})),...d.receivings.map(r=>({Table:'Receiving',Date:get(r,'Date','date'),Info:get(r,'Supplier Name','supplierName'),Value:get(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg')})),...d.waste.map(r=>({Table:'Waste',Date:get(r,'Date','date'),Info:'Total Waste',Value:get(r,'Total Waste Kg','totalWasteKg')}))]; renderTable($('#reportsTable'),['Table','Date','Info','Value'],rows); }
+
+const entryTypes=[['shift','Shift'],['receiving','Receiving'],['downtime','Downtime'],['boiler','Boiler Reading'],['ph','PH Reading'],['waste','Waste'],['sale','Sale']];
+function openEntryModal(){
+  const modal = $('#entryModal');
+  if(!modal){ toast('Entry modal is missing from index.html','bad'); return; }
+  entryType = entryType || 'shift';
+  boilerTab = 1;
+  boilerDraft = { 1: {}, 2: {} };
+  modal.classList.remove('hidden');
+  try{
+    buildEntryTabs();
+    buildEntryForm();
+  }catch(err){
+    console.error('Entry modal build failed:', err);
+    toast('Entry form failed to load. Please upload latest app.js and styles.css.', 'bad');
+    const tabs = $('#entryTabs');
+    if(tabs) tabs.innerHTML = '<div class="entry-error">Entry form error. Check browser console.</div>';
+  }
+}
+function closeEntryModal(){ const modal=$('#entryModal'); if(modal) modal.classList.add('hidden'); }
+function buildEntryTabs(){
+  const wrap = $('#entryTabs');
+  if(!wrap) return;
+  wrap.innerHTML=entryTypes.map(([k,l])=>`<button type="button" class="entry-tab ${entryType===k?'active':''}" data-entry="${k}">${l}</button>`).join('');
+  $$('.entry-tab', wrap).forEach(b=>b.addEventListener('click',()=>{
+    if(entryType==='boiler') saveCurrentBoilerTab();
+    entryType=b.dataset.entry;
+    if(entryType==='boiler'){ boilerTab=1; boilerDraft={1:{},2:{}}; }
+    buildEntryTabs();
+    buildEntryForm();
+  }));
+}
+function buildEntryForm(){
+  const form = $('#entryForm');
+  if(!form) return;
+  const d=today(); const t=new Date().toTimeString().slice(0,5); let html='';
+  if(entryType==='shift') html=[field('date','Date','date',d),field('entryTime','Entry Time','time',t),field('shiftType','Shift Type','select','',{options:['Day','Night']}),field('shiftStart','Shift Start','time'),field('shiftEnd','Shift End','time'),field('workersCount','Workers Count','number'),field('factoryName','Factory Name'),field('factoryOwner','Factory Owner'),field('consumedBalesCount','Consumed Bales Count','number'),field('producedBagsCount','Produced Bags Count','number'),field('avgBagWeightKg','Avg Bag Weight Kg','number','25',{step:'0.01'}),field('netProductionKg','Net Production Kg','number'),field('notes','Notes','textarea')].join('');
+  if(entryType==='receiving') html=[field('date','Date','date',d),field('entryTime','Entry Time','time',t),field('supplierName','Supplier Name'),field('region','Region'),field('vehicleNumber','Vehicle Number'),field('driverName','Driver Name'),field('balesCount','Bales Count','number'),field('pricePerTonThousand','Price Per Ton Thousand','number'),field('karteNumber','Karte Number'),field('grossWeightKg','Gross Weight Kg','number'),field('tareWeightKg','Tare Weight Kg','number'),field('discountPercent','Discount Percent','number','0',{step:'0.01'}),field('notes','Notes','textarea')].join('');
+  if(entryType==='downtime') html=[field('date','Date','date',d),field('entryTime','Entry Time','time',t),field('stopFrom','Stop From','time'),field('stopTo','Stop To','time'),field('reason','Reason'),field('type','Type','select','',{options:['Machine Fault','Labor Break','Cleaning','Power','Water','Other']}),field('notes','Notes','textarea')].join('');
+  if(entryType==='ph') html=[field('date','Date','date',d),field('entryTime','Entry Time','time',t),field('area','Area','select','',{options:['Boiler','Sand Filter','Rinse Tank']}),field('phReading','PH Reading','number','',{step:'0.01'}),field('notes','Notes','textarea')].join('');
+  if(entryType==='waste') html=[field('date','Date','date',d),field('entryTime','Entry Time','time',t),field('sortexWeightKg','Sortex Weight Kg','number'),field('sortexCount','Sortex Count','number'),field('bigFlexWeightKg','Big Flex Weight Kg','number'),field('bigFlexCount','Big Flex Count','number'),field('wireBagWeightKg','Wire & Bag Weight Kg','number'),field('wireBagCount','Wire & Bag Count','number'),field('capsLabelsWeightKg','Caps & Labels Weight Kg','number'),field('capsLabelsCount','Caps & Labels Count','number'),field('notes','Notes','textarea')].join('');
+  if(entryType==='sale') html=[field('date','Date','date',d),field('entryTime','Entry Time','time',t),field('buyerFactoryName','Buyer Factory Name'),field('buyerFactoryLocation','Buyer Factory Location'),field('vehicleNumber','Vehicle Number'),field('driverName','Driver Name'),field('netTripWeightKg','Net Trip Weight Kg','number'),field('discountPercent','Discount Percent','number','0',{step:'0.01'}),field('flexPricePerTonThousand','Flex Price Per Ton Thousand','number'),field('notes','Notes','textarea')].join('');
+  if(entryType==='boiler') html=buildBoilerBatchForm(d,t);
+  html += '<div class="form-actions"><button type="button" class="btn" id="cancelEntry">Cancel</button><button type="submit" class="btn primary">Save to Google Sheets</button></div>';
+  form.innerHTML=html;
+  const cancel = $('#cancelEntry'); if(cancel) cancel.onclick=closeEntryModal;
+  form.onsubmit=saveEntry;
+  if(entryType==='boiler') bindBoilerBatchUI();
+}
+function field(name,label,type='text',value='',cfg={}){ if(type==='select') return `<div class="field"><label>${label}</label><select name="${name}">${(cfg.options||[]).map(o=>`<option value="${o}">${o}</option>`).join('')}</select></div>`; if(type==='textarea') return `<div class="field full"><label>${label}</label><textarea name="${name}">${value||''}</textarea></div>`; return `<div class="field"><label>${label}</label><input name="${name}" type="${type}" value="${value||''}" ${cfg.step?`step="${cfg.step}"`:''}/></div>`; }
+function buildBoilerBatchForm(d,t){
+  const rows=[1,2,3,4,5,6].map(i=>{
+    const saved = boilerDraft[boilerTab]?.[i] || {};
+    return `<div class="boiler-row"><div><b>Meter ${i}</b></div><div><input name="b${boilerTab}m${i}pv" type="number" step="0.1" value="${saved.pv||''}" placeholder="PV" /></div><div><input name="b${boilerTab}m${i}sv" type="number" step="0.1" value="${saved.sv||''}" placeholder="SV" /></div><div><input name="b${boilerTab}m${i}a" type="number" step="0.1" value="${saved.a||''}" placeholder="A" /></div></div>`;
+  }).join('');
+  return `${field('date','Date','date',d)}${field('entryTime','Entry Time','time',t)}<div class="boiler-tabs"><button type="button" class="boiler-tab ${boilerTab===1?'active':''}" data-boiler="1">Boiler 1</button><button type="button" class="boiler-tab ${boilerTab===2?'active':''}" data-boiler="2">Boiler 2</button><span class="boiler-hint">Enter 6 meters for each boiler, then save once.</span></div><div class="boiler-table"><div class="boiler-row header"><div>Meter</div><div>Current Temperature PV</div><div>Set Temperature SV</div><div>Current A</div></div>${rows}</div><div class="field full"><label>Notes</label><textarea name="notes"></textarea></div>`;
+}
+function bindBoilerBatchUI(){
+  $$('.boiler-tab').forEach(btn=>btn.addEventListener('click',()=>{
+    saveCurrentBoilerTab();
+    boilerTab = Number(btn.dataset.boiler)||1;
+    buildEntryForm();
+  }));
+}
+function saveCurrentBoilerTab(){
+  const form = $('#entryForm'); if(!form) return;
+  const fd = new FormData(form);
+  if(!boilerDraft[boilerTab]) boilerDraft[boilerTab]={};
+  [1,2,3,4,5,6].forEach(m=>{
+    boilerDraft[boilerTab][m] = {
+      pv: fd.get(`b${boilerTab}m${m}pv`) || '',
+      sv: fd.get(`b${boilerTab}m${m}sv`) || '',
+      a: fd.get(`b${boilerTab}m${m}a`) || ''
+    };
+  });
+}
+async function saveEntry(e){
+  e.preventDefault();
+  const fd=new FormData(e.target); const data=Object.fromEntries(fd.entries());
+  let action='save'+entryType[0].toUpperCase()+entryType.slice(1); let payload=data;
+  if(entryType==='boiler'){
+    saveCurrentBoilerTab();
+    action='saveBoilerBatch'; payload=[];
+    [1,2].forEach(b=>[1,2,3,4,5,6].forEach(m=>{
+      const r = boilerDraft[b]?.[m] || {};
+      if(r.pv || r.sv || r.a) payload.push({date:data.date,entryTime:data.entryTime,boilerNumber:b,meterNumber:m,currentTemperaturePV:r.pv,setTemperatureSV:r.sv,currentA:r.a,notes:data.notes||''});
+    }));
+    if(!payload.length){ toast('Enter at least one boiler reading','bad'); return; }
+  }
+  if(entryType==='ph') action='savePH'; if(entryType==='sale') action='saveSale';
+  try{ await saveToSheets(action,payload); toast('Saved to Google Sheets successfully','good'); closeEntryModal(); await loadFromSheets(); }
+  catch(err){ console.error(err); writeLocalFallback(action,payload); toast('Google Sheets save failed. Saved locally as backup.','bad'); raw=readLocalFallback(); renderAll(); }
+}
+async function saveToSheets(action,data){
+  // CORS-safe Google Apps Script connector.
+  // We use JSONP GET for GitHub Pages compatibility.
+  // Boiler batch is split into single-row saves to avoid long URL limits.
+  if(action === 'saveBoilerBatch' && Array.isArray(data)){
+    const ids = [];
+    for(const item of data){
+      const res = await apiRequest('saveBoiler', item);
+      if(!res || !res.ok) throw new Error((res && res.error) || 'Boiler save failed');
+      if(res.id) ids.push(res.id);
+    }
+    return { ok:true, count:ids.length, ids };
+  }
+  const json = await apiRequest(action, data);
+  if(!json || !json.ok) throw new Error((json && json.error) || 'Save failed');
+  return json;
+}
+function exportCurrentPage(){ const tables={overview:$('#insightsTable'),receiving:$('#receivingTable'),process:$('#processTable'),waste:$('#wasteTable'),sales:$('#salesTable'),reports:$('#reportsTable')}; const table=tables[state.page]||$('#reportsTable'); const rows=[...table.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>`"${td.textContent.replace(/"/g,'""')}"`).join(',')); const blob=new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`environ-adapt-${state.page}.csv`; a.click(); URL.revokeObjectURL(a.href); }
