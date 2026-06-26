@@ -114,7 +114,52 @@ function jsonp(url){
 }
 function normalizePayload(d){
   d=d||{};
-  return { shifts: d.shifts||d['Shift Entries']||[], receivings:d.receivings||d.receiving||d['Receiving Entries']||[], downtimes:d.downtimes||d['Downtime Entries']||[], boilers:d.boilers||d['Boiler Readings']||[], ph:d.ph||d['PH Readings']||[], waste:d.waste||d['Waste Entries']||[], sales:d.sales||d['Sales Entries']||[] };
+  const pack = {
+    shifts: d.shifts||d['Shift Entries']||[],
+    receivings:d.receivings||d.receiving||d['Receiving Entries']||[],
+    downtimes:d.downtimes||d['Downtime Entries']||[],
+    boilers:d.boilers||d['Boiler Readings']||[],
+    ph:d.ph||d['PH Readings']||[],
+    waste:d.waste||d['Waste Entries']||[],
+    sales:d.sales||d['Sales Entries']||[]
+  };
+  Object.keys(pack).forEach(k=>pack[k]=(pack[k]||[]).map(standardizeRow));
+  return pack;
+}
+function standardizeRow(row){
+  row = row || {};
+  const out = {...row};
+  // Build normalized aliases so charts work with Excel, Google Sheets and Apps Script headers.
+  out.date = dateOnly(get(row,'Date','date'));
+  out.entryTime = timeOnly(get(row,'Entry Time','entryTime','Time','time'));
+  out.shiftId = get(row,'Shift ID','shiftId');
+  out.shiftType = get(row,'Shift Type','shiftType');
+  out.boilerNumber = get(row,'Boiler Number','boilerNumber');
+  out.meterNumber = get(row,'Meter Number','meterNumber');
+  out.currentTemperaturePV = get(row,'Current Temperature PV','currentTemperaturePV','PV','pv');
+  out.setTemperatureSV = get(row,'Set Temperature SV','setTemperatureSV','SV','sv');
+  out.currentA = get(row,'Current A','Current Ampere','currentA','currentAmpere');
+  out.phReading = get(row,'PH Reading','phReading','PH','ph');
+  out.area = get(row,'Area','area');
+  out.netProductionKg = get(row,'Net Production Kg','netProductionKg');
+  out.consumedWeightKg = get(row,'Consumed Weight Kg','consumedWeightKg');
+  out.consumedBalesCount = get(row,'Consumed Bales Count','consumedBalesCount');
+  out.producedBagsCount = get(row,'Produced Bags Count','producedBagsCount');
+  out.averageBagWeightKg = get(row,'Average Bag Weight Kg','Avg Bag Weight Kg','avgBagWeightKg','averageBagWeightKg');
+  out.averageBaleWeightKg = get(row,'Average Bale Weight Kg','Avg Bale Weight Kg','avgBaleWeightKg','averageBaleWeightKg');
+  out.netWeightAfterDiscountKg = get(row,'Net Weight After Discount Kg','netWeightAfterDiscountKg');
+  out.netWeightKg = get(row,'Net Weight Kg','netWeightKg');
+  out.balesCount = get(row,'Bales Count','balesCount');
+  out.downtimeMinutes = get(row,'Downtime Minutes','downtimeMinutes');
+  out.reason = get(row,'Downtime Reason','Reason','downtimeReason','reason');
+  out.stopFrom = timeOnly(get(row,'Stop From Time','Stop From','stopFromTime','stopFrom'));
+  out.stopTo = timeOnly(get(row,'Stop To Time','Stop To','stopToTime','stopTo'));
+  out.sortexWeightKg = get(row,'Sortex Weight Kg','sortexWeightKg');
+  out.bigFlexWeightKg = get(row,'Big Flex Weight Kg','bigFlexWeightKg');
+  out.wireBagWeightKg = get(row,'Wire And Bags Weight Kg','Wire Bag Weight Kg','wireAndBagsWeightKg','wireBagWeightKg');
+  out.capsLabelsWeightKg = get(row,'Broken Caps Labels Weight Kg','Caps Labels Weight Kg','brokenCapsLabelsWeightKg','capsLabelsWeightKg');
+  out.totalWasteKg = get(row,'Total Waste Weight Kg','Total Waste Kg','totalWasteWeightKg','totalWasteKg');
+  return out;
 }
 function readLocalFallback(){ try{return normalizePayload(JSON.parse(localStorage.getItem('localDashboardData')||'{}'));}catch(e){return emptyData();} }
 function writeLocalFallback(action, data){ const local=readLocalFallback(); const map={saveShift:'shifts',saveReceiving:'receivings',saveDowntime:'downtimes',saveBoiler:'boilers',saveBoilerBatch:'boilers',savePH:'ph',saveWaste:'waste',saveSale:'sales'}; const key=map[action]; if(!key)return; if(Array.isArray(data)) local[key].push(...data); else local[key].push(data); localStorage.setItem('localDashboardData', JSON.stringify(local)); }
@@ -122,8 +167,12 @@ function setStatus(t, type){ $('#connectionStatus').textContent=t; const dot=$('
 function toast(msg,type='good'){ const el=document.createElement('div'); el.className=`toast ${type}`; el.textContent=msg; $('#toastStack').appendChild(el); setTimeout(()=>el.remove(),4200); }
 
 function filtered(){
-  const inRange = row => { const d = get(row,'Date','date'); if(!d) return true; return (!state.dateFrom || d>=state.dateFrom) && (!state.dateTo || d<=state.dateTo); };
-  const shiftOk = row => state.shift==='all' || get(row,'Shift Type','shiftType')===state.shift || get(row,'Shift ID','shiftId')?.includes(state.shift);
+  const inRange = row => {
+    const d = dateOnly(get(row,'Date','date'));
+    if(!d) return true;
+    return (!state.dateFrom || d>=state.dateFrom) && (!state.dateTo || d<=state.dateTo);
+  };
+  const shiftOk = row => state.shift==='all' || get(row,'Shift Type','shiftType')===state.shift || String(get(row,'Shift ID','shiftId')||'').toLowerCase().includes(String(state.shift).toLowerCase());
   const f = arr => (arr||[]).filter(r=>inRange(r) && shiftOk(r));
   let data={ shifts:f(raw.shifts), receivings:f(raw.receivings), downtimes:f(raw.downtimes), boilers:f(raw.boilers), ph:f(raw.ph), waste:f(raw.waste), sales:f(raw.sales) };
   if(state.chartFilter){ data = applyChartFilter(data, state.chartFilter); $('#activeFilter').classList.remove('hidden'); $('#activeFilterText').textContent=`Filter: ${state.chartFilter.type} = ${state.chartFilter.value}`; } else $('#activeFilter').classList.add('hidden');
@@ -134,10 +183,29 @@ function applyChartFilter(data, filter){
   if(filter.type==='Waste Type') data.waste = data.waste.map(r=>({...r, _focusWaste:v}));
   if(filter.type==='PH Area') data.ph = data.ph.filter(r=>String(get(r,'Area','area')).toLowerCase()===v);
   if(filter.type==='Boiler') data.boilers = data.boilers.filter(r=>String(get(r,'Boiler Number','boilerNumber'))===String(filter.value));
-  if(filter.type==='Downtime Reason') data.downtimes = data.downtimes.filter(r=>String(get(r,'Reason','reason')).toLowerCase()===v);
+  if(filter.type==='Downtime Reason') data.downtimes = data.downtimes.filter(r=>String(get(r,'Downtime Reason','Reason','reason')).toLowerCase()===v);
   return data;
 }
 function get(row, ...keys){ for(const k of keys){ if(row && row[k]!=null && row[k] !== '') return row[k]; } return ''; }
+function dateOnly(v){
+  if(v==null || v==='') return '';
+  if(typeof v === 'number'){ const d = excelDateToJS(v); return DATE_FMT.format(d); }
+  let s=String(v).trim();
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+  const m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+  if(m){ const dd=m[1].padStart(2,'0'), mm=m[2].padStart(2,'0'); return `${m[3]}-${mm}-${dd}`; }
+  const d=new Date(s); return isNaN(d)?'':DATE_FMT.format(d);
+}
+function timeOnly(v){
+  if(v==null || v==='') return '';
+  if(typeof v === 'number'){ const mins=Math.round((v%1)*1440); return `${String(Math.floor(mins/60)).padStart(2,'0')}:${String(mins%60).padStart(2,'0')}`; }
+  let s=String(v).trim();
+  let m=s.match(/(\d{1,2}):(\d{2})(?::\d{2})?/);
+  if(m) return `${m[1].padStart(2,'0')}:${m[2]}`;
+  return s.slice(0,5);
+}
+function excelDateToJS(serial){ return new Date(Math.round((serial - 25569) * 86400 * 1000)); }
+function hourKey(row){ const t=timeOnly(get(row,'Entry Time','entryTime','Time','time')); return t?`${t.slice(0,2)}:00`:''; }
 function compute(data=filtered()){
   const receivingAfter = sum(data.receivings, r=>getNum(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg'));
   const trips=data.receivings.length;
@@ -146,8 +214,8 @@ function compute(data=filtered()){
   const consumedBales=sum(data.shifts, r=>getNum(r,'Consumed Bales Count','consumedBalesCount'));
   const consumed=consumedBales&&avgBale?consumedBales*avgBale:receivingAfter;
   const producedBags=sum(data.shifts, r=>getNum(r,'Produced Bags Count','producedBagsCount'));
-  const netProduction=sum(data.shifts, r=> getNum(r,'Net Production Kg','netProductionKg') || (getNum(r,'Produced Bags Count','producedBagsCount')*getNum(r,'Avg Bag Weight Kg','avgBagWeightKg')) );
-  const wasteRows=data.waste; const waste=sum(wasteRows, r=>getNum(r,'Total Waste Kg','totalWasteKg') || wasteTypeTotals([r]).total);
+  const netProduction=sum(data.shifts, r=> getNum(r,'Net Production Kg','netProductionKg') || (getNum(r,'Produced Bags Count','producedBagsCount')*getNum(r,'Average Bag Weight Kg','Avg Bag Weight Kg','avgBagWeightKg','averageBagWeightKg')) );
+  const wasteRows=data.waste; const waste=sum(wasteRows, r=>getNum(r,'Total Waste Weight Kg','Total Waste Kg','totalWasteWeightKg','totalWasteKg') || wasteTypeTotals([r]).total);
   const actualLoss=Math.max(0, consumed - (netProduction+waste));
   const downtime=sum(data.downtimes, r=>getNum(r,'Downtime Minutes','downtimeMinutes'));
   const stops=data.downtimes.length;
@@ -188,34 +256,68 @@ function renderKpis(){
   $('#salesKpis').innerHTML=kpiHtml(renderSalesKpis(d.sales));
   $$('.kpi[data-filter-type]').forEach(k=>k.addEventListener('click',()=>{ if(k.dataset.filterType){ state.chartFilter={type:k.dataset.filterType,value:k.dataset.filterValue}; saveState(); renderAll(); }}));
 }
-function wasteTypeTotals(rows){ return { sortex:sum(rows,r=>getNum(r,'Sortex Weight Kg','sortexWeightKg')), bigFlex:sum(rows,r=>getNum(r,'Big Flex Weight Kg','bigFlexWeightKg')), wireBag:sum(rows,r=>getNum(r,'Wire Bag Weight Kg','wireBagWeightKg')), capsLabels:sum(rows,r=>getNum(r,'Caps Labels Weight Kg','capsLabelsWeightKg')), get total(){return this.sortex+this.bigFlex+this.wireBag+this.capsLabels;} }; }
+function wasteTypeTotals(rows){ return {
+  sortex:sum(rows,r=>getNum(r,'Sortex Weight Kg','sortexWeightKg')),
+  bigFlex:sum(rows,r=>getNum(r,'Big Flex Weight Kg','bigFlexWeightKg')),
+  wireBag:sum(rows,r=>getNum(r,'Wire And Bags Weight Kg','Wire Bag Weight Kg','wireAndBagsWeightKg','wireBagWeightKg')),
+  capsLabels:sum(rows,r=>getNum(r,'Broken Caps Labels Weight Kg','Caps Labels Weight Kg','brokenCapsLabelsWeightKg','capsLabelsWeightKg')),
+  get total(){return this.sortex+this.bigFlex+this.wireBag+this.capsLabels;}
+}; }
 function renderSalesKpis(sales){ const net=sum(sales,r=>getNum(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg')); const before=sum(sales,r=>getNum(r,'Sale Price Before Discount','salePriceBeforeDiscount')); const after=sum(sales,r=>getNum(r,'Sale Price After Discount','salePriceAfterDiscount')); return [{icon:'↗',title:'Sales Weight',value:fmt(net/1000,2),unit:'MT',sub:`${sales.length} sales trips`},{icon:'£',title:'Before Discount',value:fmt(before,0),sub:'Total value'},{icon:'£',title:'After Discount',value:fmt(after,0),sub:'Total value'},{icon:'−',title:'Difference',value:fmt(before-after,0),sub:'Discount effect'}]; }
 function renderCharts(){ const d=filtered(), c=compute(d); renderProductionFlow(c); renderPhChips(); renderMeterCards(d.boilers); renderBottomMetrics(c); createOrUpdateCharts(d,c); }
 function renderProductionFlow(c){ $('#productionFlow').innerHTML=`<div class="flow-node"><small>Consumed</small><b>${fmt(c.consumed/1000,2)} MT</b><small>100%</small></div><div class="flow-node secondary"><small>Net Production</small><b>${fmt(c.netProduction/1000,2)} MT</b><small>${pct(c.materialPercent)}</small></div><div class="flow-stack"><div class="flow-node warn"><small>Waste</small><b>${fmt(c.waste/1000,2)} MT</b><small>${pct(c.wastePercent)}</small></div><div class="flow-node danger"><small>Actual Loss</small><b>${fmt(c.actualLoss/1000,2)} MT</b><small>${pct(c.actualLossPercent)}</small></div></div>`; }
 function renderPhChips(){ const areas=['all','Boiler','Sand Filter','Rinse Tank']; const html=areas.map(a=>`<button class="mini-chip ${state.phArea===a?'active':''}" data-ph-area="${a}">${a==='all'?'All Areas':a}</button>`).join(''); $('#phChips').innerHTML=html; $('#processPhChips').innerHTML=html; }
 function updateMeterOptions(){ const opts='<option value="all">All Meters</option>'+[1,2,3,4,5,6].map(i=>`<option value="${i}">Meter ${i}</option>`).join(''); ['meterFilter','processMeterFilter'].forEach(id=>{ const el=$('#'+id); if(el && el.innerHTML!==opts) el.innerHTML=opts; el.value=state.meter; }); }
-function renderMeterCards(boilers){ const rows=filterBoilers(boilers); const latest={}; rows.forEach(r=>{ const key=`${get(r,'Boiler Number','boilerNumber')}-${get(r,'Meter Number','meterNumber')}`; latest[key]=r; }); let html=''; const b = state.boiler==='all'?[1,2]:[Number(state.boiler)]; b.forEach(bo=>{ [1,2,3,4,5,6].forEach(m=>{ if(state.meter!=='all' && String(m)!==String(state.meter)) return; const r=latest[`${bo}-${m}`]||{}; const pv=getNum(r,'Current Temperature PV','currentTemperaturePV'), sv=getNum(r,'Set Temperature SV','setTemperatureSV'), a=getNum(r,'Current A','currentA'), delta=pv-sv; html += `<div class="meter-card" data-filter-type="Boiler" data-filter-value="${bo}"><b>B${bo} • Meter ${m}</b><div>PV <strong>${fmt(pv,0)}°C</strong></div><div>SV <strong>${fmt(sv,0)}°C</strong></div><div>Current <strong>${fmt(a,1)} A</strong></div><div class="delta ${Math.abs(delta)<=5?'good':'bad'}">Δ ${fmt(delta,0)}°C</div></div>`; }); }); $('#meterCards').innerHTML=html||'<p class="empty">No boiler readings yet.</p>'; $('#boilerSplit').innerHTML=html; }
+function renderMeterCards(boilers){ const rows=filterBoilers(boilers); const latest={}; rows.forEach(r=>{ const key=`${get(r,'Boiler Number','boilerNumber')}-${get(r,'Meter Number','meterNumber')}`; latest[key]=r; }); let html=''; const b = state.boiler==='all'?[1,2]:[Number(state.boiler)]; b.forEach(bo=>{ [1,2,3,4,5,6].forEach(m=>{ if(state.meter!=='all' && String(m)!==String(state.meter)) return; const r=latest[`${bo}-${m}`]||{}; const pv=getNum(r,'Current Temperature PV','currentTemperaturePV'), sv=getNum(r,'Set Temperature SV','setTemperatureSV'), a=getNum(r,'Current A','Current Ampere','currentA','currentAmpere'), delta=pv-sv; html += `<div class="meter-card" data-filter-type="Boiler" data-filter-value="${bo}"><b>B${bo} • Meter ${m}</b><div>PV <strong>${fmt(pv,0)}°C</strong></div><div>SV <strong>${fmt(sv,0)}°C</strong></div><div>Current <strong>${fmt(a,1)} A</strong></div><div class="delta ${Math.abs(delta)<=5?'good':'bad'}">Δ ${fmt(delta,0)}°C</div></div>`; }); }); $('#meterCards').innerHTML=html||'<p class="empty">No boiler readings yet.</p>'; $('#boilerSplit').innerHTML=html; }
 function filterBoilers(boilers){ return boilers.filter(r=>(state.boiler==='all'||String(get(r,'Boiler Number','boilerNumber'))===String(state.boiler)) && (state.meter==='all'||String(get(r,'Meter Number','meterNumber'))===String(state.meter))); }
 function renderBottomMetrics(c){ $('#bottomMetrics').innerHTML=[['Operating',`${fmt(c.downtime?720-c.downtime:0,0)} min`],['Avg Stop',`${fmt(c.avgStop,1)} min`],['Stops',fmt(c.stops,0)],['Efficiency',pct(Math.max(0,100-c.operationLossPercent))]].map(x=>`<div class="mini-metric"><small>${x[0]}</small><b>${x[1]}</b></div>`).join(''); }
 const labelPlugin={id:'labels',afterDatasetsDraw(chart){const{ctx}=chart;ctx.save();ctx.font='700 12px Inter,Arial';ctx.fillStyle=getCss('--text');ctx.textAlign='center';chart.data.datasets.forEach((ds,di)=>{const meta=chart.getDatasetMeta(di); if(meta.hidden)return; meta.data.forEach((el,i)=>{const val=ds.data[i]; if(!val)return; const p=el.tooltipPosition(); ctx.fillText((ds.label&&ds.label.includes('%'))?pct(val):fmt(val, val<10?1:0),p.x,p.y-8);});});ctx.restore();}};
 function getCss(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 function chartOptions(extra={}){ return {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:getCss('--text'),boxWidth:14}},tooltip:{enabled:true}},scales:{x:{ticks:{color:getCss('--muted')},grid:{color:'rgba(100,116,139,.13)'}},y:{ticks:{color:getCss('--muted')},grid:{color:'rgba(100,116,139,.13)'}}},onClick:(evt, els, chart)=>{ if(els.length){ const i=els[0].index; const label=chart.data.labels[i]; toast(`Selected: ${label}`); if(chart.canvas.id.toLowerCase().includes('waste')) state.chartFilter={type:'Waste Type',value:label}; if(chart.canvas.id.toLowerCase().includes('ph')) state.chartFilter={type:'PH Area',value:label}; saveState(); renderAll(); }},...extra}; }
 function makeChart(id,type,data,options={}){ if(charts[id]){ charts[id].data=data; charts[id].options={...charts[id].options,...options}; charts[id].update(); return charts[id]; } const ctx=$('#'+id); if(!ctx) return null; charts[id]=new Chart(ctx,{type,data,options:chartOptions(options),plugins:[labelPlugin]}); return charts[id]; }
+
 function createOrUpdateCharts(d,c){
-  makeChart('productionTrendChart','line',{labels:dailyLabels(),datasets:[{label:'Consumed',data:seriesDaily(d.shifts,()=>c.consumed/1000),borderColor:COLORS.dark,backgroundColor:'transparent',tension:.35},{label:'Production',data:seriesDaily(d.shifts,()=>c.netProduction/1000),borderColor:COLORS.green2,tension:.35},{label:'Actual Loss',data:seriesDaily(d.shifts,()=>c.actualLoss/1000),borderColor:COLORS.danger,tension:.35}]});
+  const prod = productionDailySeries(d,c);
+  makeChart('productionTrendChart','line',{labels:prod.labels,datasets:[
+    {label:'Consumed',data:prod.consumed,borderColor:COLORS.dark,backgroundColor:'transparent',tension:.35},
+    {label:'Production',data:prod.production,borderColor:COLORS.green2,tension:.35},
+    {label:'Actual Loss',data:prod.loss,borderColor:COLORS.danger,tension:.35}
+  ]},{scales:{y:{beginAtZero:true,ticks:{color:getCss('--muted')},grid:{color:'rgba(100,116,139,.13)'}}}});
   const wt=wasteTypeTotals(d.waste); const wLabels=['Big Flex','Sortex','Wire & Bag','Caps & Labels']; const wData=[wt.bigFlex/1000,wt.sortex/1000,wt.wireBag/1000,wt.capsLabels/1000];
   makeChart('wasteTypeChart','doughnut',{labels:wLabels,datasets:[{data:wData,backgroundColor:[COLORS.dark,COLORS.green,COLORS.green2,COLORS.warn],borderWidth:3,borderColor:getCss('--surface')}]},{cutout:'65%',scales:{}});
   makeChart('wasteDonutPageChart','doughnut',{labels:wLabels,datasets:[{data:wData,backgroundColor:[COLORS.dark,COLORS.green,COLORS.green2,COLORS.warn],borderWidth:3,borderColor:getCss('--surface')}]},{cutout:'60%',scales:{}});
   renderPhChart('phTrendChart',d.ph); renderPhChart('processPhChart',d.ph); renderBoilerChart('boilerChart',d.boilers); renderBoilerChart('processBoilerChart',d.boilers);
   makeChart('supplierChart','bar',{labels:groupLabels(d.receivings,'Supplier Name','supplierName'),datasets:[{label:'MT',data:groupSum(d.receivings,'Supplier Name','supplierName','Net Weight After Discount Kg','netWeightAfterDiscountKg').map(v=>v/1000),backgroundColor:COLORS.green,borderRadius:12}]});
   makeChart('productionShiftChart','bar',{labels:['Day','Night'],datasets:[{label:'MT',data:['Day','Night'].map(s=>sum(d.shifts.filter(r=>get(r,'Shift Type','shiftType')===s),r=>getNum(r,'Net Production Kg','netProductionKg'))/1000),backgroundColor:[COLORS.green,COLORS.green2],borderRadius:12}]});
-  const reasons=group(d.downtimes,r=>get(r,'Reason','reason')||'Unknown'); makeChart('downtimeReasonChart','bar',{labels:Object.keys(reasons),datasets:[{label:'Minutes',data:Object.values(reasons).map(arr=>sum(arr,r=>getNum(r,'Downtime Minutes','downtimeMinutes'))),backgroundColor:COLORS.green,borderRadius:10}]},{indexAxis:'y'});
+  const reasons=group(d.downtimes,r=>get(r,'Downtime Reason','Reason','reason')||'Unknown'); makeChart('downtimeReasonChart','bar',{labels:Object.keys(reasons),datasets:[{label:'Minutes',data:Object.values(reasons).map(arr=>sum(arr,r=>getNum(r,'Downtime Minutes','downtimeMinutes'))),backgroundColor:COLORS.green,borderRadius:10}]},{indexAxis:'y'});
 }
-function renderPhChart(id, rows){ const areas=['Boiler','Sand Filter','Rinse Tank'].filter(a=>state.phArea==='all'||state.phArea===a); const labels=hourLabels(); const ds=areas.map((a,i)=>({label:a,data:labels.map(h=>avg(rows.filter(r=>String(get(r,'Area','area'))===a && String(get(r,'Entry Time','entryTime')).slice(0,2)===h.slice(0,2)),r=>getNum(r,'PH Reading','phReading'))),borderColor:[COLORS.dark,COLORS.blue,COLORS.green2][i],backgroundColor:'transparent',tension:.35})); ds.push({label:'Target Range (6.5 - 8.5)',data:labels.map(()=>8.5),borderColor:'#94a3b8',borderDash:[5,5],pointRadius:0}); makeChart(id,'line',{labels,datasets:ds},{scales:{y:{min:0,max:14,ticks:{color:getCss('--muted')},grid:{color:'rgba(100,116,139,.13)'},title:{display:true,text:'pH'}}}}); }
-function renderBoilerChart(id, rows){ rows=filterBoilers(rows); const labels=hourLabels(); const ds=[]; if(state.signal.pv) ds.push({label:'PV (°C)',data:labels.map(h=>avg(rows.filter(r=>String(get(r,'Entry Time','entryTime')).slice(0,2)===h.slice(0,2)),r=>getNum(r,'Current Temperature PV','currentTemperaturePV'))),borderColor:COLORS.green,backgroundColor:'transparent',tension:.35}); if(state.signal.sv) ds.push({label:'SV (°C)',data:labels.map(h=>avg(rows.filter(r=>String(get(r,'Entry Time','entryTime')).slice(0,2)===h.slice(0,2)),r=>getNum(r,'Set Temperature SV','setTemperatureSV'))),borderColor:COLORS.green2,borderDash:[6,4],backgroundColor:'transparent',tension:.35}); if(state.signal.a) ds.push({label:'Current A',data:labels.map(h=>avg(rows.filter(r=>String(get(r,'Entry Time','entryTime')).slice(0,2)===h.slice(0,2)),r=>getNum(r,'Current A','currentA'))),borderColor:COLORS.warn,backgroundColor:'transparent',tension:.35}); makeChart(id,'line',{labels,datasets:ds}); }
-function dailyLabels(){ return ['Jun 19','Jun 20','Jun 21','Jun 22','Jun 23','Jun 24','Jun 25']; }
-function hourLabels(){ return ['00 AM','03 AM','06 AM','09 AM','12 PM','03 PM','06 PM','09 PM']; }
-function seriesDaily(rows, fn){ const val=fn(); return dailyLabels().map((_,i)=> Math.max(0,val*(.88+((i%4)*.04)))); }
+function productionDailySeries(d,c){
+  const labels = sortedUnique([...d.shifts,...d.receivings,...d.waste,...d.downtimes].map(r=>dateOnly(get(r,'Date','date')))).filter(Boolean);
+  const finalLabels = labels.length ? labels : [state.dateTo || today()];
+  return {
+    labels: finalLabels.map(prettyDate),
+    consumed: finalLabels.map(date=>{ const sub={...d, shifts:d.shifts.filter(r=>dateOnly(get(r,'Date','date'))===date), receivings:d.receivings.filter(r=>dateOnly(get(r,'Date','date'))===date), waste:d.waste.filter(r=>dateOnly(get(r,'Date','date'))===date)}; return compute(sub).consumed/1000; }),
+    production: finalLabels.map(date=>sum(d.shifts.filter(r=>dateOnly(get(r,'Date','date'))===date),r=>getNum(r,'Net Production Kg','netProductionKg'))/1000),
+    loss: finalLabels.map(date=>{ const sub={...d, shifts:d.shifts.filter(r=>dateOnly(get(r,'Date','date'))===date), receivings:d.receivings.filter(r=>dateOnly(get(r,'Date','date'))===date), waste:d.waste.filter(r=>dateOnly(get(r,'Date','date'))===date)}; return compute(sub).actualLoss/1000; })
+  };
+}
+function renderPhChart(id, rows){
+  const areas=['Boiler','Sand Filter','Rinse Tank'].filter(a=>state.phArea==='all'||state.phArea===a);
+  const labels=timeLabels(rows);
+  const ds=areas.map((a,i)=>({label:a,data:labels.map(h=>avg(rows.filter(r=>String(get(r,'Area','area'))===a && hourKey(r)===h),r=>getNum(r,'PH Reading','phReading'))),borderColor:[COLORS.dark,COLORS.blue,COLORS.green2][i],backgroundColor:'transparent',tension:.35,spanGaps:true}));
+  ds.push({label:'Target Range (6.5 - 8.5)',data:labels.map(()=>8.5),borderColor:'#94a3b8',borderDash:[5,5],pointRadius:0});
+  makeChart(id,'line',{labels,datasets:ds},{scales:{y:{min:0,max:14,ticks:{color:getCss('--muted')},grid:{color:'rgba(100,116,139,.13)'},title:{display:true,text:'pH'}}}});
+}
+function renderBoilerChart(id, rows){
+  rows=filterBoilers(rows); const labels=timeLabels(rows); const ds=[];
+  if(state.signal.pv) ds.push({label:'PV (°C)',data:labels.map(h=>avg(rows.filter(r=>hourKey(r)===h),r=>getNum(r,'Current Temperature PV','currentTemperaturePV'))),borderColor:COLORS.green,backgroundColor:'transparent',tension:.35,spanGaps:true});
+  if(state.signal.sv) ds.push({label:'SV (°C)',data:labels.map(h=>avg(rows.filter(r=>hourKey(r)===h),r=>getNum(r,'Set Temperature SV','setTemperatureSV'))),borderColor:COLORS.green2,borderDash:[6,4],backgroundColor:'transparent',tension:.35,spanGaps:true});
+  if(state.signal.a) ds.push({label:'Current A',data:labels.map(h=>avg(rows.filter(r=>hourKey(r)===h),r=>getNum(r,'Current A','Current Ampere','currentA','currentAmpere'))),borderColor:COLORS.warn,backgroundColor:'transparent',tension:.35,spanGaps:true});
+  makeChart(id,'line',{labels,datasets:ds});
+}
+function timeLabels(rows){ const labels=sortedUnique((rows||[]).map(hourKey)).filter(Boolean); return labels.length?labels:['00:00','03:00','06:00','09:00','12:00','15:00','18:00','21:00']; }
+function sortedUnique(arr){ return [...new Set(arr.filter(Boolean))].sort(); }
+function prettyDate(date){ try{ const d=new Date(date+'T00:00:00'); return d.toLocaleDateString('en-US',{month:'short',day:'2-digit'}); }catch(e){ return date; } }
 function group(arr, fn){ return (arr||[]).reduce((o,r)=>{ const k=fn(r); (o[k]=o[k]||[]).push(r); return o; },{}); }
 function groupLabels(arr,...keys){ return Object.keys(group(arr,r=>get(r,...keys)||'Unknown')); }
 function groupSum(arr,k1,k2,v1,v2){ const g=group(arr,r=>get(r,k1,k2)||'Unknown'); return Object.values(g).map(rows=>sum(rows,r=>getNum(r,v1,v2))); }
@@ -225,8 +327,8 @@ function renderTables(){ const d=filtered(); renderInsights(d); renderReceivingT
 function renderTable(el, headers, rows, rowClick){ const h=headers.map(x=>`<th>${x}</th>`).join(''); const b=rows.length?rows.map((r,idx)=>`<tr data-idx="${idx}">${headers.map(k=>`<td>${r[k]??''}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${headers.length}">No data yet</td></tr>`; el.innerHTML=`<thead><tr>${h}</tr></thead><tbody>${b}</tbody>`; if(rowClick) $$('tbody tr',el).forEach(tr=>tr.addEventListener('click',()=>rowClick(rows[tr.dataset.idx]))); }
 function renderInsights(d){ const c=compute(d); const rows=[{Date:state.dateTo,'Total Waste (MT)':fmt(c.waste/1000,2),'% of Input':pct(c.wastePercent),'Actual Loss (MT)':fmt(c.actualLoss/1000,2),'Downtime (Min)':fmt(c.downtime,0),'Stops Count':fmt(c.stops,0),'Trend':'⌁⌁⌁'}]; renderTable($('#insightsTable'),Object.keys(rows[0]),rows); }
 function renderReceivingTable(d){ const rows=d.receivings.map(r=>({'Date':get(r,'Date','date'),'Supplier':get(r,'Supplier Name','supplierName'),'Region':get(r,'Region','region'),'Vehicle':get(r,'Vehicle Number','vehicleNumber'),'Bales':get(r,'Bales Count','balesCount'),'Net Kg':fmt(getNum(r,'Net Weight Kg','netWeightKg'),0),'After Discount Kg':fmt(getNum(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg'),0),'Avg Bale Kg':fmt(getNum(r,'Avg Bale Weight Kg','avgBaleWeightKg'),1)})); renderTable($('#receivingTable'),['Date','Supplier','Region','Vehicle','Bales','Net Kg','After Discount Kg','Avg Bale Kg'],rows); }
-function renderProcessTable(d){ const rows=[...d.boilers.map(r=>({'Type':'Boiler','Date':get(r,'Date','date'),'Time':get(r,'Entry Time','entryTime'),'Area':`B${get(r,'Boiler Number','boilerNumber')} M${get(r,'Meter Number','meterNumber')}`,'PV / PH':fmt(getNum(r,'Current Temperature PV','currentTemperaturePV'),1),'SV':fmt(getNum(r,'Set Temperature SV','setTemperatureSV'),1),'Current A':fmt(getNum(r,'Current A','currentA'),1)})),...d.ph.map(r=>({'Type':'PH','Date':get(r,'Date','date'),'Time':get(r,'Entry Time','entryTime'),'Area':get(r,'Area','area'),'PV / PH':fmt(getNum(r,'PH Reading','phReading'),2),'SV':'','Current A':''}))]; renderTable($('#processTable'),['Type','Date','Time','Area','PV / PH','SV','Current A'],rows); }
-function renderWasteTable(d){ const rows=d.waste.map(r=>({'Date':get(r,'Date','date'),'Sortex Kg':fmt(getNum(r,'Sortex Weight Kg','sortexWeightKg'),0),'Big Flex Kg':fmt(getNum(r,'Big Flex Weight Kg','bigFlexWeightKg'),0),'Wire & Bag Kg':fmt(getNum(r,'Wire Bag Weight Kg','wireBagWeightKg'),0),'Caps & Labels Kg':fmt(getNum(r,'Caps Labels Weight Kg','capsLabelsWeightKg'),0),'Total Kg':fmt(getNum(r,'Total Waste Kg','totalWasteKg'),0)})); const down=d.downtimes.map(r=>({'Date':get(r,'Date','date'),'Sortex Kg':'Stop','Big Flex Kg':get(r,'Reason','reason'),'Wire & Bag Kg':get(r,'Stop From','stopFrom'),'Caps & Labels Kg':get(r,'Stop To','stopTo'),'Total Kg':fmt(getNum(r,'Downtime Minutes','downtimeMinutes'),0)+' min'})); renderTable($('#wasteTable'),['Date','Sortex Kg','Big Flex Kg','Wire & Bag Kg','Caps & Labels Kg','Total Kg'],[...rows,...down]); }
+function renderProcessTable(d){ const rows=[...d.boilers.map(r=>({'Type':'Boiler','Date':get(r,'Date','date'),'Time':get(r,'Entry Time','entryTime'),'Area':`B${get(r,'Boiler Number','boilerNumber')} M${get(r,'Meter Number','meterNumber')}`,'PV / PH':fmt(getNum(r,'Current Temperature PV','currentTemperaturePV'),1),'SV':fmt(getNum(r,'Set Temperature SV','setTemperatureSV'),1),'Current A':fmt(getNum(r,'Current A','Current Ampere','currentA','currentAmpere'),1)})),...d.ph.map(r=>({'Type':'PH','Date':get(r,'Date','date'),'Time':get(r,'Entry Time','entryTime'),'Area':get(r,'Area','area'),'PV / PH':fmt(getNum(r,'PH Reading','phReading'),2),'SV':'','Current A':''}))]; renderTable($('#processTable'),['Type','Date','Time','Area','PV / PH','SV','Current A'],rows); }
+function renderWasteTable(d){ const rows=d.waste.map(r=>({'Date':get(r,'Date','date'),'Sortex Kg':fmt(getNum(r,'Sortex Weight Kg','sortexWeightKg'),0),'Big Flex Kg':fmt(getNum(r,'Big Flex Weight Kg','bigFlexWeightKg'),0),'Wire & Bag Kg':fmt(getNum(r,'Wire And Bags Weight Kg','Wire Bag Weight Kg','wireAndBagsWeightKg','wireBagWeightKg'),0),'Caps & Labels Kg':fmt(getNum(r,'Broken Caps Labels Weight Kg','Caps Labels Weight Kg','brokenCapsLabelsWeightKg','capsLabelsWeightKg'),0),'Total Kg':fmt(getNum(r,'Total Waste Weight Kg','Total Waste Kg','totalWasteWeightKg','totalWasteKg'),0)})); const down=d.downtimes.map(r=>({'Date':get(r,'Date','date'),'Sortex Kg':'Stop','Big Flex Kg':get(r,'Downtime Reason','Reason','reason'),'Wire & Bag Kg':get(r,'Stop From Time','Stop From','stopFromTime','stopFrom'),'Caps & Labels Kg':get(r,'Stop To Time','Stop To','stopToTime','stopTo'),'Total Kg':fmt(getNum(r,'Downtime Minutes','downtimeMinutes'),0)+' min'})); renderTable($('#wasteTable'),['Date','Sortex Kg','Big Flex Kg','Wire & Bag Kg','Caps & Labels Kg','Total Kg'],[...rows,...down]); }
 function renderSalesTable(d){ const rows=d.sales.map(r=>({'Date':get(r,'Date','date'),'Factory':get(r,'Buyer Factory Name','buyerFactoryName'),'Location':get(r,'Buyer Factory Location','buyerFactoryLocation'),'Vehicle':get(r,'Vehicle Number','vehicleNumber'),'Driver':get(r,'Driver Name','driverName'),'Net Kg':fmt(getNum(r,'Net Trip Weight Kg','netTripWeightKg'),0),'After Discount':fmt(getNum(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg'),0),'Price After':fmt(getNum(r,'Sale Price After Discount','salePriceAfterDiscount'),0)})); renderTable($('#salesTable'),['Date','Factory','Location','Vehicle','Driver','Net Kg','After Discount','Price After'],rows); }
 function renderReportsTable(d){ const rows=[...d.shifts.map(r=>({Table:'Shift',Date:get(r,'Date','date'),Info:get(r,'Shift Type','shiftType'),Value:get(r,'Net Production Kg','netProductionKg')})),...d.receivings.map(r=>({Table:'Receiving',Date:get(r,'Date','date'),Info:get(r,'Supplier Name','supplierName'),Value:get(r,'Net Weight After Discount Kg','netWeightAfterDiscountKg')})),...d.waste.map(r=>({Table:'Waste',Date:get(r,'Date','date'),Info:'Total Waste',Value:get(r,'Total Waste Kg','totalWasteKg')}))]; renderTable($('#reportsTable'),['Table','Date','Info','Value'],rows); }
 
