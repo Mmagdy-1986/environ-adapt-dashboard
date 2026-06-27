@@ -448,6 +448,7 @@ button, input, select, textarea { font: inherit; }
 /* ── GRIDS ── */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
 .grid-3 .span-2 { grid-column: span 2; }
 .mt { margin-top: 14px; }
 
@@ -1180,6 +1181,7 @@ td { font-variant-numeric: tabular-nums; }
 
   .grid-2,
   .grid-3,
+  .grid-4,
   .price-analysis {
     grid-template-columns: 1fr !important;
     gap: 12px;
@@ -1395,4 +1397,3 @@ td { font-variant-numeric: tabular-nums; }
     min-width: 88vw !important;
   }
 }
-
