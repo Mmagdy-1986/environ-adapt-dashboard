@@ -182,7 +182,11 @@ function applyFilters(){
 /* ── METRICS ── */
 function metrics(){
   const f=state.filtered;
-  const receivingKg=f.receivings.reduce((a,r)=>a+num(rowVal(r,['Net Weight After Discount Kg'])),0);
+  // Net Weight = what physically entered the factory (supplier leaves full load)
+  // Net After Discount = payment basis only (paper deduction)
+  const netIntoFactory=f.receivings.reduce((a,r)=>a+num(rowVal(r,['Net Weight Kg'])),0);
+  const receivingKg=netIntoFactory; // use physical intake for yield calculations
+  const paymentKg=f.receivings.reduce((a,r)=>a+num(rowVal(r,['Net Weight After Discount Kg'])),0); // payment basis
   const receivingGross=f.receivings.reduce((a,r)=>a+num(rowVal(r,['Gross Weight Kg'])),0);
   const receivingTare=f.receivings.reduce((a,r)=>a+num(rowVal(r,['Tare Weight Kg'])),0);
   const receivingNet=f.receivings.reduce((a,r)=>a+num(rowVal(r,['Net Weight Kg'])),0);
@@ -220,7 +224,7 @@ function metrics(){
   const salesDiscountLoss=f.sales.reduce((a,r)=>a+num(rowVal(r,['Price Difference'])),0);
   const avgSalePrice=salesKg?salesRevenue/(salesKg/1000):0;
   // Daily receiving map for avg
-  const dailyRecMap={};f.receivings.forEach(r=>{const k=dateKey(rowVal(r,['Date']));dailyRecMap[k]=(dailyRecMap[k]||0)+num(rowVal(r,['Net Weight After Discount Kg']))/1000;});
+  const dailyRecMap={};f.receivings.forEach(r=>{const k=dateKey(rowVal(r,['Date']));dailyRecMap[k]=(dailyRecMap[k]||0)+num(rowVal(r,['Net Weight Kg']))/1000;});
   const activeDays=Object.keys(dailyRecMap);
   const avgDailyReceiving=activeDays.length?Object.values(dailyRecMap).reduce((a,b)=>a+b)/activeDays.length:0;
   // Utilities metrics
@@ -231,6 +235,16 @@ function metrics(){
   const elecPerMT=prodKg?elecKwh/(prodKg/1000):0;
   const waterPerMT=prodKg?waterM3/(prodKg/1000):0;
   const sodaPerMT=prodKg?sodaKg/(prodKg/1000):0;
+  // Utility cost tracking (for reference only - not added to sale price)
+  const elecCost=f.utilities.reduce((a,r)=>a+num(rowVal(r,['Electricity Cost'])),0);
+  const waterCost=f.utilities.reduce((a,r)=>a+num(rowVal(r,['Water Cost'])),0);
+  const totalUtilityCost=f.utilities.reduce((a,r)=>a+num(rowVal(r,['Total Utility Cost'])),0);
+  const utilCostPerMT=prodKg&&totalUtilityCost?totalUtilityCost/(prodKg/1000):0;
+  // Inventory change: Net Into Factory - Consumed (positive = added to stock, negative = drew from stock)
+  const inventoryChange=netIntoFactory-consumedKg;
+  // PH alerts: readings outside 6.5-8.5 range
+  const phAlerts=f.ph.filter(r=>{const v=num(rowVal(r,['PH Reading']));return v>0&&(v<6.5||v>8.5);});
+  const phCritical=f.ph.filter(r=>{const v=num(rowVal(r,['PH Reading']));return v>0&&(v<4||v>10);});
   // Yield formulas requested by Environ Adapt
   // Actual Yield = Actual Production / Actual Input * 100
   // Material Yield = (Actual Production + Total Material Recovery) / Actual Input * 100
@@ -250,7 +264,7 @@ function metrics(){
     avgPh,avgPv,avgSv,
     salesKg,salesRevenue,salesBeforeDiscount,salesDiscountLoss,avgSalePrice,
     salesTrips:f.sales.length,
-    elecKwh,waterM3,sodaKg,inneCount,elecPerMT,waterPerMT,sodaPerMT,actualYieldPct,actualYieldRatio,materialPct,materialRatio,operationPct,operationRatio,
+    elecKwh,waterM3,sodaKg,inneCount,elecPerMT,waterPerMT,sodaPerMT,elecCost,waterCost,totalUtilityCost,utilCostPerMT,paymentKg,netIntoFactory,inventoryChange,phAlerts,phCritical,actualYieldPct,actualYieldRatio,materialPct,materialRatio,operationPct,operationRatio,
     wastePct:pct(wasteKg,consumedKg),lossPct:pct(actualLossKg,consumedKg)
   };
 }
@@ -337,7 +351,7 @@ function statRow(cells){
 function table(rows,cols,emptyMsg='No records'){
   if(!rows.length)return `<div class="empty-state">${emptyMsg}</div>`;
   return `<div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c.label||c}</th>`).join('')}</tr></thead>
-    <tbody>${rows.map(r=>`<tr>${cols.map(c=>{const key=c.key||c;const v=rowVal(r,[key],'—');return `<td>${c.fmt?c.fmt(v):v}</td>`}).join('')}</tr>`).join('')}</tbody></table></div>`;
+    <tbody>${rows.map(r=>{const isEstimated=String(rowVal(r,['Notes'])||'').toLowerCase().includes('estimated');const rowStyle=isEstimated?'background:rgba(217,119,6,0.06);':'';const cells=cols.map(c=>{const key=c.key||c;const v=rowVal(r,[key],'—');return `<td>${c.fmt?c.fmt(v):v}</td>`}).join('');return `<tr style="${rowStyle}">${cells}${isEstimated?'<td style="color:var(--warn);font-size:11px">⚠ Estimated</td>':''}</tr>`;}).join('')}</tbody></table></div>`;
 }
 function badge(val,good,warn){return `<span class="badge ${val<=good?'green':val<=warn?'yellow':'red'}">${fmt(val,1)}%</span>`;}
 function progressBar(label,val,max,color){
@@ -393,13 +407,13 @@ function renderSummary(){
 
   <!-- QUICK METRICS STRIP -->
   ${statRow([
-    {label:'Received',value:`${fmt(m.receivingKg/1000,2)} <span class="u">MT</span>`,sub:`${m.receivingTrips} trips`},
+    {label:'Net Into Factory',value:`${fmt(m.netIntoFactory/1000,2)} <span class="u">MT</span>`,sub:`${m.receivingTrips} trips · physical intake`},
+    {label:'Payment Basis',value:`${fmt(m.paymentKg/1000,2)} <span class="u">MT</span>`,sub:`After discount · what we paid for`},
     {label:'Consumed',value:`${fmt(m.consumedKg/1000,2)} <span class="u">MT</span>`,sub:`${fmt0(m.bales)} bales`},
     {label:'Produced',value:`${fmt(m.prodKg/1000,2)} <span class="u">MT</span>`,sub:`${fmt0(m.bags)} bags`},
-    {label:'Waste',value:`${fmt(m.wasteKg/1000,2)} <span class="u">MT</span>`,sub:`${fmt(m.wastePct,1)}% of consumed`},
-    {label:'Actual Yield',value:`${fmt(m.actualYieldRatio,2)} <span class="u">kg/kg</span>`,sub:`${fmt(m.actualYieldPct,1)}% · Actual Production ÷ Actual Input`},
-    {label:'Actual Loss',value:`${fmt(m.actualLossKg/1000,2)} <span class="u">MT</span>`,sub:`${fmt(m.lossPct,1)}% of consumed`},
-    {label:'Electricity',value:`${fmt(m.elecKwh,0)} <span class="u">kWh</span>`,sub:m.elecPerMT?fmt(m.elecPerMT,1)+' /MT':''},
+    {label:'Actual Yield',value:`${fmt(m.actualYieldRatio,2)} <span class="u">kg/kg</span>`,sub:`${fmt(m.actualYieldPct,1)}% · Production ÷ Consumed`},
+    {label:'Inventory Change',value:`${m.inventoryChange>=0?'+':''}${fmt(m.inventoryChange/1000,3)} <span class="u">MT</span>`,sub:m.inventoryChange>=0?'Added to stock':'Drew from stock'},
+    {label:'PH Alerts',value:`${m.phAlerts.length}`,sub:m.phCritical.length?`${m.phCritical.length} critical readings!`:'readings out of range'},
     {label:'Revenue',value:`${fmt0(m.salesRevenue)}`,sub:`${m.salesTrips} trips`}
   ])}
 
@@ -430,6 +444,8 @@ function renderSummary(){
             <tr><td>Waste Rate</td><td>${fmt(m.wastePct,1)}%</td><td>${badge(m.wastePct,8,15)}</td></tr>
             <tr><td>Loss Rate</td><td>${fmt(m.lossPct,1)}%</td><td>${badge(m.lossPct,5,10)}</td></tr>
             <tr><td>Avg PH</td><td>${fmt(m.avgPh,2)}</td><td><span class="badge ${m.avgPh>=6.5&&m.avgPh<=8.5?'green':'red'}">${m.avgPh>=6.5&&m.avgPh<=8.5?'Normal':'Out of Range'}</span></td></tr>
+            <tr><td>PH Alerts</td><td>${m.phAlerts.length} readings out of 6.5–8.5</td><td><span class="badge ${m.phAlerts.length===0?'green':m.phCritical.length>0?'red':'yellow'}">${m.phAlerts.length===0?'All Normal':m.phCritical.length>0?m.phCritical.length+' Critical!':'Watch'}</span></td></tr>
+            <tr><td>Inventory Change</td><td>${m.inventoryChange>=0?'+':''}${fmt(m.inventoryChange/1000,3)} MT</td><td><span class="badge ${Math.abs(m.inventoryChange)<50?'green':'yellow'}">${m.inventoryChange>=0?'Added to Stock':'Drew from Stock'}</span></td></tr>
             <tr><td>Boiler Δ (PV-SV)</td><td>${fmt(m.avgPv-m.avgSv,1)} °C</td><td><span class="badge ${Math.abs(m.avgPv-m.avgSv)<=5?'green':Math.abs(m.avgPv-m.avgSv)<=10?'yellow':'red'}">${Math.abs(m.avgPv-m.avgSv)<=5?'Normal':Math.abs(m.avgPv-m.avgSv)<=10?'Watch':'Alert'}</span></td></tr>
           </tbody>
         </table>
@@ -444,6 +460,7 @@ function renderSummary(){
       ${summarySignal('Production',efficiency>=68?'green':efficiency>=55?'yellow':'red',efficiency>=68?'Continue current operations. Yield is on target.':efficiency>=55?'Monitor closely. Yield is below target — review bale quality and machine settings.':'Immediate action needed. Yield is critically low — investigate consumption losses.',fmt(efficiency,1)+'% efficiency · Target ≥68%')}
       ${summarySignal('Waste',m.wastePct<=8?'green':m.wastePct<=15?'yellow':'red',m.wastePct<=8?'Waste is well controlled.':m.wastePct<=15?'Waste is moderate. Review Sortex and Green Bottle reject rates.':'Waste is high. Check sorting line calibration and raw material quality.',fmt(m.wastePct,1)+'% of consumed · Target ≤8%')}
       ${summarySignal('Sales',m.salesKg>=m.prodKg*0.8?'green':m.salesKg>0?'yellow':'red',m.salesKg>=m.prodKg*0.8?'Sales are moving well relative to production.':m.salesKg>0?'Sales are below production — check inventory buildup.':'No sales recorded in this period.',fmt(m.salesKg/1000,2)+' MT sold vs '+fmt(m.prodKg/1000,2)+' MT produced')}
+      ${summarySignal('PH Quality',m.phCritical.length>0?'red':m.phAlerts.length>0?'yellow':'green',m.phCritical.length>0?'⚠ Critical PH readings detected — immediate attention required for process quality.':m.phAlerts.length>0?'PH readings outside normal range — monitor closely and adjust chemical dosing.':'All PH readings within normal range 6.5–8.5.',m.phAlerts.length+' alert(s) · '+m.phCritical.length+' critical')}
     </div>
   </section>`;
 
@@ -485,11 +502,11 @@ function renderProduction(){
 
   <!-- WASTE BREAKDOWN -->
   ${statRow([
-    {label:'Sortex',value:`${fmt(m.sortexKg/1000,3)} MT`,sub:`${fmt(pct(m.sortexKg,m.wasteKg),1)}% of waste`},
-    {label:'Green Bottle',value:`${fmt(m.bigFlexKg/1000,3)} MT`,sub:`${fmt(pct(m.bigFlexKg,m.wasteKg),1)}% of waste`},
-    {label:'Bag & Strap',value:`${fmt(m.wireKg/1000,3)} MT`,sub:`${fmt(pct(m.wireKg,m.wasteKg),1)}% of waste`},
-    {label:'Caps & Labels',value:`${fmt(m.capsKg/1000,3)} MT`,sub:`${fmt(pct(m.capsKg,m.wasteKg),1)}% of waste`},
-    {label:'Actual Loss',value:`${fmt(m.actualLossKg/1000,3)} MT`,sub:'Unaccounted'}
+    {label:'Sortex / PVC',value:`${fmt0(m.sortexKg)} <span class='u'>kg</span>`,sub:`${fmt(pct(m.sortexKg,m.wasteKg),1)}% of waste · ${fmt(pct(m.sortexKg,m.consumedKg),2)}% of consumed`},
+    {label:'Green Bottle',value:`${fmt0(m.bigFlexKg)} <span class='u'>kg</span>`,sub:`${fmt(pct(m.bigFlexKg,m.wasteKg),1)}% of waste · ${fmt(pct(m.bigFlexKg,m.consumedKg),2)}% of consumed`},
+    {label:'Bag & Strap',value:`${fmt0(m.wireKg)} <span class='u'>kg</span>`,sub:`${fmt(pct(m.wireKg,m.wasteKg),1)}% of waste · ${fmt(pct(m.wireKg,m.consumedKg),2)}% of consumed`},
+    {label:'Caps & Labels',value:`${fmt0(m.capsKg)} <span class='u'>kg</span>`,sub:`${fmt(pct(m.capsKg,m.wasteKg),1)}% of waste · ${fmt(pct(m.capsKg,m.consumedKg),2)}% of consumed`},
+    {label:'Actual Loss',value:`${fmt0(m.actualLossKg)} <span class='u'>kg</span>`,sub:`${fmt(m.lossPct,1)}% of consumed · unaccounted`}
   ])}
 
   <div class="grid-3">
@@ -570,14 +587,14 @@ function renderProduction(){
 ═════════════════════════════════════════════════════ */
 function renderReceiving(){
   const m=metrics(),f=state.filtered;
-  const dailyMap=byDate(f.receivings,r=>num(rowVal(r,['Net Weight After Discount Kg']))/1000);
+  const dailyMap=byDate(f.receivings,r=>num(rowVal(r,['Net Weight Kg']))/1000);
   const dKeys=Object.keys(dailyMap).sort();
   $('#page-receiving').innerHTML=`
   <div class="kpi-grid">
-    ${kpi('Total Received',`${fmt(m.receivingKg/1000,2)} <span class="unit">MT</span>`,`${m.receivingTrips} trips · ${m.activeDays} days`,'▣')}
-    ${kpi('Avg Daily Receiving',`${fmt(m.avgDailyReceiving,2)} <span class="unit">MT</span>`,`${m.activeDays} active days`,'📅')}
-    ${kpi('Gross → Net',`${fmt(m.receivingNet/1000,2)} <span class="unit">MT</span>`,`Gross: ${fmt(m.receivingGross/1000,2)} · Tare: ${fmt(m.receivingTare/1000,2)} MT`,'⚖')}
-    ${kpi('Discount Applied',`${fmt(m.avgDiscount,1)} <span class="unit">%</span>`,`${fmt(m.discountKg/1000,2)} MT deducted`,'%','rgba(217,119,6,.1)')}
+    ${kpi('Net Into Factory',`${fmt(m.netIntoFactory/1000,2)} <span class="unit">MT</span>`,`${m.receivingTrips} trips · supplier leaves full load`,'▣')}
+    ${kpi('Payment Basis',`${fmt(m.paymentKg/1000,2)} <span class="unit">MT</span>`,`After discount · ${fmt(m.discountKg/1000,2)} MT deducted on paper`,'💳','rgba(217,119,6,.08)')}
+    ${kpi('Avg Daily (Physical)',`${fmt(m.avgDailyReceiving,2)} <span class="unit">MT</span>`,`${m.activeDays} active days · net weight basis`,'📅')}
+    ${kpi('Discount (Paper Only)',`${fmt(m.avgDiscount,1)} <span class="unit">%</span>`,`${fmt(m.discountKg/1000,2)} MT · material stays in factory`,'%','rgba(217,119,6,.1)')}
   </div>
 
   <!-- PRICE ROW -->
@@ -585,7 +602,7 @@ function renderReceiving(){
     {label:'Price Before Discount',value:`${fmt0(m.priceBeforeDiscount)}`,sub:'Total trip prices'},
     {label:'Price After Discount',value:`${fmt0(m.priceAfterDiscount)}`,sub:'What we paid'},
     {label:'Total Discount Amount',value:`${fmt0(m.priceDiff)}`,sub:'Saved via deduction'},
-    {label:'Avg Price / Ton',value:`${fmt(m.receivingKg?m.priceAfterDiscount/(m.receivingKg/1000):0,0)}`,sub:'After discount'},
+    {label:'Avg Price / Ton',value:`${fmt(m.paymentKg?m.priceAfterDiscount/(m.paymentKg/1000):0,0)}`,sub:'After discount · per payment MT'},
     {label:'Discount Weight',value:`${fmt(m.discountKg/1000,2)} MT`,sub:`${fmt(m.avgDiscount,1)}% avg rate`}
   ])}
 
@@ -611,10 +628,13 @@ function renderReceiving(){
     {key:'Price Difference',label:'Diff',fmt:v=>fmt0(v)},
     {key:'Average Bale Weight Kg',label:'Avg Bale',fmt:v=>fmt(v,1)},
     {key:'Notes'}
-  ])}</section>`;
+  ])}</section>
+  <div style="margin-top:10px;padding:12px 16px;background:var(--panel2);border-radius:10px;font-size:12.5px;color:var(--muted);border:1px solid var(--line)">
+    <b style="color:var(--text)">📌 Note on Receiving Figures</b> · <b>Net Into Factory</b> = physical material (Net Weight) used for Yield calculations · <b>Payment Basis</b> = Net Weight minus discount used for cost calculations · Discount weight stays in the factory — supplier does not take it back.
+  </div>`;
 
   // Supplier pie
-  const sm={};f.receivings.forEach(r=>{const s=rowVal(r,['Supplier Name'],'Unknown');sm[s]=(sm[s]||0)+num(rowVal(r,['Net Weight After Discount Kg']))/1000;});
+  const sm={};f.receivings.forEach(r=>{const s=rowVal(r,['Supplier Name'],'Unknown');sm[s]=(sm[s]||0)+num(rowVal(r,['Net Weight Kg']))/1000;});
   const sk=Object.keys(sm).sort((a,b)=>sm[b]-sm[a]);
   if(sk.length){drawDoughnut('supPieChart',sk,sk.map(k=>sm[k]),[C.green,C.teal,C.blue,C.purple,C.amber]);}else eb('supPieBox','No data');
   // Daily trend
@@ -632,15 +652,21 @@ function renderReceiving(){
 ═════════════════════════════════════════════════════ */
 function renderSales(){
   const m=metrics(),f=state.filtered;
-  const costPerMT=m.prodKg?m.priceAfterDiscount/(m.prodKg/1000):0;
+  // Raw material cost = payment basis (After Discount) not physical intake
+  const rawMatCostPerMT=m.prodKg?m.priceAfterDiscount/(m.prodKg/1000):0;
+  // Full cost per MT = raw material + utilities (for reference, NOT added to price)
+  const costPerMT=rawMatCostPerMT; // keep as raw material only for price decision
+  const fullCostPerMT=costPerMT+(m.utilCostPerMT||0);
   const grossMarginPct=m.salesRevenue&&costPerMT?pct(m.avgSalePrice-costPerMT,m.avgSalePrice):0;
-  const breakeven=costPerMT;
+  const fullMarginPct=m.salesRevenue&&fullCostPerMT?pct(m.avgSalePrice-fullCostPerMT,m.avgSalePrice):0;
+  const breakeven=fullCostPerMT||costPerMT;
   $('#page-sales').innerHTML=`
   <div class="kpi-grid">
     ${kpi('Total Revenue',`${fmt0(m.salesRevenue)}`,`${m.salesTrips} trips · ${fmt(m.salesKg/1000,2)} MT sold`,'$')}
     ${kpi('Avg Sale Price',`${fmt0(m.avgSalePrice)} <span class="unit">/MT</span>`,`Before discount: ${fmt0(m.salesBeforeDiscount/(m.salesKg/1000||1))} /MT`,'↗')}
-    ${kpi('Est. Cost / MT',`${fmt0(costPerMT)}`,`Based on receiving cost ÷ production`,'÷','rgba(37,99,235,.1)')}
-    ${kpi('Gross Margin',`${fmt(grossMarginPct,1)} <span class="unit">%</span>`,grossMarginPct>0?`~${fmt((m.avgSalePrice-costPerMT)*m.salesKg/1000,0)} total margin`:'No cost data for margin','◈',grossMarginPct>15?'rgba(0,166,81,.1)':'rgba(229,62,62,.1)')}
+    ${kpi('Raw Material Cost/MT',`${fmt0(rawMatCostPerMT)}`,`Payment basis ÷ production`,'÷','rgba(37,99,235,.1)')}
+    ${kpi('Full Cost/MT',`${fmt0(fullCostPerMT)}`,m.utilCostPerMT?`Raw ${fmt0(rawMatCostPerMT)} + Util ${fmt0(m.utilCostPerMT)}`:'Add utilities data','⚙','rgba(124,58,237,.08)')}
+    ${kpi('Margin (Raw only)',`${fmt(grossMarginPct,1)} <span class="unit">%</span>`,grossMarginPct>0?`~${fmt((m.avgSalePrice-costPerMT)*m.salesKg/1000,0)} total`:'No cost data','◈',grossMarginPct>15?'rgba(0,166,81,.1)':'rgba(229,62,62,.1)')}
     ${kpi('Sales Discount Given',`${fmt0(m.salesDiscountLoss)}`,`${fmt(f.sales.length?f.sales.reduce((a,r)=>a+num(rowVal(r,['Discount Percent'])),0)/f.sales.length:0,1)}% avg discount`,'%','rgba(217,119,6,.1)')}
     ${kpi('Price Before Disc',`${fmt0(m.salesBeforeDiscount)}`,`Discount loss: ${fmt0(m.salesDiscountLoss)}`,'✦')}
     ${kpi('Revenue / MT',`${fmt0(m.salesKg?m.salesRevenue/(m.salesKg/1000):0)}`,`Net after all discounts`,'=')}
@@ -652,9 +678,12 @@ function renderSales(){
     <div class="insight-card">
       <h4>Price Analysis</h4>
       <div class="insight-row"><span class="ir-label">Avg Sale Price (MT)</span><span class="ir-value">${fmt0(m.avgSalePrice)}</span></div>
-      <div class="insight-row"><span class="ir-label">Est. Raw Material Cost (MT)</span><span class="ir-value">${fmt0(costPerMT)}</span></div>
-      <div class="insight-row"><span class="ir-label">Gross Margin per MT</span><span class="ir-value ${m.avgSalePrice>costPerMT?'pos':'neg'}">${m.avgSalePrice>costPerMT?'+':''}${fmt0(m.avgSalePrice-costPerMT)}</span></div>
-      <div class="insight-row"><span class="ir-label">Break-even Price</span><span class="ir-value">${fmt0(breakeven)}</span></div>
+      <div class="insight-row"><span class="ir-label">Raw Material Cost (MT)</span><span class="ir-value">${fmt0(rawMatCostPerMT)}</span></div>
+      <div class="insight-row"><span class="ir-label">Utility Cost (MT) — tracking only</span><span class="ir-value">${fmt0(m.utilCostPerMT||0)}</span></div>
+      <div class="insight-row"><span class="ir-label">Full Cost (MT)</span><span class="ir-value">${fmt0(fullCostPerMT)}</span></div>
+      <div class="insight-row"><span class="ir-label">Margin vs Raw Cost</span><span class="ir-value ${m.avgSalePrice>rawMatCostPerMT?'pos':'neg'}">${m.avgSalePrice>rawMatCostPerMT?'+':''}${fmt0(m.avgSalePrice-rawMatCostPerMT)}</span></div>
+      <div class="insight-row"><span class="ir-label">Margin vs Full Cost</span><span class="ir-value ${m.avgSalePrice>fullCostPerMT?'pos':'neg'}">${m.avgSalePrice>fullCostPerMT?'+':''}${fmt0(m.avgSalePrice-fullCostPerMT)}</span></div>
+      <div class="insight-row"><span class="ir-label">Break-even (full cost)</span><span class="ir-value">${fmt0(breakeven)}</span></div>
       <div class="insight-row"><span class="ir-label">Safety Margin</span><span class="ir-value ${m.avgSalePrice>breakeven*1.1?'pos':'neg'}">${fmt(pct(m.avgSalePrice-breakeven,breakeven),1)}%</span></div>
     </div>
     <div class="insight-card">
@@ -670,8 +699,9 @@ function renderSales(){
       </table>
       <div style="margin-top:14px;padding:12px;background:var(--panel2);border-radius:10px;font-size:12.5px;line-height:1.7;color:var(--muted)">
         <b style="color:var(--text)">💡 Optimal Selling Price Suggestion</b><br>
-        Based on current cost ${fmt0(breakeven)}/MT + 15% margin target = <b style="color:var(--green)">${fmt0(breakeven*1.15)}/MT</b><br>
-        ${m.avgSalePrice>breakeven*1.15?'✓ Current price exceeds target':'⚠ Consider negotiating higher price'}
+        Raw material cost: ${fmt0(rawMatCostPerMT)}/MT · Utilities: ${fmt0(m.utilCostPerMT||0)}/MT · Full cost: ${fmt0(fullCostPerMT)}/MT<br>
+        Target price (full cost + 15%) = <b style="color:var(--green)">${fmt0(fullCostPerMT*1.15)}/MT</b><br>
+        ${m.avgSalePrice>fullCostPerMT*1.15?'✓ Current price exceeds target':'⚠ Consider negotiating higher price — utilities included in calculation'}
       </div>
     </div>
   </div>
@@ -739,7 +769,19 @@ function renderQuality(){
     </div>`;
   }
 
+  const phAlertHtml = m.phAlerts.length ? `
+    <div style="background:${m.phCritical.length?'#fef2f2':'#fffbeb'};border:1px solid ${m.phCritical.length?'#fca5a5':'#fcd34d'};border-radius:10px;padding:14px 18px;margin-bottom:14px">
+      <b style="color:${m.phCritical.length?'#991b1b':'#854d0e'}">${m.phCritical.length?'🚨 Critical PH Readings!':'⚠ PH Out of Range'}</b>
+      <div style="margin-top:8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
+        ${m.phAlerts.map(r=>`<div style="background:rgba(0,0,0,0.04);border-radius:6px;padding:8px 12px;font-size:12.5px">
+          <b>${rowVal(r,['Area'])}</b> · ${fmt(num(rowVal(r,['PH Reading'])),2)} pH<br>
+          <span style="color:var(--muted)">${rowVal(r,['Date'])} ${rowVal(r,['Entry Time'])} · 
+          ${num(rowVal(r,['PH Reading']))<6.5?'Acidic — below 6.5':'Alkaline — above 8.5'}</span>
+        </div>`).join('')}
+      </div>
+    </div>` : '';
   $('#page-quality').innerHTML=`
+  ${phAlertHtml}
   <!-- QUALITY GAUGES -->
   <div style="margin-bottom:14px">
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Contaminant rates as % of consumed material · PH readings per area</p>
@@ -885,8 +927,9 @@ function renderMeterCards(rows){
   boilers.forEach(b=>{for(let i=1;i<=6;i++){
     const r=[...rows].reverse().find(x=>String(rowVal(x,['Boiler Number']))===b&&String(rowVal(x,['Meter Number']))===String(i));
     const pv=num(rowVal(r||{},['Current Temperature PV'])),sv=num(rowVal(r||{},['Set Temperature SV'])),delta=pv-sv;
-    const dc=Math.abs(delta)>10?C.red:Math.abs(delta)>5?C.amber:C.green;
-    html+=`<div class="meter-card"><b>B${b}·M${i}</b><div>PV <strong>${r?fmt(pv,0):'-'}°C</strong></div><div style="font-size:11px;color:var(--muted)">SV ${r?fmt(sv,0):'-'}°C</div><div style="font-size:11px;color:${dc}">Δ ${r?fmt(delta,1):'-'}°C</div></div>`;
+    const sensorOff=r&&pv===0&&sv>0; // PV=0 with SV>0 = sensor disconnected
+    const dc=sensorOff?C.red:Math.abs(delta)>10?C.red:Math.abs(delta)>5?C.amber:C.green;
+    html+=`<div class="meter-card" style="${sensorOff?'border-color:'+C.red+';background:rgba(229,62,62,0.06)':''}"><b>B${b}·M${i}</b><div>${sensorOff?'<span style="color:var(--danger);font-size:11px;font-weight:700">⚠ Sensor Off</span>':'PV <strong>'+fmt(pv,0)+'°C</strong>'}</div><div style="font-size:11px;color:var(--muted)">SV ${r?fmt(sv,0):'-'}°C</div><div style="font-size:11px;color:${dc}">${sensorOff?'Check connection':'Δ '+fmt(delta,1)+'°C'}</div></div>`;
   }});
   box.innerHTML=html;
 }
@@ -930,7 +973,7 @@ function sel(name,label,opts){return `<label>${label}<select name="${name}">${op
 
 function renderEntryForm(){
   const d=today(),t=nowTime();let html='';
-  if(state.entryType==='shift') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${sel('shiftType','Shift Type',['Day','Night'])}${inp('shiftStartTime','Shift Start','time')}${inp('shiftEndTime','Shift End','time')}${inp('workersCount','Workers','number')}${inp('factoryName','Factory')}${inp('factoryOwner','Owner')}${inp('consumedBalesCount','Consumed Bales','number')}${inp('averageBaleWeightKg','Avg Bale Wt (kg)','number')}${inp('producedBagsCount','Produced Bags','number')}${inp('averageBagWeightKg','Avg Bag Wt (kg)','number')}${inp('bigJumboBagsCount','Big Jumbo Bags Count','number')}${inp('smallJumboBagsCount','Small Jumbo Bags Count','number')}${inp('sacksCount','Sacks Count','number')}${inp('notes','Notes')}`;
+  if(state.entryType==='shift') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${sel('shiftType','Shift Type',['Day','Night'])}${inp('shiftStartTime','Shift Start','time')}${inp('shiftEndTime','Shift End','time')}${inp('workersCount','Workers','number')}${inp('factoryName','Factory')}${inp('factoryOwner','Owner')}${inp('consumedBalesCount','Consumed Bales','number')}${inp('averageBaleWeightKg','Avg Bale Wt (kg)','number')}<label style='grid-column:1/-1;background:var(--green-dim);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--green-dark)'><b>📦 Production Breakdown by Package Type</b><br><small style='color:var(--muted)'>Enter count for each type + individual bag weight — total is auto-calculated</small></label>${inp('bigJumboBagsCount','Big Jumbo Bags Count','number')}${inp('bigJumboWeightKg','Big Jumbo Wt/Bag (kg)','number')}${inp('smallJumboBagsCount','Small Jumbo Bags Count','number')}${inp('smallJumboWeightKg','Small Jumbo Wt/Bag (kg)','number')}${inp('sacksCount','Sacks Count','number')}${inp('sacksWeightKg','Sacks Wt/Bag (kg)','number')}<div id='prodPreview' style='grid-column:1/-1;padding:10px 14px;background:var(--panel2);border-radius:8px;font-size:13px;color:var(--muted)'>Total Production: — kg</div>${inp('notes','Notes')}`;
   if(state.entryType==='receiving') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('supplierName','Supplier')}${inp('region','Region')}${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}${inp('balesCount','Bales Count','number')}${inp('pricePerTonThousand','Price / Ton (×1000)','number')}${inp('karteNumber','Karte No.')}${inp('grossWeightKg','Gross Weight (kg)','number')}${inp('tareWeightKg','Tare Weight (kg)','number')}${inp('discountPercent','Discount %','number')}${inp('notes','Notes')}`;
   if(state.entryType==='downtime') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('stopFromTime','Stop From','time')}${inp('stopToTime','Stop To','time')}${inp('downtimeReason','Reason')}${inp('notes','Notes')}`;
   if(state.entryType==='waste') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('sortexWeightKg','Sortex Wt (kg)','number')}${inp('sortexCount','Sortex Count','number')}${inp('bigFlexWeightKg','Green Bottle Wt (kg)','number')}${inp('bigFlexCount','Green Bottle Count','number')}${inp('wireAndBagsWeightKg','Bag & Strap Wt (kg)','number')}${inp('wireAndBagsCount','Bag & Strap Count','number')}${inp('brokenCapsLabelsWeightKg','Caps & Labels Wt (kg)','number')}${inp('brokenCapsLabelsCount','Caps & Labels Count','number')}${inp('notes','Notes')}`;
@@ -943,6 +986,18 @@ function renderEntryForm(){
   $('#cancelEntry').onclick=()=>$('#entryModal').classList.add('hidden');
   $('#entryForm').onsubmit=saveEntry;
   if(state.entryType==='boiler')wireBoilerForm();
+  if(state.entryType==='shift'){
+    const calcProd=()=>{
+      const el=$('#entryForm');
+      const big=num(el?.querySelector('[name=bigJumboBagsCount]')?.value)*num(el?.querySelector('[name=bigJumboWeightKg]')?.value);
+      const small=num(el?.querySelector('[name=smallJumboBagsCount]')?.value)*num(el?.querySelector('[name=smallJumboWeightKg]')?.value);
+      const sacks=num(el?.querySelector('[name=sacksCount]')?.value)*num(el?.querySelector('[name=sacksWeightKg]')?.value);
+      const total=big+small+sacks;
+      const prev=$('#prodPreview');
+      if(prev) prev.innerHTML=`Total Production: <b style='color:var(--green)'>${total>0?fmt0(total)+' kg = '+fmt(total/1000,3)+' MT':'—'}</b>`;
+    };
+    $$('[name=bigJumboBagsCount],[name=bigJumboWeightKg],[name=smallJumboBagsCount],[name=smallJumboWeightKg],[name=sacksCount],[name=sacksWeightKg]',$('#entryForm')).forEach(i=>i.oninput=calcProd);
+  }
   if(state.entryType==='ph'){$$('[data-ph-area]').forEach(i=>i.oninput=()=>savePHDraft());$$('[name=phDate],[name=phTime]').forEach(i=>i.onchange=()=>savePHDraft());}
   translateDashboardText($('#entryModal'));
 }
