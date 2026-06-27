@@ -24,13 +24,13 @@ const AR_TEXT = {
   'DATE FROM':'من تاريخ','DATE TO':'إلى تاريخ','SHIFT':'الوردية','All Shifts':'كل الورديات','Day':'نهار','Night':'ليل','Refresh':'تحديث','Export':'تصدير','New Entry':'إدخال جديد','Choose entry type and save directly to Google Sheets.':'اختر نوع الإدخال واحفظ مباشرة في Google Sheets.','Save to Sheets':'حفظ في الشيت','Cancel':'إلغاء','Close modal':'إغلاق النافذة','Open menu':'فتح القائمة','Toggle sidebar':'فتح/غلق القائمة','Toggle theme':'تغيير الوضع',
   'Shift':'وردية','Downtime':'توقف','Boiler':'غلاية','PH':'PH','Waste':'هالك','Sale':'بيع','Utilities':'مرافق','Date':'التاريخ','Time':'الوقت','Shift Type':'نوع الوردية','Shift Start':'بداية الوردية','Shift End':'نهاية الوردية','Workers':'العمال','Factory':'المصنع','Owner':'المالك','Consumed Bales':'البالات المستهلكة','Avg Bale Wt (kg)':'متوسط وزن البالة (كجم)','Produced Bags':'الأجولة المنتجة','Avg Bag Wt (kg)':'متوسط وزن الجوال (كجم)','Notes':'ملاحظات',
   'Supplier':'المورد','Region':'المنطقة','Vehicle':'السيارة','Driver':'السائق','Bales Count':'عدد البالات','Price / Ton (×1000)':'سعر الطن (×1000)','Karte No.':'رقم الكارتة','Gross Weight (kg)':'الوزن القائم (كجم)','Tare Weight (kg)':'وزن الفارغ (كجم)','Discount %':'نسبة الخصم %','Stop From':'توقف من','Stop To':'توقف إلى','Reason':'السبب',
-  'Sortex Wt (kg)':'وزن السورتكس (كجم)','Sortex Count':'عدد السورتكس','Big Flex Wt (kg)':'وزن الفليكس الكبير (كجم)','Big Flex Count':'عدد الفليكس الكبير','Wire & Bags Wt (kg)':'وزن السلك والأكياس (كجم)','Wire & Bags Count':'عدد السلك والأكياس','Caps & Labels Wt (kg)':'وزن الأغطية والليبل (كجم)','Caps & Labels Count':'عدد الأغطية والليبل','Buyer Factory':'مصنع العميل','Location':'الموقع','Net Weight (kg)':'صافي الوزن (كجم)',
+  'Sortex Wt (kg)':'وزن السورتكس (كجم)','Sortex Count':'عدد السورتكس','Green Wt (kg)':'وزن اخضر (كجم)','Green Count':'عدد جواني الاخضر','Wire & Bags Wt (kg)':'وزن الشمبر والأكياس (كجم)','Wire & Bags Count':'عدد الشمبر والأكياس','Caps & Labels Wt (kg)':'وزن الأغطية والليبل (كجم)','Caps & Labels Count':'عدد الأغطية والليبل','Buyer Factory':'مصنع العميل','Location':'الموقع','Net Weight (kg)':'صافي الوزن (كجم)',
   'Meter':'عداد','PV (°C)':'PV (°م)','SV (°C)':'SV (°م)','Current (A)':'الأمبير (A)','Area':'المنطقة','PH Reading':'قراءة PH','Optional…':'اختياري…','Electricity':'الكهرباء','Water':'المياه','Chemicals':'الكيماويات','Start Reading (kWh)':'قراءة البداية (kWh)','End Reading (kWh)':'قراءة النهاية (kWh)','Start Reading (m³)':'قراءة البداية (م³)','End Reading (m³)':'قراءة النهاية (م³)','Soda Bags Used':'عدد أجولة الصودا','Soda kg per Bag':'كجم الصودا لكل جوال','Inne Bags Used':'عدد أجولة Inne','Bags count':'عدد الأجولة','Total = Bags × kg/Bag':'الإجمالي = عدد الأجولة × كجم/جوال','Consumed = End − Start':'الاستهلاك = النهاية − البداية',
   'Production Efficiency':'كفاءة الإنتاج','Operational Uptime':'زمن التشغيل','Revenue Generated':'الإيراد المحقق','Received':'المستلم','Consumed':'المستهلك','Produced':'المنتج','Waste':'الهالك','Actual Yield':'الكفاءة الفعلية','Actual Loss':'الفقد الفعلي','Revenue':'الإيرادات','Production vs Consumption — Daily (MT)':'الإنتاج مقابل الاستهلاك يوميًا (طن)','Material Flow Breakdown':'تحليل تدفق الخامة','Net Production':'صافي الإنتاج','Uptime':'زمن التشغيل','Sales vs Produced':'المبيعات مقابل الإنتاج','Key Ratios':'النسب الرئيسية','Metric':'المؤشر','Value':'القيمة','Status':'الحالة','Material Yield':'كفاءة الخامة','Waste Rate':'معدل الهالك','Loss Rate':'معدل الفقد','Avg PH':'متوسط PH','Boiler Δ (PV-SV)':'فرق الغلاية (PV-SV)','Management Signals — What to do next':'إشارات الإدارة — ماذا نفعل بعد ذلك','Production':'الإنتاج','Sales':'المبيعات',
-  'Total Waste':'إجمالي الهالك','Downtime':'التوقفات','Avg Bag Weight':'متوسط وزن الجوال','Sortex':'سورتكس','Big Flex':'فليكس كبير','Wire & Bags':'سلك وأكياس','Caps & Labels':'أغطية وليبل','Unaccounted':'غير محسوب','Daily Production vs Consumption (MT)':'الإنتاج اليومي مقابل الاستهلاك (طن)','Waste Distribution':'توزيع الهالك','Daily Yield % Trend':'اتجاه الكفاءة اليومية %','Downtime by Reason (min)':'التوقف حسب السبب (دقيقة)','Shift Records':'سجلات الورديات','Downtime Log':'سجل التوقفات','Utilities per Shift':'المرافق لكل وردية','No records':'لا توجد سجلات','No data':'لا توجد بيانات',
+  'Total Waste':'إجمالي الهالك','Downtime':'التوقفات','Avg Bag Weight':'متوسط وزن الجوال','Sortex':'سورتكس','Green':'زجاجة خضراء','Wire & Bags':'شمبر وأكياس','Caps & Labels':'أغطية وليبل','Unaccounted':'غير محسوب','Daily Production vs Consumption (MT)':'الإنتاج اليومي مقابل الاستهلاك (طن)','Waste Distribution':'توزيع الهالك','Daily Yield % Trend':'اتجاه الكفاءة اليومية %','Downtime by Reason (min)':'التوقف حسب السبب (دقيقة)','Shift Records':'سجلات الورديات','Downtime Log':'سجل التوقفات','Utilities per Shift':'المرافق لكل وردية','No records':'لا توجد سجلات','No data':'لا توجد بيانات',
   'Total Received':'إجمالي المستلم','Avg Daily Receiving':'متوسط الاستلام اليومي','Gross → Net':'القائم → الصافي','Discount Applied':'الخصم المطبق','Price Before Discount':'السعر قبل الخصم','Price After Discount':'السعر بعد الخصم','Total Discount Amount':'إجمالي قيمة الخصم','Avg Price / Ton':'متوسط سعر الطن','Discount Weight':'وزن الخصم','Supplier Share (MT)':'نسبة الموردين (طن)','Daily Receiving Trend (MT)':'اتجاه الاستلام اليومي (طن)','By Supplier — Total MT':'حسب المورد — إجمالي طن','Discount % by Trip':'نسبة الخصم لكل نقلة','All Receiving Records':'كل سجلات الاستلام',
   'Total Revenue':'إجمالي الإيرادات','Avg Sale Price':'متوسط سعر البيع','Est. Cost / MT':'التكلفة التقديرية/طن','Gross Margin':'هامش الربح','Sales Discount Given':'خصم المبيعات','Price Before Disc':'السعر قبل الخصم','Revenue / MT':'الإيراد/طن','Break-even Price':'سعر التعادل','Price Analysis':'تحليل السعر','Risk Analysis':'تحليل المخاطر','Risk Factor':'عامل الخطر','Current':'الحالي','Daily Revenue Trend':'اتجاه الإيراد اليومي','Revenue by Buyer':'الإيراد حسب العميل','All Sales Records':'كل سجلات المبيعات','Buyer':'العميل',
-  'Contaminant rates as % of consumed material · PH readings per area':'نسب الشوائب من الخامة المستهلكة · قراءات PH حسب المنطقة','PVC / Sortex':'PVC / سورتكس','Metal / Wire':'معدن / سلك','Color / Big Flex':'لون / فليكس كبير','Other / Caps':'أخرى / أغطية','Boiler PH':'PH الغلاية','Sand Filter PH':'PH فلتر الرمل','Rinse Tank PH':'PH تنك الشطف','Total Contamination %':'إجمالي الشوائب %','PH Trend by Area':'اتجاه PH حسب المنطقة','Contaminant Breakdown (kg)':'تحليل الشوائب (كجم)','Waste Type Trend (Daily MT)':'اتجاه نوع الهالك يوميًا (طن)','PH Status Summary':'ملخص حالة PH','Readings':'قراءات','PH Readings Log':'سجل قراءات PH','Normal':'طبيعي','Out of Range':'خارج النطاق','Acidic':'حمضي','Alkaline':'قلوي','Min':'أقل','Max':'أعلى','All':'الكل','Sand Filter':'فلتر الرمل','Rinse Tank':'تنك الشطف','Sand':'رمل','Rinse':'شطف',
+  'Contaminant rates as % of consumed material · PH readings per area':'نسب الشوائب من الخامة المستهلكة · قراءات PH حسب المنطقة','PVC / Sortex':'PVC / سورتكس','Metal / Wire':'معدن / شمبر','Color / Green':'لون / زجاجة خضراء','Other / Caps':'أخرى / أغطية','Boiler PH':'PH الغلاية','Sand Filter PH':'PH فلتر الرمل','Rinse Tank PH':'PH تنك الشطف','Total Contamination %':'إجمالي الشوائب %','PH Trend by Area':'اتجاه PH حسب المنطقة','Contaminant Breakdown (kg)':'تحليل الشوائب (كجم)','Waste Type Trend (Daily MT)':'اتجاه نوع الهالك يوميًا (طن)','PH Status Summary':'ملخص حالة PH','Readings':'قراءات','PH Readings Log':'سجل قراءات PH','Normal':'طبيعي','Out of Range':'خارج النطاق','Acidic':'حمضي','Alkaline':'قلوي','Min':'أقل','Max':'أعلى','All':'الكل','Sand Filter':'فلتر الرمل','Rinse Tank':'تنك الشطف','Sand':'رمل','Rinse':'شطف',
   'Boiler Avg PV':'متوسط PV للغلاية','PV/SV Delta':'فرق PV/SV','Boiler Readings':'قراءات الغلاية','Boiler Temperature Trend (°C)':'اتجاه حرارة الغلاية (°م)','Boiler Readings — Full Log':'قراءات الغلاية — السجل الكامل','PH Readings — Full Log':'قراءات PH — السجل الكامل','All Boilers':'كل الغلايات','Boiler 1':'غلاية 1','Boiler 2':'غلاية 2','All Meters':'كل العدادات','PV':'PV','SV':'SV','Ampere (A)':'الأمبير (A)',
   'Shift Entries':'إدخالات الورديات','No data to export':'لا توجد بيانات للتصدير','Cannot reach Google Sheets: ':'تعذر الاتصال بـ Google Sheets: ','Save failed: ':'فشل الحفظ: ','Enter at least one reading':'أدخل قراءة واحدة على الأقل','Enter at least one PH reading':'أدخل قراءة PH واحدة على الأقل','Saved':'تم الحفظ','record':'سجل','records':'سجلات','to Google Sheets':'في Google Sheets','Selected:':'المحدد:','Clear':'مسح'
 };
@@ -195,9 +195,9 @@ function metrics(){
   const bales=f.shifts.reduce((a,r)=>a+num(rowVal(r,['Consumed Bales Count'])),0);
   const prodKg=f.shifts.reduce((a,r)=>a+(num(rowVal(r,['Net Production Kg']))||num(rowVal(r,['Produced Bags Count']))*num(rowVal(r,['Average Bag Weight Kg']))),0);
   const bags=f.shifts.reduce((a,r)=>a+num(rowVal(r,['Produced Bags Count'])),0);
-  const wasteKg=f.waste.reduce((a,r)=>a+(num(rowVal(r,['Total Waste Weight Kg']))||num(rowVal(r,['Sortex Weight Kg']))+num(rowVal(r,['Big Flex Weight Kg']))+num(rowVal(r,['Wire And Bags Weight Kg']))+num(rowVal(r,['Broken Caps Labels Weight Kg']))),0);
+  const wasteKg=f.waste.reduce((a,r)=>a+(num(rowVal(r,['Total Waste Weight Kg']))||num(rowVal(r,['Sortex Weight Kg']))+num(rowVal(r,['Green Weight Kg']))+num(rowVal(r,['Wire And Bags Weight Kg']))+num(rowVal(r,['Broken Caps Labels Weight Kg']))),0);
   const sortexKg=f.waste.reduce((a,r)=>a+num(rowVal(r,['Sortex Weight Kg'])),0);
-  const bigFlexKg=f.waste.reduce((a,r)=>a+num(rowVal(r,['Big Flex Weight Kg'])),0);
+  const bigFlexKg=f.waste.reduce((a,r)=>a+num(rowVal(r,['Green Weight Kg'])),0);
   const wireKg=f.waste.reduce((a,r)=>a+num(rowVal(r,['Wire And Bags Weight Kg'])),0);
   const capsKg=f.waste.reduce((a,r)=>a+num(rowVal(r,['Broken Caps Labels Weight Kg'])),0);
   const downtimeMin=f.downtimes.reduce((a,r)=>a+num(rowVal(r,['Downtime Minutes'])),0);
@@ -429,7 +429,7 @@ function renderSummary(){
     <h3>🧭 Management Signals — What to do next</h3>
     <div class="grid-3" style="margin-top:14px">
       ${summarySignal('Production',efficiency>=68?'green':efficiency>=55?'yellow':'red',efficiency>=68?'Continue current operations. Yield is on target.':efficiency>=55?'Monitor closely. Yield is below target — review bale quality and machine settings.':'Immediate action needed. Yield is critically low — investigate consumption losses.',fmt(efficiency,1)+'% efficiency · Target ≥68%')}
-      ${summarySignal('Waste',m.wastePct<=8?'green':m.wastePct<=15?'yellow':'red',m.wastePct<=8?'Waste is well controlled.':m.wastePct<=15?'Waste is moderate. Review Sortex and Big Flex reject rates.':'Waste is high. Check sorting line calibration and raw material quality.',fmt(m.wastePct,1)+'% of consumed · Target ≤8%')}
+      ${summarySignal('Waste',m.wastePct<=8?'green':m.wastePct<=15?'yellow':'red',m.wastePct<=8?'Waste is well controlled.':m.wastePct<=15?'Waste is moderate. Review Sortex and Green reject rates.':'Waste is high. Check sorting line calibration and raw material quality.',fmt(m.wastePct,1)+'% of consumed · Target ≤8%')}
       ${summarySignal('Sales',m.salesKg>=m.prodKg*0.8?'green':m.salesKg>0?'yellow':'red',m.salesKg>=m.prodKg*0.8?'Sales are moving well relative to production.':m.salesKg>0?'Sales are below production — check inventory buildup.':'No sales recorded in this period.',fmt(m.salesKg/1000,2)+' MT sold vs '+fmt(m.prodKg/1000,2)+' MT produced')}
     </div>
   </section>`;
@@ -472,7 +472,7 @@ function renderProduction(){
   <!-- WASTE BREAKDOWN -->
   ${statRow([
     {label:'Sortex',value:`${fmt(m.sortexKg/1000,3)} MT`,sub:`${fmt(pct(m.sortexKg,m.wasteKg),1)}% of waste`},
-    {label:'Big Flex',value:`${fmt(m.bigFlexKg/1000,3)} MT`,sub:`${fmt(pct(m.bigFlexKg,m.wasteKg),1)}% of waste`},
+    {label:'Green',value:`${fmt(m.bigFlexKg/1000,3)} MT`,sub:`${fmt(pct(m.bigFlexKg,m.wasteKg),1)}% of waste`},
     {label:'Wire & Bags',value:`${fmt(m.wireKg/1000,3)} MT`,sub:`${fmt(pct(m.wireKg,m.wasteKg),1)}% of waste`},
     {label:'Caps & Labels',value:`${fmt(m.capsKg/1000,3)} MT`,sub:`${fmt(pct(m.capsKg,m.wasteKg),1)}% of waste`},
     {label:'Actual Loss',value:`${fmt(m.actualLossKg/1000,3)} MT`,sub:'Unaccounted'}
@@ -534,7 +534,7 @@ function renderProduction(){
   ]);
   // Waste pie
   const wv=[m.sortexKg,m.bigFlexKg,m.wireKg,m.capsKg].map(v=>v/1000);
-  if(wv.reduce((a,b)=>a+b))drawDoughnut('wastePieChart',['Sortex','Big Flex','Wire & Bags','Caps & Labels'],wv,[C.green,C.teal,C.amber,C.purple]);
+  if(wv.reduce((a,b)=>a+b))drawDoughnut('wastePieChart',['Sortex','Green','Wire & Bags','Caps & Labels'],wv,[C.green,C.teal,C.amber,C.purple]);
   else eb('wastePieBox','No waste data');
   // Yield trend
   const ym=byDate(f.shifts,r=>{const p=num(rowVal(r,['Net Production Kg']))||num(rowVal(r,['Produced Bags Count']))*num(rowVal(r,['Average Bag Weight Kg']));const c=num(rowVal(r,['Consumed Weight Kg']))||num(rowVal(r,['Consumed Bales Count']))*num(rowVal(r,['Average Bale Weight Kg']));return c?p/c*100:0;});
@@ -708,7 +708,7 @@ function renderQuality(){
   const m=metrics();
   const sortexPct=pct(m.sortexKg,m.consumedKg);
   const metalPct=pct(m.wireKg,m.consumedKg);   // Wire = metal proxy
-  const colorPct=pct(m.bigFlexKg,m.consumedKg); // Big flex = color/PVC proxy
+  const colorPct=pct(m.bigFlexKg,m.consumedKg); // Green = color/PVC proxy
   const otherPct=pct(m.capsKg,m.consumedKg);
 
   function gauge(label,val,limit,unit='%'){
@@ -729,7 +729,7 @@ function renderQuality(){
     <div class="gauge-grid">
       ${gauge('PVC / Sortex',sortexPct,5)}
       ${gauge('Metal / Wire',metalPct,1)}
-      ${gauge('Color / Big Flex',colorPct,3)}
+      ${gauge('Color / Green',colorPct,3)}
       ${gauge('Other / Caps',otherPct,2)}
       ${gauge('Boiler PH',phAvg(phByArea.Boiler),100,'pH')}
     </div>
@@ -776,14 +776,14 @@ function renderQuality(){
 
   // Contaminant pie
   const cv=[m.sortexKg,m.wireKg,m.bigFlexKg,m.capsKg];
-  if(cv.reduce((a,b)=>a+b))drawDoughnut('contPieChart',['Sortex/PVC','Wire/Metal','Big Flex/Color','Caps/Other'],cv,[C.green,C.teal,C.amber,C.purple]);
+  if(cv.reduce((a,b)=>a+b))drawDoughnut('contPieChart',['Sortex/PVC','Wire/Metal','Green/Color','Caps/Other'],cv,[C.green,C.teal,C.amber,C.purple]);
   else eb('contPieBox','No contamination data');
 
   // Waste trend
   const sm2=byDate(f.waste,r=>num(rowVal(r,['Sortex Weight Kg']))/1000);
-  const bm2=byDate(f.waste,r=>num(rowVal(r,['Big Flex Weight Kg']))/1000);
+  const bm2=byDate(f.waste,r=>num(rowVal(r,['Green Weight Kg']))/1000);
   const {labels:wl,series:ws}=alignSeries([sm2,bm2]);
-  if(wl.length)drawLine('wasteTrendChart',wl,[{label:'Sortex',data:ws[0],color:C.green},{label:'Big Flex',data:ws[1],color:C.amber}]);
+  if(wl.length)drawLine('wasteTrendChart',wl,[{label:'Sortex',data:ws[0],color:C.green},{label:'Green',data:ws[1],color:C.amber}]);
   else ec('wasteTrendChart','No data');
 }
 
@@ -883,7 +883,7 @@ function renderReports(){
     {label:'Shift Entries',rows:all.shifts,cols:['Date','Shift Type','Consumed Weight Kg','Net Production Kg','Material Yield Percent','Actual Loss Kg','Notes']},
     {label:'Receiving',rows:all.receivings,cols:['Date','Supplier Name','Net Weight After Discount Kg','Discount Percent','Trip Price After Discount','Notes']},
     {label:'Sales',rows:all.sales,cols:['Date','Buyer Factory Name','Net Weight After Discount Kg','Sale Price After Discount','Discount Percent','Notes']},
-    {label:'Waste',rows:all.waste,cols:['Date','Total Waste Weight Kg','Sortex Weight Kg','Big Flex Weight Kg','Wire And Bags Weight Kg','Broken Caps Labels Weight Kg']},
+    {label:'Waste',rows:all.waste,cols:['Date','Total Waste Weight Kg','Sortex Weight Kg','Green Weight Kg','Wire And Bags Weight Kg','Broken Caps Labels Weight Kg']},
     {label:'Downtime',rows:all.downtimes,cols:['Date','Downtime Minutes','Downtime Reason','Notes']},
     {label:'PH Readings',rows:all.ph,cols:['Date','Entry Time','Area','PH Reading','PH Status','Notes']},
     {label:'Boiler Readings',rows:all.boilers,cols:['Date','Entry Time','Boiler Number','Meter Number','Current Temperature PV','Set Temperature SV','Temperature Difference','Current Ampere']},
@@ -916,7 +916,7 @@ function renderEntryForm(){
   if(state.entryType==='shift') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${sel('shiftType','Shift Type',['Day','Night'])}${inp('shiftStartTime','Shift Start','time')}${inp('shiftEndTime','Shift End','time')}${inp('workersCount','Workers','number')}${inp('factoryName','Factory')}${inp('factoryOwner','Owner')}${inp('consumedBalesCount','Consumed Bales','number')}${inp('averageBaleWeightKg','Avg Bale Wt (kg)','number')}${inp('producedBagsCount','Produced Bags','number')}${inp('averageBagWeightKg','Avg Bag Wt (kg)','number')}${inp('notes','Notes')}`;
   if(state.entryType==='receiving') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('supplierName','Supplier')}${inp('region','Region')}${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}${inp('balesCount','Bales Count','number')}${inp('pricePerTonThousand','Price / Ton (×1000)','number')}${inp('karteNumber','Karte No.')}${inp('grossWeightKg','Gross Weight (kg)','number')}${inp('tareWeightKg','Tare Weight (kg)','number')}${inp('discountPercent','Discount %','number')}${inp('notes','Notes')}`;
   if(state.entryType==='downtime') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('stopFromTime','Stop From','time')}${inp('stopToTime','Stop To','time')}${inp('downtimeReason','Reason')}${inp('notes','Notes')}`;
-  if(state.entryType==='waste') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('sortexWeightKg','Sortex Wt (kg)','number')}${inp('sortexCount','Sortex Count','number')}${inp('bigFlexWeightKg','Big Flex Wt (kg)','number')}${inp('bigFlexCount','Big Flex Count','number')}${inp('wireAndBagsWeightKg','Wire & Bags Wt (kg)','number')}${inp('wireAndBagsCount','Wire & Bags Count','number')}${inp('brokenCapsLabelsWeightKg','Caps & Labels Wt (kg)','number')}${inp('brokenCapsLabelsCount','Caps & Labels Count','number')}${inp('notes','Notes')}`;
+  if(state.entryType==='waste') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('sortexWeightKg','Sortex Wt (kg)','number')}${inp('sortexCount','Sortex Count','number')}${inp('bigFlexWeightKg','Green Wt (kg)','number')}${inp('bigFlexCount','Green Count','number')}${inp('wireAndBagsWeightKg','Wire & Bags Wt (kg)','number')}${inp('wireAndBagsCount','Wire & Bags Count','number')}${inp('brokenCapsLabelsWeightKg','Caps & Labels Wt (kg)','number')}${inp('brokenCapsLabelsCount','Caps & Labels Count','number')}${inp('notes','Notes')}`;
   if(state.entryType==='sale') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('buyerFactoryName','Buyer Factory')}${inp('buyerFactoryLocation','Location')}${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}${inp('netTripWeightKg','Net Weight (kg)','number')}${inp('discountPercent','Discount %','number')}${inp('flexPricePerTonThousand','Price / Ton (×1000)','number')}${inp('notes','Notes')}`;
   if(state.entryType==='boiler') html=boilerBatchForm(d,t);
   if(state.entryType==='ph') html=phBatchForm(d,t);
