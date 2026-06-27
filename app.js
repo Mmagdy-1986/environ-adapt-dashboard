@@ -277,7 +277,7 @@ function cd(){
   Chart.defaults.borderColor=state.dark?'#1e3327':'#e0ebe3';
   Chart.defaults.plugins.legend.labels.usePointStyle=true;
   Chart.defaults.plugins.legend.labels.pointStyle='circle';
-  Chart.defaults.plugins.legend.labels.padding=100;
+  Chart.defaults.plugins.legend.labels.padding=16;
   Chart.defaults.plugins.tooltip.backgroundColor=state.dark?'#0e1a12':'#0a1a10';
   Chart.defaults.plugins.tooltip.titleColor='#fff';
   Chart.defaults.plugins.tooltip.bodyColor='rgba(255,255,255,0.75)';
