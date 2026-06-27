@@ -108,7 +108,7 @@ function parseDate(v){
   return null;
 }
 function dateKey(v){const d=parseDate(v);if(!d)return '';return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-function timeLabel(v){if(!v)return '';if(typeof v==='string')return v.replace(/:\d{2}\s*$/,'');if(v instanceof Date)return `${String(v.getHours()).padStart(2,'0')}:${String(v.getMinutes()).padStart(2,'0')}`;return String(v);}
+function timeLabel(v){if(!v&&v!==0)return '';if(typeof v==='string'){if(/^\d+\.\d+$/.test(v.trim())){const frac=parseFloat(v);if(frac>=0&&frac<1){const m=Math.round(frac*1440);return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}}return v.replace(/:\d{2}\s*$/,'');}if(typeof v==='number'&&v>=0&&v<1){const m=Math.round(v*1440);return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}if(v instanceof Date)return `${String(v.getHours()).padStart(2,'0')}:${String(v.getMinutes()).padStart(2,'0')}`;return String(v);}
 function shiftType(row){return String(rowVal(row,['Shift Type','shiftType'],'')).trim()||'Day';}
 function trend(arr){
   if(arr.length<2)return 0;
@@ -297,7 +297,7 @@ function drawLine(id,labels,ds,opts={}){
     pointBackgroundColor:d.color,pointBorderColor:'#fff',pointBorderWidth:2,fill:!!d.fill
   }))},options:{responsive:true,maintainAspectRatio:false,
     interaction:{mode:'index',intersect:false},
-    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y,2)}`}}},
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed.y;return ctx.dataset.label+': '+(ctx.dataset.label.toLowerCase().includes('revenue')||ctx.dataset.label.toLowerCase().includes('cost')||ctx.dataset.label.toLowerCase().includes('price')?fmt0(v):fmt(v,2));}}}},
     onClick:(e,els)=>{if(els[0]){const i=els[0].index,di=els[0].datasetIndex;cc(ds[di].label+' '+labels[i],ds[di].data[i]);}},
     scales:{x:{grid:{display:false},ticks:{maxRotation:30,font:{size:11}}},
       y:{beginAtZero:true,grid:{color:state.dark?'#1e3327':'#f0f4f1'},ticks:{callback:v=>fmt(v,1)},...(opts.yOpts||{})}
@@ -351,8 +351,9 @@ function statRow(cells){
 function table(rows,cols,emptyMsg='No records'){
   if(!rows.length)return `<div class="empty-state">${emptyMsg}</div>`;
   return `<div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c.label||c}</th>`).join('')}</tr></thead>
-    <tbody>${rows.map(r=>{const isEstimated=String(rowVal(r,['Notes'])||'').toLowerCase().includes('estimated');const rowStyle=isEstimated?'background:rgba(217,119,6,0.06);':'';const cells=cols.map(c=>{const key=c.key||c;const v=rowVal(r,[key],'—');return `<td>${c.fmt?c.fmt(v):v}</td>`}).join('');return `<tr style="${rowStyle}">${cells}${isEstimated?'<td style="color:var(--warn);font-size:11px">⚠ Estimated</td>':''}</tr>`;}).join('')}</tbody></table></div>`;
+    <tbody>${rows.map(r=>{const isEstimated=String(rowVal(r,['Notes'])||'').toLowerCase().includes('estimated');const rowStyle=isEstimated?'background:rgba(217,119,6,0.06);':'';const cells=cols.map(c=>{const key=c.key||c;const v=rowVal(r,[key],'—');const isDateCol=(key==='Date'||key==='date'||(c.label||'').toLowerCase()==='date');const isTimeCol=key.includes('Time')||key.includes('time')||(c.label||'').toLowerCase().includes('time');const disp=c.fmt?c.fmt(v):isDateCol?fmtDate(v):isTimeCol?timeLabel(v):v;return `<td>${disp}</td>`}).join('');return `<tr style="${rowStyle}">${cells}${isEstimated?'<td style="color:var(--warn);font-size:11px">⚠ Estimated</td>':''}</tr>`;}).join('')}</tbody></table></div>`;
 }
+function fmtDate(v){if(!v||v==='—')return '—';const d=parseDate(v);if(!d||isNaN(d))return String(v);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function badge(val,good,warn){return `<span class="badge ${val<=good?'green':val<=warn?'yellow':'red'}">${fmt(val,1)}%</span>`;}
 function progressBar(label,val,max,color){
   const p=Math.min(100,num(val)/Math.max(num(max),0.001)*100);
@@ -456,7 +457,7 @@ function renderSummary(){
   <!-- MANAGER RECOMMENDATION -->
   <section class="panel mt">
     <h3>🧭 Management Signals — What to do next</h3>
-    <div class="grid-3" style="margin-top:14px">
+    <div class="grid-4" style="margin-top:14px">
       ${summarySignal('Production',efficiency>=68?'green':efficiency>=55?'yellow':'red',efficiency>=68?'Continue current operations. Yield is on target.':efficiency>=55?'Monitor closely. Yield is below target — review bale quality and machine settings.':'Immediate action needed. Yield is critically low — investigate consumption losses.',fmt(efficiency,1)+'% efficiency · Target ≥68%')}
       ${summarySignal('Waste',m.wastePct<=8?'green':m.wastePct<=15?'yellow':'red',m.wastePct<=8?'Waste is well controlled.':m.wastePct<=15?'Waste is moderate. Review Sortex and Green Bottle reject rates.':'Waste is high. Check sorting line calibration and raw material quality.',fmt(m.wastePct,1)+'% of consumed · Target ≤8%')}
       ${summarySignal('Sales',m.salesKg>=m.prodKg*0.8?'green':m.salesKg>0?'yellow':'red',m.salesKg>=m.prodKg*0.8?'Sales are moving well relative to production.':m.salesKg>0?'Sales are below production — check inventory buildup.':'No sales recorded in this period.',fmt(m.salesKg/1000,2)+' MT sold vs '+fmt(m.prodKg/1000,2)+' MT produced')}
@@ -487,7 +488,7 @@ function summarySignal(title,cls,msg,sub){
 function renderProduction(){
   const m=metrics(),f=state.filtered;
   $('#page-production').innerHTML=`
-  <div class="kpi-grid">
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr)">
     ${kpi('Consumed',`${fmt(m.consumedKg/1000,2)} <span class="unit">MT</span>`,`${fmt0(m.bales)} bales`,'↓')}
     ${kpi('Net Production',`${fmt(m.prodKg/1000,2)} <span class="unit">MT</span>`,`${fmt0(m.bags)} bags`,'✓')}
     ${kpi('Total Waste',`${fmt(m.wasteKg/1000,2)} <span class="unit">MT</span>`,`${fmt(m.wastePct,1)}% of consumed`,'♻','rgba(217,119,6,.12)')}
@@ -917,7 +918,7 @@ function drawBoilerTrendInto(chartId){
   if(modes.includes('pv'))ds.push(mk('Current Temperature PV','PV (°C)',C.green));
   if(modes.includes('sv'))ds.push(mk('Set Temperature SV','SV (°C)',C.teal));
   if(modes.includes('amp'))ds.push(mk('Current Ampere','Ampere (A)',C.amber));
-  drawLine(chartId,labels,ds);
+  drawLine(chartId,labels,ds,{yOpts:{min:0,max:14,ticks:{callback:v=>v+' pH'}}});
 }
 function renderMeterCards(rows){
   const box=$('#meterCards');if(!box)return;
@@ -974,7 +975,7 @@ function sel(name,label,opts){return `<label>${label}<select name="${name}">${op
 function renderEntryForm(){
   const d=today(),t=nowTime();let html='';
   if(state.entryType==='shift') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${sel('shiftType','Shift Type',['Day','Night'])}${inp('shiftStartTime','Shift Start','time')}${inp('shiftEndTime','Shift End','time')}${inp('workersCount','Workers','number')}${inp('factoryName','Factory')}${inp('factoryOwner','Owner')}${inp('consumedBalesCount','Consumed Bales','number')}${inp('averageBaleWeightKg','Avg Bale Wt (kg)','number')}<label style='grid-column:1/-1;background:var(--green-dim);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--green-dark)'><b>📦 Production Breakdown by Package Type</b><br><small style='color:var(--muted)'>Enter count for each type + individual bag weight — total is auto-calculated</small></label>${inp('bigJumboBagsCount','Big Jumbo Bags Count','number')}${inp('bigJumboWeightKg','Big Jumbo Wt/Bag (kg)','number')}${inp('smallJumboBagsCount','Small Jumbo Bags Count','number')}${inp('smallJumboWeightKg','Small Jumbo Wt/Bag (kg)','number')}${inp('sacksCount','Sacks Count','number')}${inp('sacksWeightKg','Sacks Wt/Bag (kg)','number')}<div id='prodPreview' style='grid-column:1/-1;padding:10px 14px;background:var(--panel2);border-radius:8px;font-size:13px;color:var(--muted)'>Total Production: — kg</div>${inp('notes','Notes')}`;
-  if(state.entryType==='receiving') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('supplierName','Supplier')}${inp('region','Region')}${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}${inp('balesCount','Bales Count','number')}${inp('pricePerTonThousand','Price / Ton (×1000)','number')}${inp('karteNumber','Karte No.')}${inp('grossWeightKg','Gross Weight (kg)','number')}${inp('tareWeightKg','Tare Weight (kg)','number')}${inp('discountPercent','Discount %','number')}${inp('notes','Notes')}`;
+  if(state.entryType==='receiving') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('supplierName','Supplier')}${inp('region','Region')}${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}${inp('balesCount','Bales Count','number')}${inp('pricePerTonThousand','Price / Ton (×1000)','number')}${inp('karteNumber','Karte No.')}${inp('grossWeightKg','Gross Weight (kg)','number')}${inp('tareWeightKg','Tare Weight (kg)','number')}${inp('discountPercent','Discount %','number')}<div id='netPreview' style='grid-column:1/-1;padding:10px 14px;background:var(--green-dim);border-radius:8px;font-size:13px;color:var(--green-dark)'>Net Weight: — kg &nbsp;|&nbsp; After Discount: — kg</div>${inp('notes','Notes')}`;
   if(state.entryType==='downtime') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('stopFromTime','Stop From','time')}${inp('stopToTime','Stop To','time')}${inp('downtimeReason','Reason')}${inp('notes','Notes')}`;
   if(state.entryType==='waste') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('sortexWeightKg','Sortex Wt (kg)','number')}${inp('sortexCount','Sortex Count','number')}${inp('bigFlexWeightKg','Green Bottle Wt (kg)','number')}${inp('bigFlexCount','Green Bottle Count','number')}${inp('wireAndBagsWeightKg','Bag & Strap Wt (kg)','number')}${inp('wireAndBagsCount','Bag & Strap Count','number')}${inp('brokenCapsLabelsWeightKg','Caps & Labels Wt (kg)','number')}${inp('brokenCapsLabelsCount','Caps & Labels Count','number')}${inp('notes','Notes')}`;
   if(state.entryType==='sale') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('buyerFactoryName','Buyer Factory')}${inp('buyerFactoryLocation','Location')}${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}${inp('netTripWeightKg','Net Weight (kg)','number')}${inp('discountPercent','Discount %','number')}${inp('flexPricePerTonThousand','Price / Ton (×1000)','number')}${inp('notes','Notes')}`;
@@ -986,6 +987,19 @@ function renderEntryForm(){
   $('#cancelEntry').onclick=()=>$('#entryModal').classList.add('hidden');
   $('#entryForm').onsubmit=saveEntry;
   if(state.entryType==='boiler')wireBoilerForm();
+  if(state.entryType==='receiving'){
+    const calcNet=()=>{
+      const el=$('#entryForm');
+      const gross=num(el?.querySelector('[name=grossWeightKg]')?.value);
+      const tare=num(el?.querySelector('[name=tareWeightKg]')?.value);
+      const disc=num(el?.querySelector('[name=discountPercent]')?.value);
+      const net=Math.max(0,gross-tare);
+      const after=net*(1-disc/100);
+      const prev=$('#netPreview');
+      if(prev) prev.innerHTML=`Net Weight: <b style='color:var(--green)'>${net>0?fmt0(net)+' kg':'—'}</b> &nbsp;|&nbsp; After Discount: <b style='color:var(--green)'>${after>0?fmt0(after)+' kg':'—'}</b>`;
+    };
+    $$('[name=grossWeightKg],[name=tareWeightKg],[name=discountPercent]',$('#entryForm')).forEach(i=>i.oninput=calcNet);
+  }
   if(state.entryType==='shift'){
     const calcProd=()=>{
       const el=$('#entryForm');
@@ -1163,6 +1177,7 @@ function bind(){
   $('#sidebarToggle').onclick=()=>{const sb=$('#sidebar');if(window.innerWidth<=900)sb.classList.toggle('open');else sb.classList.toggle('collapsed');};
   $('#newEntryBtn').onclick=openEntry;
   $('#modalClose').onclick=()=>{$('#entryModal').classList.add('hidden');state.boilerDraft={};state.phDraft={};};
+  $('#entryModal').onclick=e=>{if(e.target===$('#entryModal')){$('#entryModal').classList.add('hidden');state.boilerDraft={};state.phDraft={};};};
   $('#refreshBtn').onclick=loadData;
   $('#exportBtn').onclick=exportCsv;
   $('#themeBtn').onclick=()=>{state.dark=!state.dark;localStorage.setItem('dark',state.dark?'1':'0');render();};
