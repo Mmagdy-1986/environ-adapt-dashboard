@@ -17,6 +17,74 @@ const i18n = {
   ar:{summary:'الملخص التنفيذي',production:'الإنتاج والكفاءة',receiving:'الاستلام',sales:'المبيعات والإيرادات',quality:'مراقبة الجودة',boilerph:'الغلايات والـ PH',reports:'البيانات الخام'}
 };
 
+/* ── FULL ARABIC UI TRANSLATION ── */
+const AR_TEXT = {
+  'Executive Summary':'الملخص التنفيذي','Production & Yield':'الإنتاج والكفاءة','Receiving':'الاستلام','Sales & Revenue':'المبيعات والإيرادات','Quality Control':'مراقبة الجودة','Boiler & PH':'الغلايات والـ PH','Raw Data':'البيانات الخام','Dashboard':'لوحة التحكم',
+  'Operations':'التشغيل','Quality & Process':'الجودة والعمليات','Reports':'التقارير','Synced':'متزامن','Live':'مباشر','Offline':'غير متصل','Ready':'جاهز','Loading…':'جاري التحميل…','Live from Google Sheets':'مباشر من Google Sheets','PET Flakes Washing Intelligence':'ذكاء تشغيل خط غسيل رقائق PET',
+  'DATE FROM':'من تاريخ','DATE TO':'إلى تاريخ','SHIFT':'الوردية','All Shifts':'كل الورديات','Day':'نهار','Night':'ليل','Refresh':'تحديث','Export':'تصدير','New Entry':'إدخال جديد','Choose entry type and save directly to Google Sheets.':'اختر نوع الإدخال واحفظ مباشرة في Google Sheets.','Save to Sheets':'حفظ في الشيت','Cancel':'إلغاء','Close modal':'إغلاق النافذة','Open menu':'فتح القائمة','Toggle sidebar':'فتح/غلق القائمة','Toggle theme':'تغيير الوضع',
+  'Shift':'وردية','Downtime':'توقف','Boiler':'غلاية','PH':'PH','Waste':'هالك','Sale':'بيع','Utilities':'مرافق','Date':'التاريخ','Time':'الوقت','Shift Type':'نوع الوردية','Shift Start':'بداية الوردية','Shift End':'نهاية الوردية','Workers':'العمال','Factory':'المصنع','Owner':'المالك','Consumed Bales':'البالات المستهلكة','Avg Bale Wt (kg)':'متوسط وزن البالة (كجم)','Produced Bags':'الأجولة المنتجة','Avg Bag Wt (kg)':'متوسط وزن الجوال (كجم)','Notes':'ملاحظات',
+  'Supplier':'المورد','Region':'المنطقة','Vehicle':'السيارة','Driver':'السائق','Bales Count':'عدد البالات','Price / Ton (×1000)':'سعر الطن (×1000)','Karte No.':'رقم الكارتة','Gross Weight (kg)':'الوزن القائم (كجم)','Tare Weight (kg)':'وزن الفارغ (كجم)','Discount %':'نسبة الخصم %','Stop From':'توقف من','Stop To':'توقف إلى','Reason':'السبب',
+  'Sortex Wt (kg)':'وزن السورتكس (كجم)','Sortex Count':'عدد السورتكس','Big Flex Wt (kg)':'وزن الفليكس الكبير (كجم)','Big Flex Count':'عدد الفليكس الكبير','Wire & Bags Wt (kg)':'وزن السلك والأكياس (كجم)','Wire & Bags Count':'عدد السلك والأكياس','Caps & Labels Wt (kg)':'وزن الأغطية والليبل (كجم)','Caps & Labels Count':'عدد الأغطية والليبل','Buyer Factory':'مصنع العميل','Location':'الموقع','Net Weight (kg)':'صافي الوزن (كجم)',
+  'Meter':'عداد','PV (°C)':'PV (°م)','SV (°C)':'SV (°م)','Current (A)':'الأمبير (A)','Area':'المنطقة','PH Reading':'قراءة PH','Optional…':'اختياري…','Electricity':'الكهرباء','Water':'المياه','Chemicals':'الكيماويات','Start Reading (kWh)':'قراءة البداية (kWh)','End Reading (kWh)':'قراءة النهاية (kWh)','Start Reading (m³)':'قراءة البداية (م³)','End Reading (m³)':'قراءة النهاية (م³)','Soda Bags Used':'عدد أجولة الصودا','Soda kg per Bag':'كجم الصودا لكل جوال','Inne Bags Used':'عدد أجولة Inne','Bags count':'عدد الأجولة','Total = Bags × kg/Bag':'الإجمالي = عدد الأجولة × كجم/جوال','Consumed = End − Start':'الاستهلاك = النهاية − البداية',
+  'Production Efficiency':'كفاءة الإنتاج','Operational Uptime':'زمن التشغيل','Revenue Generated':'الإيراد المحقق','Received':'المستلم','Consumed':'المستهلك','Produced':'المنتج','Waste':'الهالك','Actual Yield':'الكفاءة الفعلية','Actual Loss':'الفقد الفعلي','Revenue':'الإيرادات','Production vs Consumption — Daily (MT)':'الإنتاج مقابل الاستهلاك يوميًا (طن)','Material Flow Breakdown':'تحليل تدفق الخامة','Net Production':'صافي الإنتاج','Uptime':'زمن التشغيل','Sales vs Produced':'المبيعات مقابل الإنتاج','Key Ratios':'النسب الرئيسية','Metric':'المؤشر','Value':'القيمة','Status':'الحالة','Material Yield':'كفاءة الخامة','Waste Rate':'معدل الهالك','Loss Rate':'معدل الفقد','Avg PH':'متوسط PH','Boiler Δ (PV-SV)':'فرق الغلاية (PV-SV)','Management Signals — What to do next':'إشارات الإدارة — ماذا نفعل بعد ذلك','Production':'الإنتاج','Sales':'المبيعات',
+  'Total Waste':'إجمالي الهالك','Downtime':'التوقفات','Avg Bag Weight':'متوسط وزن الجوال','Sortex':'سورتكس','Big Flex':'فليكس كبير','Wire & Bags':'سلك وأكياس','Caps & Labels':'أغطية وليبل','Unaccounted':'غير محسوب','Daily Production vs Consumption (MT)':'الإنتاج اليومي مقابل الاستهلاك (طن)','Waste Distribution':'توزيع الهالك','Daily Yield % Trend':'اتجاه الكفاءة اليومية %','Downtime by Reason (min)':'التوقف حسب السبب (دقيقة)','Shift Records':'سجلات الورديات','Downtime Log':'سجل التوقفات','Utilities per Shift':'المرافق لكل وردية','No records':'لا توجد سجلات','No data':'لا توجد بيانات',
+  'Total Received':'إجمالي المستلم','Avg Daily Receiving':'متوسط الاستلام اليومي','Gross → Net':'القائم → الصافي','Discount Applied':'الخصم المطبق','Price Before Discount':'السعر قبل الخصم','Price After Discount':'السعر بعد الخصم','Total Discount Amount':'إجمالي قيمة الخصم','Avg Price / Ton':'متوسط سعر الطن','Discount Weight':'وزن الخصم','Supplier Share (MT)':'نسبة الموردين (طن)','Daily Receiving Trend (MT)':'اتجاه الاستلام اليومي (طن)','By Supplier — Total MT':'حسب المورد — إجمالي طن','Discount % by Trip':'نسبة الخصم لكل نقلة','All Receiving Records':'كل سجلات الاستلام',
+  'Total Revenue':'إجمالي الإيرادات','Avg Sale Price':'متوسط سعر البيع','Est. Cost / MT':'التكلفة التقديرية/طن','Gross Margin':'هامش الربح','Sales Discount Given':'خصم المبيعات','Price Before Disc':'السعر قبل الخصم','Revenue / MT':'الإيراد/طن','Break-even Price':'سعر التعادل','Price Analysis':'تحليل السعر','Risk Analysis':'تحليل المخاطر','Risk Factor':'عامل الخطر','Current':'الحالي','Daily Revenue Trend':'اتجاه الإيراد اليومي','Revenue by Buyer':'الإيراد حسب العميل','All Sales Records':'كل سجلات المبيعات','Buyer':'العميل',
+  'Contaminant rates as % of consumed material · PH readings per area':'نسب الشوائب من الخامة المستهلكة · قراءات PH حسب المنطقة','PVC / Sortex':'PVC / سورتكس','Metal / Wire':'معدن / سلك','Color / Big Flex':'لون / فليكس كبير','Other / Caps':'أخرى / أغطية','Boiler PH':'PH الغلاية','Sand Filter PH':'PH فلتر الرمل','Rinse Tank PH':'PH تنك الشطف','Total Contamination %':'إجمالي الشوائب %','PH Trend by Area':'اتجاه PH حسب المنطقة','Contaminant Breakdown (kg)':'تحليل الشوائب (كجم)','Waste Type Trend (Daily MT)':'اتجاه نوع الهالك يوميًا (طن)','PH Status Summary':'ملخص حالة PH','Readings':'قراءات','PH Readings Log':'سجل قراءات PH','Normal':'طبيعي','Out of Range':'خارج النطاق','Acidic':'حمضي','Alkaline':'قلوي','Min':'أقل','Max':'أعلى','All':'الكل','Sand Filter':'فلتر الرمل','Rinse Tank':'تنك الشطف','Sand':'رمل','Rinse':'شطف',
+  'Boiler Avg PV':'متوسط PV للغلاية','PV/SV Delta':'فرق PV/SV','Boiler Readings':'قراءات الغلاية','Boiler Temperature Trend (°C)':'اتجاه حرارة الغلاية (°م)','Boiler Readings — Full Log':'قراءات الغلاية — السجل الكامل','PH Readings — Full Log':'قراءات PH — السجل الكامل','All Boilers':'كل الغلايات','Boiler 1':'غلاية 1','Boiler 2':'غلاية 2','All Meters':'كل العدادات','PV':'PV','SV':'SV','Ampere (A)':'الأمبير (A)',
+  'Shift Entries':'إدخالات الورديات','No data to export':'لا توجد بيانات للتصدير','Cannot reach Google Sheets: ':'تعذر الاتصال بـ Google Sheets: ','Save failed: ':'فشل الحفظ: ','Enter at least one reading':'أدخل قراءة واحدة على الأقل','Enter at least one PH reading':'أدخل قراءة PH واحدة على الأقل','Saved':'تم الحفظ','record':'سجل','records':'سجلات','to Google Sheets':'في Google Sheets','Selected:':'المحدد:','Clear':'مسح'
+};
+
+function tr(txt){
+  const s=String(txt==null?'':txt);
+  if(state.lang!=='ar') return s;
+  return AR_TEXT[s] || s;
+}
+function trLoose(txt){
+  let s=String(txt==null?'':txt);
+  if(state.lang!=='ar') return s;
+  if(AR_TEXT[s]) return AR_TEXT[s];
+  // Common dynamic fragments
+  Object.keys(AR_TEXT).sort((a,b)=>b.length-a.length).forEach(k=>{
+    if(k && s.includes(k)) s=s.split(k).join(AR_TEXT[k]);
+  });
+  s=s.replace(/\brecords\b/g,'سجلات').replace(/\brecord\b/g,'سجل')
+     .replace(/\btrips\b/g,'نقلات').replace(/\btrip\b/g,'نقلة')
+     .replace(/\bdays\b/g,'أيام').replace(/\bactive days\b/g,'أيام نشطة')
+     .replace(/\bbags\b/g,'أجولة').replace(/\bbales\b/g,'بالات')
+     .replace(/\bmin\b/g,'دقيقة').replace(/\bminutes\b/g,'دقائق')
+     .replace(/\bof consumed\b/g,'من المستهلك').replace(/\bof waste\b/g,'من الهالك')
+     .replace(/\bAvg\b/g,'متوسط').replace(/\bTarget\b/g,'الهدف')
+     .replace(/\bNo readings\b/g,'لا توجد قراءات');
+  return s;
+}
+function translateNodeText(root=document){
+  if(state.lang!=='ar') return;
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(node){
+    const p=node.parentElement;if(!p) return NodeFilter.FILTER_REJECT;
+    if(['SCRIPT','STYLE','CANVAS'].includes(p.tagName)) return NodeFilter.FILTER_REJECT;
+    const t=node.nodeValue.trim();
+    return t?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
+  }});
+  const nodes=[];while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n=>{
+    const old=n.nodeValue; const trimmed=old.trim();
+    const translated=trLoose(trimmed);
+    if(translated!==trimmed) n.nodeValue=old.replace(trimmed,translated);
+  });
+}
+function translateAttrs(root=document){
+  if(state.lang!=='ar') return;
+  root.querySelectorAll('[placeholder],[aria-label],title').forEach(el=>{
+    ['placeholder','aria-label','title'].forEach(a=>{
+      const v=el.getAttribute(a); if(v) el.setAttribute(a,trLoose(v));
+    });
+  });
+  root.querySelectorAll('option').forEach(o=>{o.textContent=trLoose(o.textContent.trim());});
+}
+function translateDashboardText(root=document){translateNodeText(root);translateAttrs(root);}
+
+
 /* ── UTILITIES ── */
 function normalizeKey(k){return String(k||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'');}
 function rowVal(row,names,fallback=''){
@@ -57,8 +125,8 @@ function showToast(msg,type='ok'){
   _tt=setTimeout(()=>{t.classList.add('hidden');_tt=null;},4500);
 }
 function setConnection(text,ok=true){
-  $('#connectionState').innerHTML=`<span class="dot" style="${ok?'':'background:#ef4444;animation:none'}"></span> ${text}`;
-  $('#sideStatus').textContent=ok?'Live':'Offline';
+  $('#connectionState').innerHTML=`<span class="dot" style="${ok?'':'background:#ef4444;animation:none'}"></span> ${tr(text)}`;
+  $('#sideStatus').textContent=tr(ok?'Live':'Offline');
 }
 
 /* ── JSONP ── */
@@ -197,8 +265,8 @@ function cc(label,val){state.activeFilter={label,val};$('#activeFilterText').tex
 
 function drawLine(id,labels,ds,opts={}){
   dk(id);const ctx=$('#'+id);if(!ctx)return;if(!labels.length){ec(id,'No data');return;}cd();
-  state.charts[id]=new Chart(ctx,{type:'line',data:{labels,datasets:ds.map(d=>({
-    label:d.label,data:d.data,borderColor:d.color,backgroundColor:d.fill?(d.color+'28'):'transparent',
+  state.charts[id]=new Chart(ctx,{type:'line',data:{labels:labels.map(trLoose),datasets:ds.map(d=>({
+    label:tr(d.label),data:d.data,borderColor:d.color,backgroundColor:d.fill?(d.color+'28'):'transparent',
     borderWidth:2.5,tension:.4,spanGaps:true,pointRadius:4,pointHoverRadius:7,
     pointBackgroundColor:d.color,pointBorderColor:'#fff',pointBorderWidth:2,fill:!!d.fill
   }))},options:{responsive:true,maintainAspectRatio:false,
@@ -212,8 +280,8 @@ function drawLine(id,labels,ds,opts={}){
 }
 function drawBar(id,labels,ds,opts={}){
   dk(id);const ctx=$('#'+id);if(!ctx)return;if(!labels.length){ec(id,'No data');return;}cd();
-  state.charts[id]=new Chart(ctx,{type:'bar',data:{labels,datasets:ds.map(d=>({
-    label:d.label,data:d.data,backgroundColor:d.color+'cc',borderColor:d.color,
+  state.charts[id]=new Chart(ctx,{type:'bar',data:{labels:labels.map(trLoose),datasets:ds.map(d=>({
+    label:tr(d.label),data:d.data,backgroundColor:d.color+'cc',borderColor:d.color,
     borderWidth:1.5,borderRadius:6,borderSkipped:false
   }))},options:{responsive:true,maintainAspectRatio:false,
     interaction:{mode:'index',intersect:false},
@@ -227,7 +295,7 @@ function drawBar(id,labels,ds,opts={}){
 function drawDoughnut(id,labels,data,colors){
   dk(id);const ctx=$('#'+id);if(!ctx)return;cd();
   const total=data.reduce((a,b)=>a+b,0);
-  state.charts[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderColor:state.dark?'#0e1a12':'#fff',borderWidth:3,hoverOffset:10}]},
+  state.charts[id]=new Chart(ctx,{type:'doughnut',data:{labels:labels.map(trLoose),datasets:[{data,backgroundColor:colors,borderColor:state.dark?'#0e1a12':'#fff',borderWidth:3,hoverOffset:10}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
       plugins:{legend:{position:'right',labels:{padding:12,font:{size:12}}},
         tooltip:{callbacks:{label:c=>`${c.label}: ${fmt(c.raw,2)} MT (${fmt(c.raw/total*100,1)}%)`}}
@@ -835,7 +903,7 @@ function renderReports(){
 const entryTypes=[['shift','Shift'],['receiving','Receiving'],['downtime','Downtime'],['boiler','Boiler'],['ph','PH'],['waste','Waste'],['sale','Sale'],['utilities','Utilities']];
 function openEntry(){$('#entryModal').classList.remove('hidden');renderEntryTabs();renderEntryForm();}
 function renderEntryTabs(){
-  $('#entryTypeTabs').innerHTML=entryTypes.map(([id,txt])=>`<button type="button" class="entry-tab ${state.entryType===id?'active':''}" data-entry="${id}">${txt}</button>`).join('');
+  $('#entryTypeTabs').innerHTML=entryTypes.map(([id,txt])=>`<button type="button" class="entry-tab ${state.entryType===id?'active':''}" data-entry="${id}">${tr(txt)}</button>`).join('');
   $$('[data-entry]').forEach(b=>b.onclick=()=>{saveBoilerDraft();savePHDraft();state.entryType=b.dataset.entry;renderEntryTabs();renderEntryForm();});
 }
 function today(){return new Date().toISOString().slice(0,10);}
@@ -859,6 +927,7 @@ function renderEntryForm(){
   $('#entryForm').onsubmit=saveEntry;
   if(state.entryType==='boiler')wireBoilerForm();
   if(state.entryType==='ph'){$$('[data-ph-area]').forEach(i=>i.oninput=()=>savePHDraft());$$('[name=phDate],[name=phTime]').forEach(i=>i.onchange=()=>savePHDraft());}
+  translateDashboardText($('#entryModal'));
 }
 
 function boilerBatchForm(d,t){
@@ -976,13 +1045,18 @@ function exportCsv(){
 /* ── RENDER ROUTER ── */
 function render(){
   document.documentElement.dir=state.lang==='ar'?'rtl':'ltr';
+  document.documentElement.lang=state.lang==='ar'?'ar':'en';
   document.body.classList.toggle('dark',state.dark);
   $$('#brandLogo').forEach(img=>img.src=state.dark?'assets/logo-environ-adapt-white.png':'assets/logo-environ-adapt-light.png');
   $$('[data-i18n]').forEach(el=>el.textContent=i18n[state.lang][el.dataset.i18n]||el.textContent);
   const titles={summary:'Executive Summary',production:'Production & Yield',receiving:'Receiving',sales:'Sales & Revenue',quality:'Quality Control',boilerph:'Boiler & PH',reports:'Raw Data'};
-  $('#pageTitle').textContent=titles[state.page]||'Dashboard';
+  $('#pageTitle').textContent=tr(titles[state.page]||'Dashboard');
+  const subtitle=$('#pageSubTitle'); if(subtitle) subtitle.textContent=tr('PET Flakes Washing Intelligence');
+  const live=$('#liveText'); if(live) live.textContent=tr('Live from Google Sheets');
+  const langBtn=$('#langBtn'); if(langBtn) langBtn.textContent=state.lang==='ar'?'EN':'AR';
   const fn={summary:renderSummary,production:renderProduction,receiving:renderReceiving,sales:renderSales,quality:renderQuality,boilerph:renderBoilerPH,reports:renderReports}[state.page]||renderSummary;
   fn();
+  translateDashboardText(document);
 }
 
 /* ── INIT ── */
