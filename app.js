@@ -1,7 +1,7 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec'; 
-const APP_VERSION = 'FLAKES_V20_PRO_FINAL_REVIEWED';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec';
+const APP_VERSION = 'FLAKES_V24_MANUAL_SODA_RATE';
 
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
@@ -26,7 +26,7 @@ const AR_TEXT = {
   'Shift':'وردية','Downtime':'توقف','Boiler':'غلاية','PH':'PH','Waste':'هالك','Sale':'بيع','Utilities':'مرافق','Date':'التاريخ','Time':'الوقت','Shift Type':'نوع الوردية','Shift Start':'بداية الوردية','Shift End':'نهاية الوردية','Workers':'العمال','Factory':'المصنع','Owner':'المالك','Consumed Bales':'البالات المستهلكة','Avg Bale Wt (kg)':'متوسط وزن البالة (كجم)','Produced Bags':'الأجولة المنتجة','Avg Bag Wt (kg)':'متوسط وزن الجوال (كجم)','Big Jumbo Bags Count':'عدد الجواني الكبيرة','Small Jumbo Bags Count':'عدد الجواني الصغيرة','Sacks Count':'عدد الشكاير','Packaging Counts':'أعداد الجواني والشكاير','Notes':'ملاحظات',
   'Supplier':'المورد','Region':'المنطقة','Vehicle':'السيارة','Driver':'السائق','Bales Count':'عدد البالات','Price / Ton (×1000)':'سعر الطن (×1000)','Karte No.':'رقم الكارتة','Gross Weight (kg)':'الوزن القائم (كجم)','Tare Weight (kg)':'وزن الفارغ (كجم)','Discount %':'نسبة الخصم %','Stop From':'توقف من','Stop To':'توقف إلى','Reason':'السبب',
   'Sortex Wt (kg)':'وزن السورتكس (كجم)','Sortex Count':'عدد السورتكس','Green Bottle Wt (kg)':'زجاجة خضراء (كجم)','Color Bottle Wt (kg)':'بالات ألوان (كجم)','Big Flex Wt (kg)':'زجاجة خضراء (كجم)','Green Bottle Count':'عدد الزجاجات الخضراء','Color Bottle Count':'عدد بالات الألوان','Big Flex Count':'عدد الزجاجات الخضراء','Bag & Strap Wt (kg)':'وزن الشمبر والأكياس (كجم)','Wire & Bags Wt (kg)':'وزن الشمبر والأكياس (كجم)','Bag & Strap Count':'عدد الشمبر والأكياس','Wire & Bags Count':'عدد الشمبر والأكياس','Caps & Labels Wt (kg)':'وزن الغطاء والليبل المكسر (كجم)','Caps & Labels Count':'عدد الغطاء والليبل المكسر','Buyer Factory':'مصنع العميل','Location':'الموقع','Net Weight (kg)':'صافي الوزن (كجم)',
-  'Meter':'عداد','PV (°C)':'PV (°م)','SV (°C)':'SV (°م)','Current (A)':'الأمبير (A)','Area':'المنطقة','PH Reading':'قراءة PH','Optional…':'اختياري…','Electricity':'الكهرباء','Water':'المياه','Chemicals':'الكيماويات','Start Reading (kWh)':'قراءة البداية (kWh)','End Reading (kWh)':'قراءة النهاية (kWh)','Start Reading (m³)':'قراءة البداية (م³)','End Reading (m³)':'قراءة النهاية (م³)','Soda Bags Used':'عدد أجولة الصودا','Soda kg per Bag':'كجم الصودا لكل جوال','Inne Bags Used':'عدد أجولة Inne','Bags count':'عدد الأجولة','Total = Bags × kg/Bag':'الإجمالي = عدد الأجولة × كجم/جوال','Consumed = End − Start':'الاستهلاك = النهاية − البداية',
+  'Meter':'عداد','PV (°C)':'PV (°م)','SV (°C)':'SV (°م)','Current (A)':'الأمبير (A)','Area':'المنطقة','PH Reading':'قراءة PH','Optional…':'اختياري…','Electricity':'الكهرباء','Water':'المياه','Chemicals':'الكيماويات','Start Reading (kWh)':'قراءة البداية (kWh)','End Reading (kWh)':'قراءة النهاية (kWh)','Start Reading (m³)':'قراءة البداية (م³)','End Reading (m³)':'قراءة النهاية (م³)','Soda Bags Used':'عدد أجولة الصودا','Soda kg per Bag':'كجم الصودا لكل جوال','Inner Bags Used':'الأكياس الداخلية','Bags count':'عدد الأجولة','Total = Bags × kg/Bag':'الإجمالي = عدد الأجولة × كجم/جوال','Consumed = End − Start':'الاستهلاك = النهاية − البداية',
   'Production Efficiency':'كفاءة الإنتاج','Operational Uptime':'زمن التشغيل','Revenue Generated':'الإيراد المحقق','Received':'المستلم','Consumed':'المستهلك','Produced':'المنتج','Waste':'الهالك','Actual Yield':'الكفاءة الفعلية','Actual Loss':'الفقد الفعلي','Revenue':'الإيرادات','Production vs Consumption — Daily (MT)':'الإنتاج مقابل الاستهلاك يوميًا (طن)','Material Flow Breakdown':'تحليل تدفق الخامة','Net Production':'صافي الإنتاج','Uptime':'زمن التشغيل','Sales vs Produced':'المبيعات مقابل الإنتاج','Key Ratios':'النسب الرئيسية','Metric':'المؤشر','Value':'القيمة','Status':'الحالة','Material Yield':'كفاءة الخامة','Waste Rate':'معدل الهالك','Loss Rate':'معدل الفقد','Avg PH':'متوسط PH','Boiler Δ (PV-SV)':'فرق الغلاية (PV-SV)','Management Signals — What to do next':'إشارات الإدارة — ماذا نفعل بعد ذلك','Production':'الإنتاج','Sales':'المبيعات',
   'Total Waste':'إجمالي الهالك','Downtime':'التوقفات','Avg Bag Weight':'متوسط وزن الجوال','Sortex':'سورتكس','Green Bottle':'زجاجة خضراء','Color Bottle':'بالات ألوان','Big Flex':'زجاجة خضراء','Bag & Strap':'شمبر وأكياس','Wire & Bags':'شمبر وأكياس','Caps & Labels':'غطاء وليبل مكسر','Unaccounted':'غير محسوب','Daily Production vs Consumption (MT)':'الإنتاج اليومي مقابل الاستهلاك (طن)','Waste Distribution':'توزيع الهالك','Daily Yield % Trend':'اتجاه الكفاءة اليومية %','Downtime by Reason (min)':'التوقف حسب السبب (دقيقة)','Shift Records':'سجلات الورديات','Downtime Log':'سجل التوقفات','Utilities per Shift':'المرافق لكل وردية','No records':'لا توجد سجلات','No data':'لا توجد بيانات',
   'Total Received':'إجمالي المستلم','Avg Daily Receiving':'متوسط الاستلام اليومي','Gross → Net':'القائم → الصافي','Discount Applied':'الخصم المطبق','Price Before Discount':'السعر قبل الخصم','Price After Discount':'السعر بعد الخصم','Total Discount Amount':'إجمالي قيمة الخصم','Avg Price / Ton':'متوسط سعر الطن','Discount Weight':'وزن الخصم','Supplier Share (MT)':'نسبة الموردين (طن)','Daily Receiving Trend (MT)':'اتجاه الاستلام اليومي (طن)','By Supplier — Total MT':'حسب المورد — إجمالي طن','Discount % by Trip':'نسبة الخصم لكل نقلة','All Receiving Records':'كل سجلات الاستلام',
@@ -34,7 +34,7 @@ const AR_TEXT = {
   'Contaminant rates as % of consumed material · PH readings per area':'نسب الشوائب من الخامة المستهلكة · قراءات PH حسب المنطقة','PVC / Sortex':'PVC / سورتكس','Metal / Wire':'شمبر وأكياس','Color / Green Bottle':'لون / زجاجة خضراء','Color / Green + Color Bottle':'لون / زجاجة خضراء + بالات ألوان','Color / Big Flex':'لون / زجاجة خضراء','Other / Caps':'أخرى / أغطية','Boiler PH':'PH الغلاية','Sand Filter PH':'PH فلتر الرمل','Rinse Tank PH':'PH تنك الشطف','Total Contamination %':'إجمالي الشوائب %','PH Trend by Area':'اتجاه PH حسب المنطقة','Contaminant Breakdown (kg)':'تحليل الشوائب (كجم)','Waste Type Trend (Daily MT)':'اتجاه نوع الهالك يوميًا (طن)','PH Status Summary':'ملخص حالة PH','Readings':'قراءات','PH Readings Log':'سجل قراءات PH','Normal':'طبيعي','Out of Range':'خارج النطاق','Acidic':'حمضي','Alkaline':'قلوي','Min':'أقل','Max':'أعلى','All':'الكل','Sand Filter':'فلتر الرمل','Rinse Tank':'تنك الشطف','Sand':'رمل','Rinse':'شطف',
   'Boiler Avg PV':'متوسط PV للغلاية','PV/SV Delta':'فرق PV/SV','Boiler Readings':'قراءات الغلاية','Boiler Temperature Trend (°C)':'اتجاه حرارة الغلاية (°م)','Boiler Readings — Full Log':'قراءات الغلاية — السجل الكامل','PH Readings — Full Log':'قراءات PH — السجل الكامل','All Boilers':'كل الغلايات','Boiler 1':'غلاية 1','Boiler 2':'غلاية 2','All Meters':'كل العدادات','PV':'PV','SV':'SV','Ampere (A)':'الأمبير (A)',
 
-  'Worker Daily Wage':'يومية العامل','Labor Cost':'تكلفة العمالة','Packaging Cost':'تكلفة الجواني','Big Jumbo Unit Cost':'سعر الجونية الكبيرة','Small Jumbo Unit Cost':'سعر الجونية الصغيرة','Sacks Unit Cost':'سعر الشيكارة','Forklift Fuel':'وقود الفورك لفت','Fuel Type':'نوع الوقود','Fuel Liters':'لترات الوقود','Fuel Cost':'تكلفة الوقود','Operating Cost / MT':'تكلفة التشغيل/طن','Total Operating Cost':'إجمالي تكلفة التشغيل','Soda Type':'نوع الصودا','Flakes / Bags':'قشور / شكاير','Liquid':'سائلة','Soda Liquid Liters':'لتر صودا سائلة','Line Sludge':'طينة الخط','Line Sludge Wt (kg)':'وزن طينة الخط (كجم)','Line Sludge Count':'عدد/دفعات الطينة','Operation Waste':'هالك تشغيل','Material Waste':'هالك خامة','Total Utilities Cost':'إجمالي تكلفة المرافق','Utilities Cost / MT':'تكلفة المرافق/طن','Electricity Cost':'تكلفة الكهرباء','Water Cost':'تكلفة المياه','Soda Cost':'تكلفة الصودا','Online Rate':'سعر أونلاين','Price Status':'حالة السعر','Gap To Target':'العجز عن المطلوب','High Boiler Reading':'قراءة غلاية عالية','Boiler PH uses 0-100 scale; monitor high reading.':'PH الغلاية بنظام 0-100؛ راقب القراءة العالية.',
+  'Worker Daily Wage':'يومية العامل','Labor Cost':'تكلفة العمالة','Packaging Cost':'تكلفة الجواني','Big Jumbo Unit Cost':'سعر الجونية الكبيرة','Small Jumbo Unit Cost':'سعر الجونية الصغيرة','Sacks Unit Cost':'سعر الشيكارة','Forklift Fuel':'وقود الفورك لفت','Fuel Type':'نوع الوقود','Fuel Liters':'لترات الوقود','Fuel Cost':'تكلفة الوقود','Operating Cost / MT':'تكلفة التشغيل/طن','Total Operating Cost':'إجمالي تكلفة التشغيل','Soda Type':'نوع الصودا','Flakes / Bags':'قشور / شكاير','Liquid':'سائلة','Soda Liquid Liters':'لتر صودا سائلة','Line Sludge':'طينة الخط','Line Sludge Wt (kg)':'وزن طينة الخط (كجم)','Line Sludge Count':'عدد/دفعات الطينة','Operation Waste':'هالك تشغيل','Material Waste':'هالك خامة','Total Utilities Cost':'إجمالي تكلفة المرافق','Utilities Cost / MT':'تكلفة المرافق/طن','Electricity Cost':'تكلفة الكهرباء','Water Cost':'تكلفة المياه','Soda Cost':'تكلفة الصودا','Manual Rate':'سعر يدوي','Soda Rate EGP/Kg':'سعر كيلو الصودا','Soda Liquid Rate EGP/L':'سعر لتر الصودا','Online Rate':'سعر أونلاين','Price Status':'حالة السعر','Gap To Target':'العجز عن المطلوب','High Boiler Reading':'قراءة غلاية عالية','Boiler PH uses 0-100 scale; monitor high reading.':'PH الغلاية بنظام 0-100؛ راقب القراءة العالية.',
   'Shift Entries':'إدخالات الورديات','No data to export':'لا توجد بيانات للتصدير','Cannot reach Google Sheets: ':'تعذر الاتصال بـ Google Sheets: ','Save failed: ':'فشل الحفظ: ','Enter at least one reading':'أدخل قراءة واحدة على الأقل','Enter at least one PH reading':'أدخل قراءة PH واحدة على الأقل','Saved':'تم الحفظ','record':'سجل','records':'سجلات','to Google Sheets':'في Google Sheets','Actual Production ÷ Actual Input':'الإنتاج الفعلي ÷ الاستهلاك الفعلي','Actual Input ÷ Actual Production':'الاستهلاك الفعلي ÷ الإنتاج','(Actual Production + Total Material Recovery) ÷ Actual Input':'(الإنتاج الفعلي + إجمالي المواد القابلة للاستفادة) ÷ الاستهلاك الفعلي','Actual Input ÷ (Actual Production + Total Material Recovery)':'الاستهلاك الفعلي ÷ (الإنتاج الفعلي + المواد القابلة للاستفادة)','(Actual Production + Operation Recovery) ÷ Actual Input':'(الإنتاج الفعلي + نواتج التشغيل القابلة للاستفادة) ÷ الاستهلاك الفعلي','Actual Input ÷ (Actual Production + Operation Recovery)':'الاستهلاك الفعلي ÷ (الإنتاج الفعلي + نواتج التشغيل القابلة للاستفادة)','Selected:':'المحدد:','Clear':'مسح'
 };
 
@@ -244,7 +244,7 @@ function hideAppLoader(){
 startAppLoaderSimulation();
 
 /* ── JSONP ── */
-function jsonp(action,params={}){
+function jsonp(action,params={},options={}){
   return new Promise((resolve,reject)=>{
     const cb='cb_'+Date.now()+'_'+Math.floor(Math.random()*999999);
     const url=new URL(APPS_SCRIPT_URL);
@@ -252,7 +252,11 @@ function jsonp(action,params={}){
     url.searchParams.set('_v',APP_VERSION);url.searchParams.set('_ts',Date.now());
     Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,typeof v==='string'?v:JSON.stringify(v)));
     const s=document.createElement('script');s.async=true;s.referrerPolicy='no-referrer';
-    const timer=setTimeout(()=>{cleanup();reject(new Error('Timeout — Apps Script did not answer. Check Web App deployment and mobile connection.'));},30000);
+
+    // V23: saving and loading can take longer on mobile/slow Apps Script deployments.
+    // Do not fail too early while Google Sheets is appending or returning large data.
+    const timeoutMs = options.timeoutMs || (String(action).startsWith('save') ? 90000 : 70000);
+    const timer=setTimeout(()=>{cleanup();reject(new Error('Timeout — Apps Script did not answer within '+Math.round(timeoutMs/1000)+'s. The request may still complete in Google Sheets; refresh after a few seconds.'));},timeoutMs);
     function cleanup(){clearTimeout(timer);delete window[cb];if(s.parentNode)s.remove();}
     window[cb]=(data)=>{cleanup();data&&data.ok===false?reject(new Error(data.error||'Error')):resolve(data);};
     s.onerror=()=>{cleanup();reject(new Error('Cannot reach Apps Script — redeploy Web App as Anyone with the link and check internet on mobile.'));};
@@ -353,7 +357,7 @@ function metrics(){
   const elecKwh=f.utilities.reduce((a,r)=>a+num(rowVal(r,['Electricity Consumed Kwh'])),0);
   const waterM3=f.utilities.reduce((a,r)=>a+num(rowVal(r,['Water Consumed M3'])),0);
   const sodaKg=f.utilities.reduce((a,r)=>a+num(rowVal(r,['Soda Total Kg','Soda Flakes Total Kg','Soda Liquid Total Kg'])),0);
-  const inneCount=f.utilities.reduce((a,r)=>a+num(rowVal(r,['Inne Bags Count'])),0);
+  const innerBagsCount=f.utilities.reduce((a,r)=>a+num(rowVal(r,['Inner Bags Count','Inne Bags Count'])),0);
   const elecPerMT=prodKg?elecKwh/(prodKg/1000):0;
   const waterPerMT=prodKg?waterM3/(prodKg/1000):0;
   const sodaPerMT=prodKg?sodaKg/(prodKg/1000):0;
@@ -392,7 +396,7 @@ function metrics(){
     avgPh,avgPv,avgSv,
     salesKg,salesRevenue,salesBeforeDiscount,salesDiscountLoss,avgSalePrice,
     salesTrips:f.sales.length,
-    elecKwh,waterM3,sodaKg,inneCount,elecPerMT,waterPerMT,sodaPerMT,elecCost,waterCost,sodaCost,fuelCost,packagingCost,laborCost,totalUtilityCost,utilCostPerMT,totalOperatingCost,operatingCostPerMT,paymentKg,netIntoFactory,inventoryChange,phAlerts,phCritical,actualYieldPct,actualYieldRatio,materialPct,materialRatio,operationPct,operationRatio,
+    elecKwh,waterM3,sodaKg,innerBagsCount,elecPerMT,waterPerMT,sodaPerMT,elecCost,waterCost,sodaCost,fuelCost,packagingCost,laborCost,totalUtilityCost,utilCostPerMT,totalOperatingCost,operatingCostPerMT,paymentKg,netIntoFactory,inventoryChange,phAlerts,phCritical,actualYieldPct,actualYieldRatio,materialPct,materialRatio,operationPct,operationRatio,
     wastePct:pct(wasteKg,consumedKg),lossPct:pct(actualLossKg,consumedKg)
   };
 }
@@ -1118,9 +1122,51 @@ function nowTime(){return new Date().toTimeString().slice(0,5);}
 function inp(name,label,type='text',val=''){return `<label>${label}<input name="${name}" type="${type}" value="${val}" step="${type==='number'?'any':''}"></label>`;}
 function sel(name,label,opts){return `<label>${label}<select name="${name}">${opts.map(o=>`<option value="${o}">${o}</option>`).join('')}</select></label>`;}
 
+
+function lastPositive(rows, keys, fallback=0){
+  const list = Array.isArray(rows) ? rows : [];
+  for(let i=list.length-1;i>=0;i--){
+    const v = num(rowVal(list[i], keys));
+    if(v>0) return v;
+  }
+  return fallback;
+}
+function weightedAvgBaleFromReceiving(){
+  const rows = (state.filtered && state.filtered.receivings && state.filtered.receivings.length) ? state.filtered.receivings : (state.raw.receivings || []);
+  let totalKg=0,totalBales=0;
+  rows.forEach(r=>{
+    const b=num(rowVal(r,['Bales Count','balesCount']));
+    const kg=num(rowVal(r,['Net Weight After Discount Kg','Net Weight Kg']));
+    if(b>0 && kg>0){ totalBales+=b; totalKg+=kg; }
+  });
+  if(totalBales>0) return totalKg/totalBales;
+  return lastPositive(state.raw.receivings,['Average Bale Weight Kg'],0);
+}
+function autoPackageWeights(){
+  return {
+    big:lastPositive(state.raw.shifts,['Big Jumbo Weight Kg'],1000),
+    small:lastPositive(state.raw.shifts,['Small Jumbo Weight Kg'],500),
+    sacks:lastPositive(state.raw.shifts,['Sacks Weight Kg'],25)
+  };
+}
+function hiddenInput(name,val='') { return `<input type="hidden" name="${name}" value="${val}">`; }
+function entrySection(title,sub,body,cls=''){
+  return `<div class="entry-section ${cls}" style="grid-column:1/-1"><div class="entry-section-head"><div><b>${title}</b>${sub?`<small>${sub}</small>`:''}</div></div><div class="entry-section-grid">${body}</div></div>`;
+}
+
 function renderEntryForm(){
   const d=today(),t=nowTime();let html='';
-  if(state.entryType==='shift') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${sel('shiftType','Shift Type',['Day','Night'])}${inp('shiftStartTime','Shift Start','time')}${inp('shiftEndTime','Shift End','time')}${inp('workersCount','Workers','number')}${inp('workerDailyWageEGP','Worker Daily Wage','number')}${inp('factoryName','Factory')}${inp('factoryOwner','Owner')}${inp('consumedBalesCount','Consumed Bales','number')}${inp('averageBaleWeightKg','Avg Bale Wt (kg)','number')}<label style='grid-column:1/-1;background:var(--green-dim);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--green-dark)'><b>📦 Production Breakdown by Package Type</b><br><small style='color:var(--muted)'>Enter count for each type + individual bag weight — total is auto-calculated</small></label>${inp('bigJumboBagsCount','Big Jumbo Bags Count','number')}${inp('bigJumboWeightKg','Big Jumbo Wt/Bag (kg)','number')}${inp('smallJumboBagsCount','Small Jumbo Bags Count','number')}${inp('smallJumboWeightKg','Small Jumbo Wt/Bag (kg)','number')}${inp('sacksCount','Sacks Count','number')}${inp('sacksWeightKg','Sacks Wt/Bag (kg)','number')}<div id='prodPreview' style='grid-column:1/-1;padding:10px 14px;background:var(--panel2);border-radius:8px;font-size:13px;color:var(--muted)'>Total Production: — kg · packaging and labor cost are calculated from online/cache sources.</div>${inp('notes','Notes')}`;
+  if(state.entryType==='shift'){
+    const autoAvg=weightedAvgBaleFromReceiving();
+    const pkg=autoPackageWeights();
+    html=`${hiddenInput('averageBaleWeightKg',fmt(autoAvg,3))}${hiddenInput('bigJumboWeightKg',pkg.big)}${hiddenInput('smallJumboWeightKg',pkg.small)}${hiddenInput('sacksWeightKg',pkg.sacks)}
+    ${entrySection('بيانات الوردية','التاريخ والوقت ونوع الوردية',`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${sel('shiftType','Shift Type',['Day','Night'])}${inp('shiftStartTime','Shift Start','time')}${inp('shiftEndTime','Shift End','time')}`)}
+    ${entrySection('المصنع والعمالة','اليومية تدخل هنا وتدخل تلقائيًا في تكلفة التشغيل للطن',`${inp('factoryName','Factory')}${inp('factoryOwner','Owner')}${inp('workersCount','Workers','number')}${inp('workerDailyWageEGP','Worker Daily Wage','number')}`)}
+    ${entrySection('استهلاك الخامة','متوسط وزن البالة محسوب تلقائيًا من الاستلامات ولا يتم إدخاله يدويًا',`${inp('consumedBalesCount','Consumed Bales','number')}<div class="readonly-metric"><small>متوسط وزن البالة التلقائي</small><b id="avgBaleAutoText">${autoAvg>0?fmt(autoAvg,1)+' kg':'—'}</b><span>من بيانات Receiving</span></div><div class="readonly-metric"><small>إجمالي الخامة المستهلكة</small><b id="consumedPreview">—</b><span>البالات × متوسط وزن البالة</span></div>`)}
+    ${entrySection('الإنتاج حسب نوع التعبئة','أدخل العدد فقط — أوزان الجواني والشكاير تحسب تلقائيًا من الإعدادات/آخر بيانات محفوظة',`${inp('bigJumboBagsCount','Big Jumbo Bags Count','number')}${inp('smallJumboBagsCount','Small Jumbo Bags Count','number')}${inp('sacksCount','Sacks Count','number')}<div class="package-weight-strip"><span>Big Jumbo: <b>${fmt0(pkg.big)} kg</b></span><span>Small Jumbo: <b>${fmt0(pkg.small)} kg</b></span><span>Sacks: <b>${fmt0(pkg.sacks)} kg</b></span></div>`,'production-section')}
+    <div id='prodPreview' class='entry-total-preview'>Total Production: — kg · packaging and labor cost are calculated from online/cache sources.</div>
+    <label class="full">Notes<input name="notes" type="text"></label>`;
+  }
   if(state.entryType==='receiving') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('supplierName','Supplier')}${inp('region','Region')}${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}${inp('balesCount','Bales Count','number')}${inp('pricePerTonThousand','Price / Ton (×1000)','number')}${inp('karteNumber','Karte No.')}${inp('grossWeightKg','Gross Weight (kg)','number')}${inp('tareWeightKg','Tare Weight (kg)','number')}${inp('discountPercent','Discount %','number')}<div id='netPreview' style='grid-column:1/-1;padding:10px 14px;background:var(--green-dim);border-radius:8px;font-size:13px;color:var(--green-dark)'>Net Weight: — kg &nbsp;|&nbsp; After Discount: — kg</div>${inp('notes','Notes')}`;
   if(state.entryType==='downtime') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('stopFromTime','Stop From','time')}${inp('stopToTime','Stop To','time')}${inp('downtimeReason','Reason')}${inp('notes','Notes')}`;
   if(state.entryType==='waste') html=wasteForm(d,t);
@@ -1150,18 +1196,24 @@ function renderEntryForm(){
   }
   if(state.entryType==='shift'){
     const calcProd=()=>{
-      const el=$('#entryForm');
-      const big=num(el?.querySelector('[name=bigJumboBagsCount]')?.value)*num(el?.querySelector('[name=bigJumboWeightKg]')?.value);
-      const small=num(el?.querySelector('[name=smallJumboBagsCount]')?.value)*num(el?.querySelector('[name=smallJumboWeightKg]')?.value);
-      const sacks=num(el?.querySelector('[name=sacksCount]')?.value)*num(el?.querySelector('[name=sacksWeightKg]')?.value);
+      const f=$('#entryForm');
+      const v=n=>num(f?.querySelector(`[name=${n}]`)?.value);
+      const autoAvg=weightedAvgBaleFromReceiving();
+      const pkg=autoPackageWeights();
+      const set=(n,val)=>{const el=f?.querySelector(`[name=${n}]`); if(el)el.value=val;};
+      set('averageBaleWeightKg',fmt(autoAvg,3));
+      set('bigJumboWeightKg',pkg.big); set('smallJumboWeightKg',pkg.small); set('sacksWeightKg',pkg.sacks);
+      const consumed=v('consumedBalesCount')*autoAvg;
+      const big=v('bigJumboBagsCount')*pkg.big, small=v('smallJumboBagsCount')*pkg.small, sacks=v('sacksCount')*pkg.sacks;
       const total=big+small+sacks;
-      const workers=num(el?.querySelector('[name=workersCount]')?.value);
-      const wage=num(el?.querySelector('[name=workerDailyWageEGP]')?.value);
-      const labor=workers*wage;
-      const prev=$('#prodPreview');
-      if(prev) prev.innerHTML=`Total Production: <b style='color:var(--green)'>${total>0?fmt0(total)+' kg = '+fmt(total/1000,3)+' MT':'—'}</b> &nbsp;|&nbsp; Labor preview: <b style='color:var(--green)'>${labor>0?fmt0(labor)+' EGP':'online/cache'}</b>`;
+      const labor=v('workersCount')*v('workerDailyWageEGP');
+      const avgTxt=$('#avgBaleAutoText'), consTxt=$('#consumedPreview'), prev=$('#prodPreview');
+      if(avgTxt) avgTxt.textContent=autoAvg>0?fmt(autoAvg,1)+' kg':'—';
+      if(consTxt) consTxt.textContent=consumed>0?fmt0(consumed)+' kg':'—';
+      if(prev) prev.innerHTML=`<b>Total Production:</b> <span style='color:var(--green);font-weight:800'>${total>0?fmt0(total)+' kg = '+fmt(total/1000,3)+' MT':'—'}</span> &nbsp;|&nbsp; <b>Labor:</b> <span style='color:var(--green);font-weight:800'>${labor>0?fmt0(labor)+' EGP':'online/cache'}</span> &nbsp;|&nbsp; <b>Consumed:</b> <span style='color:var(--green);font-weight:800'>${consumed>0?fmt0(consumed)+' kg':'—'}</span>`;
     };
-    $$('[name=bigJumboBagsCount],[name=bigJumboWeightKg],[name=smallJumboBagsCount],[name=smallJumboWeightKg],[name=sacksCount],[name=sacksWeightKg],[name=workersCount],[name=workerDailyWageEGP]',$('#entryForm')).forEach(i=>i.oninput=calcProd);
+    $$('[name=consumedBalesCount],[name=bigJumboBagsCount],[name=smallJumboBagsCount],[name=sacksCount],[name=workersCount],[name=workerDailyWageEGP]',$('#entryForm')).forEach(i=>i.oninput=calcProd);
+    calcProd();
   }
   if(state.entryType==='ph'){$$('[data-ph-area]').forEach(i=>i.oninput=()=>savePHDraft());$$('[name=phDate],[name=phTime]').forEach(i=>i.onchange=()=>savePHDraft());}
   translateDashboardText($('#entryModal'));
@@ -1227,9 +1279,9 @@ function utilitiesForm(d,t){
       <tbody>
         <tr><td><b>⚡ Electricity</b><small>EgyptERA · Low Voltage 380V / Other Users</small></td><td><input name="electricityStartReading" type="number" min="0" step="0.1" placeholder="Start kWh"></td><td><input name="electricityEndReading" type="number" min="0" step="0.1" placeholder="End kWh"></td><td id="elecPreview">0 kWh · online rate</td></tr>
         <tr><td><b>💧 Water</b><small>Giza - 6 October / Industrial</small></td><td><input name="waterStartReading" type="number" min="0" step="0.01" placeholder="Start m³"></td><td><input name="waterEndReading" type="number" min="0" step="0.01" placeholder="End m³"></td><td id="waterPreview">0 m³ · online rate</td></tr>
-        <tr><td><b>🧴 Soda</b><small>Flakes by kg or liquid by liter</small></td><td><select name="sodaType" id="sodaType"><option value="flakes">Flakes / Bags</option><option value="liquid">Liquid</option></select></td><td><div id="sodaInputs"><input name="sodaFlakesBagsCount" type="number" min="0" step="1" placeholder="Bags"><input name="sodaFlakesKgPerBag" type="number" min="0" step="0.5" value="25" placeholder="Kg/Bag"></div></td><td id="sodaPreview">0 kg · online rate</td></tr>
+        <tr><td><b>🧴 Soda</b><small>Manual price · flakes by kg / liquid by liter</small></td><td><select name="sodaType" id="sodaType"><option value="flakes">Flakes / Bags</option><option value="liquid">Liquid</option></select></td><td><div id="sodaInputs" class="inline-inputs"><input name="sodaFlakesBagsCount" type="number" min="0" step="1" placeholder="Bags"><input name="sodaFlakesKgPerBag" type="number" min="0" step="0.5" value="25" placeholder="Kg/Bag"><input name="sodaFlakesRateEGPPerKg" type="number" min="0" step="0.01" placeholder="EGP/Kg"></div></td><td id="sodaPreview">0 kg × manual rate = 0 EGP</td></tr>
         <tr><td><b>⛽ Forklift Fuel</b><small>diesel/gasoline official rate</small></td><td><select name="forkliftFuelType"><option value="diesel">Diesel / Solar</option><option value="gasoline80">Gasoline 80</option><option value="gasoline92">Gasoline 92</option><option value="gasoline95">Gasoline 95</option></select></td><td><input name="forkliftFuelLiters" type="number" min="0" step="0.1" placeholder="Liters consumed"></td><td id="fuelPreview">0 L × official rate</td></tr>
-        <tr><td><b>Inne Bags</b></td><td><input name="inneBagsCount" type="number" min="0" step="1" placeholder="Bags count"></td><td></td><td>Count only</td></tr>
+        <tr><td><b>🧾 Inner Bags</b><small>الأكياس الداخلية</small></td><td><input name="innerBagsCount" type="number" min="0" step="1" placeholder="Bags count"></td><td></td><td>Count only</td></tr>
       </tbody>
     </table>
     <div class="auto-summary" id="utilitiesSummary">
@@ -1238,7 +1290,7 @@ function utilitiesForm(d,t){
       <div><small>Soda</small><b>0</b></div>
       <div><small>Fuel</small><b>0 L</b></div><div><small>Electricity Tariff</small><b>EgyptERA Online</b></div>
     </div>
-    <div class="form-hint">Prices are calculated in Apps Script from Price Sources + Tariff Cache. If a source has no API/Regex, the record is saved with price status so it is visible instead of silently using a wrong number.</div>
+    <div class="form-hint">Electricity, water and fuel can use Price Sources / Tariff Cache. Soda price is manual: enter EGP/Kg for flakes or EGP/Liter for liquid, and the value is saved with the shift so old records do not change when prices change.</div>
   </div>
   <label style="grid-column:1/-1">Notes<input name="notes" type="text"></label>`;
 }
@@ -1260,7 +1312,7 @@ function wireUtilitiesForm(){
   const renderSodaInputs=()=>{
     const type=form.querySelector('[name=sodaType]')?.value||'flakes';
     const box=$('#sodaInputs'); if(!box)return;
-    box.innerHTML=type==='liquid'?`<input name="sodaLiquidLiters" type="number" min="0" step="0.1" placeholder="Liters"><input name="sodaLiquidConcentrationPercent" type="number" min="0" max="100" step="1" value="50" placeholder="% concentration"><input name="sodaLiquidDensityKgPerLiter" type="number" min="0" step="0.01" value="1.53" placeholder="Density kg/L">`:`<input name="sodaFlakesBagsCount" type="number" min="0" step="1" placeholder="Bags"><input name="sodaFlakesKgPerBag" type="number" min="0" step="0.5" value="25" placeholder="Kg/Bag">`;
+    box.innerHTML=type==='liquid'?`<input name="sodaLiquidLiters" type="number" min="0" step="0.1" placeholder="Liters"><input name="sodaLiquidRateEGPPerLiter" type="number" min="0" step="0.01" placeholder="EGP/Liter"><input name="sodaLiquidConcentrationPercent" type="number" min="0" max="100" step="1" value="50" placeholder="% concentration"><input name="sodaLiquidDensityKgPerLiter" type="number" min="0" step="0.01" value="1.53" placeholder="Density kg/L">`:`<input name="sodaFlakesBagsCount" type="number" min="0" step="1" placeholder="Bags"><input name="sodaFlakesKgPerBag" type="number" min="0" step="0.5" value="25" placeholder="Kg/Bag"><input name="sodaFlakesRateEGPPerKg" type="number" min="0" step="0.01" placeholder="EGP/Kg">`;
     $$('input',box).forEach(i=>i.oninput=update); update();
   };
   const update=()=>{
@@ -1268,15 +1320,23 @@ function wireUtilitiesForm(){
     const ekwh=Math.max(0,v('electricityEndReading')-v('electricityStartReading'));
     const wm3=Math.max(0,v('waterEndReading')-v('waterStartReading'));
     const type=form.querySelector('[name=sodaType]')?.value||'flakes';
-    const soda=type==='liquid'?v('sodaLiquidLiters')+' L':fmt(v('sodaFlakesBagsCount')*v('sodaFlakesKgPerBag'),2)+' kg';
+    const flakesKg=v('sodaFlakesBagsCount')*v('sodaFlakesKgPerBag');
+    const liquidLiters=v('sodaLiquidLiters');
+    const flakesRate=v('sodaFlakesRateEGPPerKg');
+    const liquidRate=v('sodaLiquidRateEGPPerLiter');
+    const sodaQty=type==='liquid'?liquidLiters:flakesKg;
+    const sodaUnit=type==='liquid'?'L':'kg';
+    const sodaRate=type==='liquid'?liquidRate:flakesRate;
+    const sodaCost=sodaQty*sodaRate;
+    const soda=`${fmt(sodaQty,2)} ${sodaUnit}`;
     const fuel=v('forkliftFuelLiters');
     const ft=form.querySelector('[name=forkliftFuelType]')?.selectedOptions?.[0]?.textContent||'Diesel';
     const e=$('#elecPreview'),w=$('#waterPreview'),so=$('#sodaPreview'),fu=$('#fuelPreview'),sum=$('#utilitiesSummary');
     if(e)e.textContent=`${fmt(ekwh,1)} kWh × EgyptERA online tariff`;
-    if(w)w.textContent=`${fmt(wm3,2)} m³ × online rate`;
-    if(so)so.textContent=`${soda} × online rate`;
+    if(w)w.textContent=`${fmt(wm3,2)} m³ × online/cache rate`;
+    if(so)so.textContent=`${soda} × ${fmt(sodaRate,2)} EGP/${sodaUnit} = ${fmt0(sodaCost)} EGP`;
     if(fu)fu.textContent=`${fmt(fuel,1)} L ${ft} × official rate`;
-    if(sum)sum.innerHTML=`<div><small>Electricity</small><b>${fmt(ekwh,1)} kWh</b></div><div><small>Water</small><b>${fmt(wm3,2)} m³</b></div><div><small>Soda</small><b>${soda}</b></div><div><small>Fuel</small><b>${fmt(fuel,1)} L</b></div><div><small>Electricity Tariff</small><b>EgyptERA Online</b></div>`;
+    if(sum)sum.innerHTML=`<div><small>Electricity</small><b>${fmt(ekwh,1)} kWh</b></div><div><small>Water</small><b>${fmt(wm3,2)} m³</b></div><div><small>Soda</small><b>${soda}</b><em>${fmt0(sodaCost)} EGP manual</em></div><div><small>Fuel</small><b>${fmt(fuel,1)} L</b></div><div><small>Electricity Tariff</small><b>EgyptERA Online</b></div>`;
   };
   form.querySelector('[name=sodaType]')?.addEventListener('change',renderSodaInputs);
   $$('input',form).forEach(i=>i.oninput=update); renderSodaInputs(); update();
@@ -1301,6 +1361,11 @@ function wireBoilerForm(){
 
 async function saveEntry(e){
   e.preventDefault();
+  const form = $('#entryForm');
+  const btn = form ? form.querySelector('[type=submit]') : null;
+  const oldBtnText = btn ? btn.textContent : '';
+  if(btn){ btn.disabled = true; btn.textContent = isAr() ? 'جاري الحفظ...' : 'Saving...'; }
+
   try{
     let res;
     if(state.entryType==='boiler'){
@@ -1308,23 +1373,36 @@ async function saveEntry(e){
       const data={date:state.boilerDraft.date,entryTime:state.boilerDraft.entryTime,readings:[]};
       [1,2].forEach(b=>{const obj=state.boilerDraft[b]||{};Object.keys(obj).forEach(m=>{const r=obj[m];if(r.pv!==''||r.sv!==''||r.currentAmpere!=='')data.readings.push({boilerNumber:b,meterNumber:Number(m),currentTemperaturePV:r.pv,setTemperatureSV:r.sv,currentAmpere:r.currentAmpere});});});
       if(!data.readings.length)throw new Error('Enter at least one reading');
-      res=await jsonp('saveBoilerBatch',{payload:JSON.stringify(data)});
+      res=await jsonp('saveBoilerBatch',{payload:JSON.stringify(data)},{timeoutMs:90000});
     }else if(state.entryType==='ph'){
       savePHDraft();
       const areas=['Boiler','Sand Filter','Rinse Tank'];
       const readings=areas.filter(a=>state.phDraft[a]?.phReading!=='').map(a=>({date:state.phDraft.date,entryTime:state.phDraft.entryTime,area:a,phReading:state.phDraft[a]?.phReading||'',notes:state.phDraft[a]?.notes||''}));
       if(!readings.length)throw new Error('Enter at least one PH reading');
-      let count=0;for(const r of readings){await jsonp('savePH',{payload:JSON.stringify(r)});count++;}
+      let count=0;for(const r of readings){await jsonp('savePH',{payload:JSON.stringify(r)},{timeoutMs:90000});count++;}
       res={count};
     }else{
-      const data=Object.fromEntries(new FormData($('#entryForm')).entries());
+      const data=Object.fromEntries(new FormData(form).entries());
       const action={shift:'saveShift',receiving:'saveReceiving',downtime:'saveDowntime',waste:'saveWaste',sale:'saveSale',utilities:'saveUtilities'}[state.entryType];
-      res=await jsonp(action,{payload:JSON.stringify(data)});
+      res=await jsonp(action,{payload:JSON.stringify(data)},{timeoutMs:90000});
     }
+
     showToast(`✓ Saved ${res.count||1} record${(res.count||1)>1?'s':''} to Google Sheets`);
     $('#entryModal').classList.add('hidden');state.boilerDraft={};state.phDraft={};
-    await loadData();
-  }catch(err){console.error(err);showToast('Save failed: '+err.message,'error');}
+
+    // V23: do not mark the save as failed if the post-save refresh is slow.
+    // The record is already saved; refresh in the background.
+    loadData().catch(err=>{
+      console.warn('Background refresh failed after save:', err);
+      showToast('Saved, but refresh was slow. Press Refresh after a few seconds.','warn');
+      setConnection('Saved • refresh needed', false);
+    });
+  }catch(err){
+    console.error(err);
+    showToast('Save failed: '+err.message,'error');
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = oldBtnText; }
+  }
 }
 
 /* ── EXPORT ── */
