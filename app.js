@@ -423,17 +423,22 @@ function cc(label,val){state.activeFilter={label,val};$('#activeFilterText').tex
 
 function drawLine(id,labels,ds,opts={}){
   dk(id);const ctx=$('#'+id);if(!ctx)return;if(!labels.length){ec(id,'No data');return;}cd();
+  const extra=opts.extra||{};
+  const extraScales=extra.scales||{};
+  const extraRest=Object.fromEntries(Object.entries(extra).filter(([k])=>k!=='scales'));
   state.charts[id]=new Chart(ctx,{type:'line',data:{labels:labels.map(trLoose),datasets:ds.map(d=>({
     label:tr(d.label),data:d.data,borderColor:d.color,backgroundColor:d.fill?(d.color+'28'):'transparent',
     borderWidth:2.5,tension:.4,spanGaps:true,pointRadius:4,pointHoverRadius:7,
-    pointBackgroundColor:d.color,pointBorderColor:'#fff',pointBorderWidth:2,fill:!!d.fill
+    pointBackgroundColor:d.color,pointBorderColor:'#fff',pointBorderWidth:2,fill:!!d.fill,
+    ...(d.yAxisID?{yAxisID:d.yAxisID}:{})
   }))},options:{responsive:true,maintainAspectRatio:false,
     interaction:{mode:'index',intersect:false},
     plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed.y;return ctx.dataset.label+': '+(ctx.dataset.label.toLowerCase().includes('revenue')||ctx.dataset.label.toLowerCase().includes('cost')||ctx.dataset.label.toLowerCase().includes('price')?fmt0(v):fmt(v,2));}}}},
     onClick:(e,els)=>{if(els[0]){const i=els[0].index,di=els[0].datasetIndex;cc(ds[di].label+' '+labels[i],ds[di].data[i]);}},
     scales:{x:{grid:{display:false},ticks:{maxRotation:30,font:{size:11}}},
-      y:{beginAtZero:true,grid:{color:state.dark?'#1e3327':'#f0f4f1'},ticks:{callback:v=>fmt(v,1)},...(opts.yOpts||{})}
-    },...(opts.extra||{})
+      y:{beginAtZero:true,grid:{color:state.dark?'#1e3327':'#f0f4f1'},ticks:{callback:v=>fmt(v,1)},...(opts.yOpts||{})},
+      ...extraScales
+    },...extraRest
   }});
 }
 function drawBar(id,labels,ds,opts={}){
@@ -620,7 +625,7 @@ function summarySignal(title,cls,msg,sub){
 function renderProduction(){
   const m=metrics(),f=state.filtered;
   $('#page-production').innerHTML=`
-  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr)">
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
     ${kpi('Consumed',`${fmt(m.consumedKg/1000,2)} <span class="unit">MT</span>`,`${fmt0(m.bales)} bales`,'↓')}
     ${kpi('Net Production',`${fmt(m.prodKg/1000,2)} <span class="unit">MT</span>`,`${fmt0(m.bags)} bags`,'✓')}
     ${kpi('Total Waste',`${fmt(m.wasteKg/1000,2)} <span class="unit">MT</span>`,`${fmt(m.wastePct,1)}% of consumed`,'♻','rgba(217,119,6,.12)')}
@@ -632,6 +637,7 @@ function renderProduction(){
     ${kpi('Avg Bag Weight',`${fmt(safeDiv(m.prodKg,m.bags),1)} <span class="unit">kg</span>`,`${fmt0(m.bags)} bags · ${fmt0(m.bales)} bales`,'▦')}
     ${kpi('Packaging Counts',`${fmt0(m.bigJumboBags+m.smallJumboBags+m.sacksCount)}`,`Big ${fmt0(m.bigJumboBags)} · Small ${fmt0(m.smallJumboBags)} · Sacks ${fmt0(m.sacksCount)}`,'▤')}
     ${kpi('Operating Cost / MT',`${fmt0(m.operatingCostPerMT||0)}`,`Utilities ${fmt0(m.utilCostPerMT||0)} · Packaging ${fmt0(m.packagingCost)} · Labor ${fmt0(m.laborCost)} · Fuel ${fmt0(m.fuelCost)}`,'💰','rgba(124,58,237,.08)')}
+    ${kpi('Total Operating Cost',`${fmt0(m.totalOperatingCost||0)}`,`Utilities + packaging + labor + fuel`,'Σ','rgba(124,58,237,.06)')}
   </div>
 
   <!-- WASTE BREAKDOWN -->
@@ -882,7 +888,7 @@ function renderQuality(){
   // PH analysis per area
   const phByArea={Boiler:[],Rinse:[],Sand:[]};
   f.ph.forEach(r=>{
-    const area=String(rowVal(r,['Area']),'').toLowerCase();
+    const area=String(rowVal(r,['Area'])||'').toLowerCase();
     const val=num(rowVal(r,['PH Reading']));
     if(!val)return;
     if(area.includes('boiler'))phByArea.Boiler.push(val);
@@ -1048,9 +1054,21 @@ function drawPHTrendInto(chartId,area='all'){
   const labels=[...new Set(rows.map(r=>timeLabel(rowVal(r,['Entry Time']))).filter(Boolean))].sort();
   if(!rows.length||!labels.length){ec(chartId,'No PH readings');return;}
   const colors=[C.green,C.blue,C.amber];
-  const ds=areas.map((a,i)=>({label:a,data:labels.map(l=>{const v=rows.filter(r=>timeLabel(rowVal(r,['Entry Time']))===l&&String(rowVal(r,['Area'])).toLowerCase()===a.toLowerCase()).map(r=>num(rowVal(r,['PH Reading'])));return v.length?v.reduce((x,y)=>x+y)/v.length:null;}),color:colors[i]}));
-  const maxY=area==='Boiler'||area==='all'||!area?100:14;
-  drawLine(chartId,labels,ds,{yOpts:{min:0,max:maxY}});
+  const showingAll=area==='all'||!area;
+  const ds=areas.map((a,i)=>({label:a,data:labels.map(l=>{const v=rows.filter(r=>timeLabel(rowVal(r,['Entry Time']))===l&&String(rowVal(r,['Area'])).toLowerCase()===a.toLowerCase()).map(r=>num(rowVal(r,['PH Reading'])));return v.length?v.reduce((x,y)=>x+y)/v.length:null;}),color:colors[i],
+    // Boiler uses a 0-100 scale; Sand/Rinse use 0-14. When showing all areas together,
+    // route Boiler to a separate right-hand axis so it doesn't flatten the other two series.
+    yAxisID:showingAll&&a==='Boiler'?'y1':'y'
+  }));
+  if(!showingAll){
+    const maxY=area==='Boiler'?100:14;
+    drawLine(chartId,labels,ds,{yOpts:{min:0,max:maxY}});
+    return;
+  }
+  drawLine(chartId,labels,ds,{
+    yOpts:{min:0,max:14},
+    extra:{scales:{y1:{position:'right',min:0,max:100,grid:{drawOnChartArea:false},ticks:{callback:v=>fmt(v,0)}}}}
+  });
 }
 function drawBoilerTrendInto(chartId){
   const bs=$('#boilerSel')?.value||'all',ms=$('#meterSel')?.value||'all';
@@ -1408,7 +1426,7 @@ async function saveEntry(e){
 /* ── EXPORT ── */
 function exportCsv(){
   const f=state.filtered;
-  const sets={summary:f.shifts,production:f.shifts,receiving:f.receivings,sales:f.sales,quality:f.ph,boilerph:f.boilers,reports:[...f.shifts,...f.receivings,...f.downtimes,...f.boilers,...f.ph,...f.waste,...f.sales,...f.utilities]};
+  const sets={summary:f.shifts,production:f.shifts,receiving:f.receivings,sales:f.sales,quality:f.ph,boilerph:f.boilers,waste:f.waste,reports:[...f.shifts,...f.receivings,...f.downtimes,...f.boilers,...f.ph,...f.waste,...f.sales,...f.utilities]};
   const rows=(sets[state.page]||f.shifts)||[];
   if(!rows.length){showToast('No data to export','warn');return;}
   const cols=Object.keys(rows[0]);
