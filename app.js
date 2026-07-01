@@ -14,12 +14,20 @@ const state = {
 };
 
 const i18n = {
-  en:{summary:'Executive Summary',production:'Production & Yield',receiving:'Receiving',sales:'Sales & Revenue',quality:'Quality Control',boilerph:'Boiler & PH',reports:'Raw Data'},
-  ar:{summary:'الملخص التنفيذي',production:'الإنتاج والكفاءة',receiving:'الاستلام',sales:'المبيعات والإيرادات',quality:'مراقبة الجودة',boilerph:'الغلايات والـ PH',reports:'البيانات الخام'}
+  en:{summary:'Executive Summary',production:'Production & Yield',receiving:'Receiving',sales:'Sales & Revenue',quality:'Quality Control',boilerph:'Boiler & PH',shifts:'Shift Comparison',intelligence:'Intelligence',reports:'Raw Data'},
+  ar:{summary:'الملخص التنفيذي',production:'الإنتاج والكفاءة',receiving:'الاستلام',sales:'المبيعات والإيرادات',quality:'مراقبة الجودة',boilerph:'الغلايات والـ PH',shifts:'مقارنة الورديات',intelligence:'الذكاء التشغيلي',reports:'البيانات الخام'}
 };
 
 /* ── FULL ARABIC UI TRANSLATION ── */
 const AR_TEXT = {
+  'Shift Comparison':'مقارنة الورديات','Intelligence':'الذكاء التشغيلي','Day Shifts':'ورديات نهار','Night Shifts':'ورديات ليل',
+  'Day vs Night':'نهار مقابل ليل','Best Shift':'أفضل وردية','Worst Shift':'أسوأ وردية','Avg per Shift':'متوسط الوردية',
+  'Shift Performance':'أداء الورديات','Workers Productivity':'إنتاجية العمال','Cost per Shift':'تكلفة الوردية',
+  'Supplier Intelligence':'ذكاء الموردين','Buyer Intelligence':'ذكاء المشترين','Avg Bale Weight':'متوسط وزن البالة',
+  'Total Supplied MT':'إجمالي المورّد طن','Cost per MT':'تكلفة الطن','Avg Discount':'متوسط الخصم',
+  'Trips':'نقلات','Best Supplier':'أفضل مورد','Revenue per MT':'الإيراد/طن','Total Bought MT':'إجمالي المشتري طن',
+  'Supplier Performance':'أداء الموردين','Buyer Performance':'أداء المشترين','Yield per Supplier':'كفاءة لكل مورد',
+  'Shifts':'الورديات',
   'Executive Summary':'الملخص التنفيذي','Production & Yield':'الإنتاج والكفاءة','Receiving':'الاستلام','Sales & Revenue':'المبيعات والإيرادات','Quality Control':'مراقبة الجودة','Boiler & PH':'الغلايات والـ PH','Raw Data':'البيانات الخام','Dashboard':'لوحة التحكم',
   'Operations':'التشغيل','Quality & Process':'الجودة والعمليات','Reports':'التقارير','Synced':'متزامن','Live':'مباشر','Offline':'غير متصل','Ready':'جاهز','Loading…':'جاري التحميل…','Live from Google Sheets':'مباشر من Google Sheets','PET Flakes Washing Intelligence':'ذكاء تشغيل خط غسيل رقائق PET',
   'DATE FROM':'من تاريخ','DATE TO':'إلى تاريخ','SHIFT':'الوردية','All Shifts':'كل الورديات','Day':'نهار','Night':'ليل','Refresh':'تحديث','Export':'تصدير','New Entry':'إدخال جديد','Choose entry type and save directly to Google Sheets.':'اختر نوع الإدخال واحفظ مباشرة في Google Sheets.','Save to Sheets':'حفظ في الشيت','Cancel':'إلغاء','Close modal':'إغلاق النافذة','Open menu':'فتح القائمة','Toggle sidebar':'فتح/غلق القائمة','Toggle theme':'تغيير الوضع',
@@ -339,6 +347,9 @@ function metrics(){
   const downtimeMin=f.downtimes.reduce((a,r)=>a+num(rowVal(r,['Downtime Minutes'])),0);
   const phVals=f.ph.map(r=>num(rowVal(r,['PH Reading']))).filter(Boolean);
   const avgPh=phVals.length?phVals.reduce((a,b)=>a+b)/phVals.length:0;
+  // Boiler uses 0-100 scale — exclude from the 6.5-8.5 Sand/Rinse normal-range check
+  const sandRinsePhVals=f.ph.filter(r=>!String(rowVal(r,['Area'])||'').toLowerCase().includes('boiler')).map(r=>num(rowVal(r,['PH Reading']))).filter(Boolean);
+  const avgSandRinsePh=sandRinsePhVals.length?sandRinsePhVals.reduce((a,b)=>a+b)/sandRinsePhVals.length:0;
   const pvVals=f.boilers.map(r=>num(rowVal(r,['Current Temperature PV']))).filter(Boolean);
   const svVals=f.boilers.map(r=>num(rowVal(r,['Set Temperature SV']))).filter(Boolean);
   const avgPv=pvVals.length?pvVals.reduce((a,b)=>a+b)/pvVals.length:0;
@@ -393,7 +404,7 @@ function metrics(){
     receivingTrips:f.receivings.length,avgDailyReceiving,activeDays:activeDays.length,
     consumedKg,bales,prodKg,bags,wasteKg,sortexKg,bigFlexKg,colorBottleKg,wireKg,capsKg,sludgeKg,materialRecoveryKg,operationRecoveryKg,actualInputKg,bigJumboBags,smallJumboBags,sacksCount,
     downtimeMin,stops:f.downtimes.length,actualLossKg,
-    avgPh,avgPv,avgSv,
+    avgPh,avgSandRinsePh,avgPv,avgSv,
     salesKg,salesRevenue,salesBeforeDiscount,salesDiscountLoss,avgSalePrice,
     salesTrips:f.sales.length,
     elecKwh,waterM3,sodaKg,innerBagsCount,elecPerMT,waterPerMT,sodaPerMT,elecCost,waterCost,sodaCost,fuelCost,packagingCost,laborCost,totalUtilityCost,utilCostPerMT,totalOperatingCost,operatingCostPerMT,paymentKg,netIntoFactory,inventoryChange,phAlerts,phCritical,actualYieldPct,actualYieldRatio,materialPct,materialRatio,operationPct,operationRatio,
@@ -486,9 +497,9 @@ function statRow(cells){
   return `<div class="stat-row">${cells.map(c=>`<div class="stat-cell"><div class="lbl">${c.label}</div><div class="val">${c.value}</div>${c.sub?`<div class="sub">${c.sub}</div>`:''}</div>`).join('')}</div>`;
 }
 function table(rows,cols,emptyMsg='No records'){
-  if(!rows.length)return `<div class="empty-state">${emptyMsg}</div>`;
+  if(!rows.length)return `<div class="empty-state">${emptyMsg}<br><button class="btn ghost" style="margin-top:12px;font-size:12px" onclick="openEntry()">+ Add First Entry</button></div>`;
   return `<div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${c.label||c}</th>`).join('')}</tr></thead>
-    <tbody>${rows.map(r=>{const isEstimated=String(rowVal(r,['Notes'])||'').toLowerCase().includes('estimated');const rowStyle=isEstimated?'background:rgba(217,119,6,0.06);':'';const cells=cols.map(c=>{const key=c.key||c;const v=rowVal(r,[key],'—');const isDateCol=(key==='Date'||key==='date'||(c.label||'').toLowerCase()==='date');const isTimeCol=key.includes('Time')||key.includes('time')||(c.label||'').toLowerCase().includes('time');const disp=c.fmt?c.fmt(v):isDateCol?fmtDate(v):isTimeCol?timeLabel(v):v;return `<td>${disp}</td>`}).join('');return `<tr style="${rowStyle}">${cells}${isEstimated?'<td style="color:var(--warn);font-size:11px">⚠ Estimated</td>':''}</tr>`;}).join('')}</tbody></table></div>`;
+    <tbody>${rows.map(r=>{const isEstimated=String(rowVal(r,['Notes'])||'').toLowerCase().includes('estimated');const rowStyle=isEstimated?'background:rgba(217,119,6,0.06);border-left:3px solid var(--warn);':'';const cells=cols.map(c=>{const key=c.key||c;const v=rowVal(r,[key],'—');const isDateCol=(key==='Date'||key==='date'||(c.label||'').toLowerCase()==='date');const isTimeCol=key.includes('Time')||key.includes('time')||(c.label||'').toLowerCase().includes('time');const isNotesCol=key==='Notes'||key==='notes';const disp=c.fmt?c.fmt(v):isDateCol?fmtDate(v):isTimeCol?timeLabel(v):v;const cellVal=isEstimated&&isNotesCol?`<span style="color:var(--warn);font-weight:700">⚠ </span>${disp}`:disp;return `<td>${cellVal}</td>`}).join('');return `<tr style="${rowStyle}">${cells}</tr>`;}).join('')}</tbody></table></div>`;
 }
 function fmtDate(v){if(!v||v==='—')return '—';const d=parseDate(v);if(!d||isNaN(d))return String(v);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function badge(val,good,warn){return `<span class="badge ${val<=good?'green':val<=warn?'yellow':'red'}">${fmt(val,1)}%</span>`;}
@@ -509,7 +520,6 @@ function alignSeries(maps){const labels=[...new Set(maps.flatMap(m=>Object.keys(
 ═════════════════════════════════════════════════════ */
 function renderSummary(){
   const m=metrics(),f=state.filtered;
-  const profitPerMT=m.avgSalePrice-(m.consumedKg&&m.prodKg?m.priceAfterDiscount/(m.prodKg/1000):0);
   const yieldTrend=()=>{
     const d=byDate(f.shifts,r=>(num(rowVal(r,['Net Production Kg']))||num(rowVal(r,['Produced Bags Count']))*num(rowVal(r,['Average Bag Weight Kg'])))/num(rowVal(r,['Consumed Weight Kg'])||num(rowVal(r,['Consumed Bales Count']))*num(rowVal(r,['Average Bale Weight Kg']))));
     const vals=Object.keys(d).sort().map(k=>d[k]).filter(v=>v>0&&v<2);
@@ -533,7 +543,7 @@ function renderSummary(){
       <div class="dc-icon">⏱</div>
       <div class="dc-label">Operational Uptime</div>
       <div class="dc-value" style="color:${m.downtimeMin>120?C.red:m.downtimeMin>60?C.amber:C.green}">${fmt(uptimePct,1)}%</div>
-      <div class="dc-note">${m.downtimeMin} min downtime across ${m.stops} stops<br>${m.stops?'Avg stop: '+fmt(m.downtimeMin/m.stops,0)+' min':'No downtime recorded'}</div>
+      <div class="dc-note">${m.downtimeMin} min downtime across ${m.stops} stops<br>${m.stops?'Avg stop: '+fmt(m.downtimeMin/m.stops,0)+' min · based on 8hr/shift':'No downtime recorded'}</div>
     </div>
     <div class="decision-card ${m.salesRevenue>0?'green':'yellow'}">
       <div class="dc-icon">$</div>
@@ -581,7 +591,7 @@ function renderSummary(){
             <tr><td>Material Yield</td><td>${fmt(m.materialRatio,3)} kg/kg<br><small>${fmt(m.materialPct,1)}%</small></td><td>${badge(100-m.materialPct,35,45)}</td></tr>
             <tr><td>Waste Rate</td><td>${fmt(m.wastePct,1)}%</td><td>${badge(m.wastePct,8,15)}</td></tr>
             <tr><td>Loss Rate</td><td>${fmt(m.lossPct,1)}%</td><td>${badge(m.lossPct,5,10)}</td></tr>
-            <tr><td>Avg PH</td><td>${fmt(m.avgPh,2)}</td><td><span class="badge ${m.avgPh>=6.5&&m.avgPh<=8.5?'green':'red'}">${m.avgPh>=6.5&&m.avgPh<=8.5?'Normal':'Out of Range'}</span></td></tr>
+            <tr><td>Avg PH</td><td>${fmt(m.avgSandRinsePh,2)}<br><small style="color:var(--muted)">Sand/Rinse only</small></td><td><span class="badge ${m.avgSandRinsePh>=6.5&&m.avgSandRinsePh<=8.5?'green':m.avgSandRinsePh===0?'':'red'}">${m.avgSandRinsePh===0?'—':m.avgSandRinsePh>=6.5&&m.avgSandRinsePh<=8.5?'Normal':'Out of Range'}</span></td></tr>
             <tr><td>PH Alerts</td><td>${m.phAlerts.length} readings out of 6.5–8.5</td><td><span class="badge ${m.phAlerts.length===0?'green':m.phCritical.length>0?'red':'yellow'}">${m.phAlerts.length===0?'All Normal':m.phCritical.length>0?m.phCritical.length+' Critical!':'Watch'}</span></td></tr>
             <tr><td>Inventory Change</td><td>${m.inventoryChange>=0?'+':''}${fmt(m.inventoryChange/1000,3)} MT</td><td><span class="badge ${Math.abs(m.inventoryChange)<50?'green':'yellow'}">${m.inventoryChange>=0?'Added to Stock':'Drew from Stock'}</span></td></tr>
             <tr><td>Boiler Δ (PV-SV)</td><td>${fmt(m.avgPv-m.avgSv,1)} °C</td><td><span class="badge ${Math.abs(m.avgPv-m.avgSv)<=5?'green':Math.abs(m.avgPv-m.avgSv)<=10?'yellow':'red'}">${Math.abs(m.avgPv-m.avgSv)<=5?'Normal':Math.abs(m.avgPv-m.avgSv)<=10?'Watch':'Alert'}</span></td></tr>
@@ -721,7 +731,7 @@ function renderProduction(){
   // Yield trend
   const ym=byDate(f.shifts,r=>{const p=num(rowVal(r,['Net Production Kg']))||num(rowVal(r,['Produced Bags Count']))*num(rowVal(r,['Average Bag Weight Kg']));const c=num(rowVal(r,['Consumed Weight Kg']))||num(rowVal(r,['Consumed Bales Count']))*num(rowVal(r,['Average Bale Weight Kg']));return c?p/c*100:0;});
   const yl=Object.keys(ym).sort();
-  if(yl.length)drawLine('yieldTrendChart',yl,[{label:'Material Yield %',data:yl.map(k=>ym[k]),color:C.green,fill:true}],{yOpts:{min:0,max:100,ticks:{callback:v=>v+'%'}}});
+  if(yl.length)drawLine('yieldTrendChart',yl,[{label:'Actual Yield %',data:yl.map(k=>ym[k]),color:C.green,fill:true}],{yOpts:{min:0,max:100,ticks:{callback:v=>v+'%'}}});
   else ec('yieldTrendChart','No yield data');
   // Downtime bar
   const dm={};f.downtimes.forEach(r=>{const s=rowVal(r,['Downtime Reason'],'Unknown');dm[s]=(dm[s]||0)+num(rowVal(r,['Downtime Minutes']));});
@@ -830,6 +840,7 @@ function renderSales(){
       <div class="insight-row"><span class="ir-label">Operating Cost (MT)</span><span class="ir-value">${fmt0(m.operatingCostPerMT||0)}</span></div>
       <div class="insight-row"><span class="ir-label">Full Cost (MT)</span><span class="ir-value">${fmt0(fullCostPerMT)}</span></div>
       <div class="insight-row"><span class="ir-label">Margin vs Raw Cost</span><span class="ir-value ${m.avgSalePrice>rawMatCostPerMT?'pos':'neg'}">${m.avgSalePrice>rawMatCostPerMT?'+':''}${fmt0(m.avgSalePrice-rawMatCostPerMT)}</span></div>
+      <div class="insight-row"><span class="ir-label">Gross Profit / MT</span><span class="ir-value ${m.avgSalePrice>rawMatCostPerMT?'pos':'neg'}">${m.avgSalePrice>rawMatCostPerMT?'+':''}${fmt0(m.avgSalePrice-rawMatCostPerMT)} EGP</span></div>
       <div class="insight-row"><span class="ir-label">Margin vs Full Cost</span><span class="ir-value ${m.avgSalePrice>fullCostPerMT?'pos':'neg'}">${m.avgSalePrice>fullCostPerMT?'+':''}${fmt0(m.avgSalePrice-fullCostPerMT)}</span></div>
       <div class="insight-row"><span class="ir-label">Break-even (full cost)</span><span class="ir-value">${fmt0(breakeven)}</span></div>
       <div class="insight-row"><span class="ir-label">Safety Margin</span><span class="ir-value ${m.avgSalePrice>breakeven*1.1?'pos':'neg'}">${fmt(pct(m.avgSalePrice-breakeven,breakeven),1)}%</span></div>
@@ -861,7 +872,7 @@ function renderSales(){
   <section class="panel mt"><h3>All Sales Records</h3>${table(f.sales.slice().reverse(),[
     {key:'Date'},{key:'Buyer Factory Name',label:'Buyer'},{key:'Buyer Factory Location',label:'Location'},
     {key:'Vehicle Number',label:'Vehicle'},
-    {key:'Net Trip Weight Kg',label:'Gross Weight (kg)',fmt:v=>fmt0(v)},
+    {key:'Net Trip Weight Kg',label:'Net Trip Wt (kg)',fmt:v=>fmt0(v)},
     {key:'Discount Percent',label:'Disc %',fmt:v=>fmt(v,1)+'%'},
     {key:'Discount Weight Kg',label:'Disc Weight (kg)',fmt:v=>fmt0(v)},
     {key:'Net Weight After Discount Kg',label:'Net Weight (kg)',fmt:v=>fmt0(v)},
@@ -1092,15 +1103,324 @@ function renderMeterCards(rows){
   const box=$('#meterCards');if(!box)return;
   const bs=$('#boilerSel')?.value||'all';
   const boilers=bs==='all'?['1','2']:[bs];
+  // If no boiler readings at all, show a single helpful message
+  if(!rows.length){box.innerHTML=`<div class="empty-state" style="grid-column:1/-1">No boiler readings yet<br><button class="btn ghost" style="margin-top:10px;font-size:12px" onclick="state.entryType='boiler';openEntry()">+ Add Boiler Reading</button></div>`;return;}
   let html='';
   boilers.forEach(b=>{for(let i=1;i<=6;i++){
     const r=[...rows].reverse().find(x=>String(rowVal(x,['Boiler Number']))===b&&String(rowVal(x,['Meter Number']))===String(i));
     const pv=num(rowVal(r||{},['Current Temperature PV'])),sv=num(rowVal(r||{},['Set Temperature SV'])),delta=pv-sv,gap=sv-pv;
     const sensorOff=r&&pv===0&&sv>0; // PV=0 with SV>0 = sensor disconnected
     const dc=sensorOff?C.red:Math.abs(gap)>10?C.red:Math.abs(gap)>5?C.amber:C.green;
-    html+=`<div class="meter-card" style="${sensorOff?'border-color:'+C.red+';background:rgba(229,62,62,0.06)':''}"><b>B${b}·M${i}</b><div>${sensorOff?'<span style="color:var(--danger);font-size:11px;font-weight:700">⚠ Sensor Off</span>':'PV <strong>'+fmt(pv,0)+'°C</strong>'}</div><div style="font-size:11px;color:var(--muted)">SV ${r?fmt(sv,0):'-'}°C</div><div style="font-size:11px;color:${dc}">${sensorOff?'Check connection':'Gap '+fmt(gap,1)+'°C'}</div></div>`;
+    html+=`<div class="meter-card" style="${sensorOff?'border-color:'+C.red+';background:rgba(229,62,62,0.06)':''}"><b>B${b}·M${i}</b><div>${sensorOff?'<span style="color:var(--danger);font-size:11px;font-weight:700">⚠ Sensor Off</span>':r?'PV <strong>'+fmt(pv,0)+'°C</strong>':'<span style="color:var(--muted);font-size:11px">No data</span>'}</div><div style="font-size:11px;color:var(--muted)">SV ${r?fmt(sv,0):'-'}°C</div><div style="font-size:11px;color:${dc}">${sensorOff?'Check connection':r?'Gap '+fmt(gap,1)+'°C':''}</div></div>`;
   }});
   box.innerHTML=html;
+}
+
+/* ════════════════════════════════════════════════════
+   PAGE: SHIFT COMPARISON — Day vs Night, per-shift analytics
+═════════════════════════════════════════════════════ */
+function renderShiftComparison(){
+  const f=state.filtered;
+  const day=f.shifts.filter(r=>shiftType(r)==='Day');
+  const night=f.shifts.filter(r=>shiftType(r)==='Night');
+  function shiftMetrics(rows){
+    const consumed=rows.reduce((a,r)=>a+num(rowVal(r,['Consumed Weight Kg'])),0);
+    const produced=rows.reduce((a,r)=>a+num(rowVal(r,['Net Production Kg'])),0);
+    const loss=rows.reduce((a,r)=>a+num(rowVal(r,['Actual Loss Kg'])),0);
+    const bigJ=rows.reduce((a,r)=>a+num(rowVal(r,['Big Jumbo Bags Count'])),0);
+    const smallJ=rows.reduce((a,r)=>a+num(rowVal(r,['Small Jumbo Bags Count'])),0);
+    const sacks=rows.reduce((a,r)=>a+num(rowVal(r,['Sacks Count'])),0);
+    const workers=rows.reduce((a,r)=>a+num(rowVal(r,['Workers Count'])),0);
+    const labor=rows.reduce((a,r)=>a+num(rowVal(r,['Labor Cost EGP'])),0);
+    const pkg=rows.reduce((a,r)=>a+num(rowVal(r,['Packaging Total Cost EGP'])),0);
+    const yield_pct=consumed?pct(produced,consumed):0;
+    const prodPerShift=rows.length?produced/rows.length:0;
+    const consPerShift=rows.length?consumed/rows.length:0;
+    const prodPerWorker=workers?produced/workers:0;
+    const costPerMT=produced?(labor+pkg)/(produced/1000):0;
+    return {count:rows.length,consumed,produced,loss,bigJ,smallJ,sacks,workers,labor,pkg,yield_pct,prodPerShift,consPerShift,prodPerWorker,costPerMT};
+  }
+  const dm=shiftMetrics(day), nm=shiftMetrics(night), am=shiftMetrics(f.shifts);
+
+  // Per-shift data for ranking
+  const shiftRows=f.shifts.map(r=>{
+    const consumed=num(rowVal(r,['Consumed Weight Kg']));
+    const produced=num(rowVal(r,['Net Production Kg']));
+    const yp=consumed?pct(produced,consumed):0;
+    return {date:fmtDate(rowVal(r,['Date'])),type:shiftType(r),consumed,produced,yield_pct:yp,
+      workers:num(rowVal(r,['Workers Count'])),labor:num(rowVal(r,['Labor Cost EGP'])),
+      pkg:num(rowVal(r,['Packaging Total Cost EGP'])),
+      bigJ:num(rowVal(r,['Big Jumbo Bags Count'])),smallJ:num(rowVal(r,['Small Jumbo Bags Count'])),sacks:num(rowVal(r,['Sacks Count']))};
+  }).filter(r=>r.consumed>0);
+
+  const best=shiftRows.length?[...shiftRows].sort((a,b)=>b.yield_pct-a.yield_pct)[0]:null;
+  const worst=shiftRows.length?[...shiftRows].sort((a,b)=>a.yield_pct-b.yield_pct)[0]:null;
+
+  function compRow(label,dayVal,nightVal,fmtFn=v=>fmt(v,1),lowerIsBetter=false){
+    const better=lowerIsBetter?(dayVal<nightVal?'day':dayVal>nightVal?'night':'tie'):(dayVal>nightVal?'day':dayVal<nightVal?'night':'tie');
+    const dCell=`<td class="cmp-val ${better==='day'?'cmp-win':''}">${fmtFn(dayVal)}</td>`;
+    const nCell=`<td class="cmp-val ${better==='night'?'cmp-win':''}">${fmtFn(nightVal)}</td>`;
+    const diff=dayVal-nightVal;
+    const diffCell=`<td class="cmp-diff ${diff>0?'pos':diff<0?'neg':''}">${diff>0?'+':''}${fmtFn(diff)}</td>`;
+    return `<tr><td class="cmp-label">${label}</td>${dCell}${nCell}${diffCell}</tr>`;
+  }
+
+  $('#page-shifts').innerHTML=`
+  <!-- TOP SUMMARY CARDS -->
+  <div class="grid-3" style="margin-bottom:14px">
+    <div class="decision-card ${dm.yield_pct>=nm.yield_pct?'green':'yellow'}">
+      <div class="dc-icon">☀</div>
+      <div class="dc-label">Day Shifts</div>
+      <div class="dc-value">${fmt(dm.yield_pct,1)}%</div>
+      <div class="dc-note">${dm.count} shifts · ${fmt(dm.produced/1000,2)} MT produced<br>Avg ${fmt(dm.prodPerShift/1000,2)} MT/shift · ${fmt(dm.prodPerWorker/1000,3)} MT/worker</div>
+    </div>
+    <div class="decision-card ${nm.yield_pct>dm.yield_pct?'green':'yellow'}">
+      <div class="dc-icon">🌙</div>
+      <div class="dc-label">Night Shifts</div>
+      <div class="dc-value">${nm.count?fmt(nm.yield_pct,1)+'%':'—'}</div>
+      <div class="dc-note">${nm.count?nm.count+' shifts · '+fmt(nm.produced/1000,2)+' MT produced<br>Avg '+fmt(nm.prodPerShift/1000,2)+' MT/shift · '+fmt(nm.prodPerWorker/1000,3)+' MT/worker':'No night shifts recorded'}</div>
+    </div>
+    <div class="decision-card ${best&&best.yield_pct>=65?'green':'yellow'}">
+      <div class="dc-icon">★</div>
+      <div class="dc-label">Best Shift</div>
+      <div class="dc-value">${best?fmt(best.yield_pct,1)+'%':'—'}</div>
+      <div class="dc-note">${best?best.date+' · '+best.type+'<br>'+fmt(best.produced/1000,2)+' MT from '+fmt(best.consumed/1000,2)+' MT consumed':'No shifts yet'}</div>
+    </div>
+  </div>
+
+  <!-- KPI COMPARISON STRIP -->
+  ${statRow([
+    {label:'Total Shifts',value:`${am.count}`,sub:`${dm.count} day · ${nm.count} night`},
+    {label:'Avg Yield',value:`${fmt(am.yield_pct,1)} <span class="u">%</span>`,sub:`Day ${fmt(dm.yield_pct,1)}% · Night ${fmt(nm.yield_pct,1)}%`},
+    {label:'Avg Production/Shift',value:`${fmt(am.prodPerShift/1000,2)} <span class="u">MT</span>`,sub:`Day ${fmt(dm.prodPerShift/1000,2)} · Night ${fmt(nm.prodPerShift/1000,2)}`},
+    {label:'Avg MT/Worker',value:`${fmt(am.prodPerWorker/1000,3)} <span class="u">MT</span>`,sub:`Day ${fmt(dm.prodPerWorker/1000,3)} · Night ${fmt(nm.prodPerWorker/1000,3)}`},
+    {label:'Worst Shift Yield',value:`${worst?fmt(worst.yield_pct,1)+'%':'—'}`,sub:worst?worst.date+' · '+worst.type:''},
+    {label:'Avg Cost / MT',value:`${fmt(am.costPerMT,0)} <span class="u">EGP</span>`,sub:`Day ${fmt(dm.costPerMT,0)} · Night ${fmt(nm.costPerMT,0)}`}
+  ])}
+
+  <div class="grid-2">
+    <!-- HEAD-TO-HEAD TABLE -->
+    <section class="panel">
+      <h3>☀ Day vs 🌙 Night — Head to Head</h3>
+      <div class="table-wrap" style="margin-top:12px">
+        <table class="cmp-table">
+          <thead><tr><th>Metric</th><th>☀ Day</th><th>🌙 Night</th><th>Difference</th></tr></thead>
+          <tbody>
+            ${compRow('Shifts',dm.count,nm.count,v=>fmt0(v))}
+            ${compRow('Avg Yield %',dm.yield_pct,nm.yield_pct,v=>fmt(v,1)+'%')}
+            ${compRow('Total Produced (MT)',dm.produced/1000,nm.produced/1000,v=>fmt(v,2))}
+            ${compRow('Avg MT / Shift',dm.prodPerShift/1000,nm.prodPerShift/1000,v=>fmt(v,2))}
+            ${compRow('Avg MT / Worker',dm.prodPerWorker/1000,nm.prodPerWorker/1000,v=>fmt(v,3))}
+            ${compRow('Total Consumed (MT)',dm.consumed/1000,nm.consumed/1000,v=>fmt(v,2))}
+            ${compRow('Actual Loss (MT)',dm.loss/1000,nm.loss/1000,v=>fmt(v,2),true)}
+            ${compRow('Avg Cost / MT (EGP)',dm.costPerMT,nm.costPerMT,v=>fmt0(v),true)}
+            ${compRow('Big Jumbo Bags',dm.bigJ,nm.bigJ,v=>fmt0(v))}
+            ${compRow('Small Jumbo Bags',dm.smallJ,nm.smallJ,v=>fmt0(v))}
+            ${compRow('Sacks',dm.sacks,nm.sacks,v=>fmt0(v))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- YIELD PER SHIFT CHART -->
+    <section class="panel">
+      <h3>Yield % — Per Shift</h3>
+      <div class="chart-wrap tall"><canvas id="shiftYieldChart"></canvas></div>
+    </section>
+  </div>
+
+  <div class="grid-2 mt">
+    <!-- PRODUCTION PER SHIFT CHART -->
+    <section class="panel">
+      <h3>Production (MT) — Per Shift</h3>
+      <div class="chart-wrap"><canvas id="shiftProdChart"></canvas></div>
+    </section>
+    <!-- WORKERS PRODUCTIVITY -->
+    <section class="panel">
+      <h3>MT Produced per Worker — Per Shift</h3>
+      <div class="chart-wrap"><canvas id="shiftWorkerChart"></canvas></div>
+    </section>
+  </div>
+
+  <!-- ALL SHIFTS RANKED TABLE -->
+  <section class="panel mt">
+    <h3>All Shifts — Ranked by Yield</h3>
+    ${table([...shiftRows].sort((a,b)=>b.yield_pct-a.yield_pct).map((r,i)=>({
+      '#':i+1,
+      'Date':r.date,'Type':r.type,
+      'Consumed (kg)':fmt0(r.consumed),
+      'Produced (kg)':fmt0(r.produced),
+      'Yield %':fmt(r.yield_pct,1)+'%',
+      'Workers':r.workers||'—',
+      'MT/Worker':r.workers?fmt(r.prodPerWorker/1000||r.produced/r.workers/1000,3):'—',
+      'Big Jumbo':r.bigJ||'—','Small Jumbo':r.smallJ||'—','Sacks':r.sacks||'—',
+      'Labor (EGP)':r.labor?fmt0(r.labor):'—'
+    })),[
+      {key:'#'},{key:'Date'},{key:'Type'},{key:'Consumed (kg)'},{key:'Produced (kg)'},
+      {key:'Yield %'},{key:'Workers'},{key:'MT/Worker'},{key:'Big Jumbo'},{key:'Small Jumbo'},{key:'Sacks'},{key:'Labor (EGP)'}
+    ],'No shift data')}
+  </section>`;
+
+  // Shift yield chart - color by day/night
+  if(shiftRows.length){
+    const labels=shiftRows.map(r=>r.date+' '+r.type.slice(0,1));
+    const colors=shiftRows.map(r=>r.type==='Day'?C.green:C.blue);
+    dk('shiftYieldChart');const ctx=$('#shiftYieldChart');if(ctx){cd();
+      state.charts['shiftYieldChart']=new Chart(ctx,{type:'bar',
+        data:{labels,datasets:[{label:'Yield %',data:shiftRows.map(r=>r.yield_pct),backgroundColor:colors,borderColor:colors,borderWidth:1.5,borderRadius:5,borderSkipped:false}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.label}: ${fmt(c.parsed.y,1)}%`}}},
+          scales:{x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10}}},y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}}}}});}
+    drawBar('shiftProdChart',labels,[{label:'MT',data:shiftRows.map(r=>r.produced/1000),color:C.green}]);
+    const workerData=shiftRows.map(r=>r.workers?r.produced/r.workers/1000:0);
+    drawBar('shiftWorkerChart',labels,[{label:'MT/Worker',data:workerData,color:C.teal}]);
+  }else{
+    ec('shiftYieldChart','No shift data');ec('shiftProdChart','No shift data');ec('shiftWorkerChart','No shift data');
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   PAGE: INTELLIGENCE — Supplier & Buyer deep analytics
+═════════════════════════════════════════════════════ */
+function renderIntelligence(){
+  const f=state.filtered,m=metrics();
+
+  // ── SUPPLIER ANALYSIS ──
+  const supMap={};
+  f.receivings.forEach(r=>{
+    const s=rowVal(r,['Supplier Name'])||'Unknown';
+    if(!supMap[s])supMap[s]={name:s,trips:0,grossKg:0,netKg:0,paymentKg:0,discountKg:0,totalCost:0,avgDisc:0,discSum:0,bales:0};
+    const sg=supMap[s];
+    sg.trips++;
+    sg.grossKg+=num(rowVal(r,['Gross Weight Kg']));
+    sg.netKg+=num(rowVal(r,['Net Weight Kg']));
+    sg.paymentKg+=num(rowVal(r,['Net Weight After Discount Kg']));
+    sg.discountKg+=num(rowVal(r,['Discount Weight Kg']));
+    sg.totalCost+=num(rowVal(r,['Trip Price After Discount']));
+    sg.discSum+=num(rowVal(r,['Discount Percent']));
+    sg.bales+=num(rowVal(r,['Bales Count']));
+  });
+  const suppliers=Object.values(supMap).map(s=>({
+    ...s,
+    avgDisc:s.trips?s.discSum/s.trips:0,
+    costPerMT:s.paymentKg?s.totalCost/(s.paymentKg/1000):0,
+    avgBaleWt:s.bales?s.netKg/s.bales:0
+  })).sort((a,b)=>b.netKg-a.netKg);
+
+  // ── BUYER ANALYSIS ──
+  const buyMap={};
+  f.sales.forEach(r=>{
+    const b=rowVal(r,['Buyer Factory Name'])||'Unknown';
+    if(!buyMap[b])buyMap[b]={name:b,trips:0,netKg:0,revenue:0,discSum:0,priceSum:0};
+    const bg=buyMap[b];
+    bg.trips++;
+    bg.netKg+=num(rowVal(r,['Net Weight After Discount Kg']));
+    bg.revenue+=num(rowVal(r,['Sale Price After Discount']));
+    bg.discSum+=num(rowVal(r,['Discount Percent']));
+    bg.priceSum+=num(rowVal(r,['Flex Price Per Ton Thousand']));
+  });
+  const buyers=Object.values(buyMap).map(b=>({
+    ...b,
+    avgDisc:b.trips?b.discSum/b.trips:0,
+    revPerMT:b.netKg?b.revenue/(b.netKg/1000):0,
+    avgPrice:b.trips?b.priceSum/b.trips:0
+  })).sort((a,b2)=>b2.revenue-a.revenue);
+
+  const topSup=suppliers[0];
+  const topBuy=buyers[0];
+
+  $('#page-intelligence').innerHTML=`
+  <!-- INTELLIGENCE HEADER -->
+  <div class="grid-2" style="margin-bottom:14px">
+    <div class="decision-card ${suppliers.length?'green':'yellow'}">
+      <div class="dc-icon">🏭</div>
+      <div class="dc-label">Top Supplier</div>
+      <div class="dc-value" style="font-size:18px;letter-spacing:-.02em">${topSup?topSup.name:'—'}</div>
+      <div class="dc-note">${topSup?fmt(topSup.netKg/1000,2)+' MT · '+topSup.trips+' trips · '+fmt(topSup.avgDisc,1)+'% avg discount':'No receiving data'}</div>
+    </div>
+    <div class="decision-card ${buyers.length?'green':'yellow'}">
+      <div class="dc-icon">🛒</div>
+      <div class="dc-label">Top Buyer</div>
+      <div class="dc-value" style="font-size:18px;letter-spacing:-.02em">${topBuy?topBuy.name:'—'}</div>
+      <div class="dc-note">${topBuy?fmt0(topBuy.revenue)+' EGP · '+topBuy.trips+' trips · '+fmt(topBuy.revPerMT,0)+' EGP/MT':'No sales data'}</div>
+    </div>
+  </div>
+
+  <!-- SUPPLIER KPIs -->
+  ${statRow([
+    {label:'Suppliers',value:`${suppliers.length}`,sub:'active in period'},
+    {label:'Total Received',value:`${fmt(m.netIntoFactory/1000,2)} <span class="u">MT</span>`,sub:`${m.receivingTrips} trips`},
+    {label:'Avg Cost / MT',value:`${fmt(m.priceAfterDiscount/(m.paymentKg/1000||1),0)} <span class="u">EGP</span>`,sub:'after discount · payment basis'},
+    {label:'Total Discount Saved',value:`${fmt0(m.priceDiff)} <span class="u">EGP</span>`,sub:`${fmt(m.discountKg/1000,2)} MT deducted`},
+    {label:'Buyers',value:`${buyers.length}`,sub:'active in period'},
+    {label:'Revenue / MT',value:`${fmt(m.avgSalePrice,0)} <span class="u">EGP</span>`,sub:`${m.salesTrips} sale trips`}
+  ])}
+
+  <div class="grid-2">
+    <!-- SUPPLIER TABLE -->
+    <section class="panel">
+      <h3>🏭 Supplier Performance</h3>
+      ${suppliers.length?`<div class="table-wrap"><table>
+        <thead><tr><th>Supplier</th><th>Trips</th><th>Net MT</th><th>Avg Disc%</th><th>Cost/MT</th><th>Avg Bale kg</th><th>Total Cost</th></tr></thead>
+        <tbody>${suppliers.map((s,i)=>`<tr ${i===0?'style="background:rgba(0,166,81,0.06);font-weight:600"':''}>
+          <td><b>${s.name}</b></td>
+          <td>${s.trips}</td>
+          <td>${fmt(s.netKg/1000,2)}</td>
+          <td><span class="badge ${s.avgDisc<=2?'green':s.avgDisc<=5?'yellow':'red'}">${fmt(s.avgDisc,1)}%</span></td>
+          <td>${fmt0(s.costPerMT)}</td>
+          <td>${fmt(s.avgBaleWt,1)}</td>
+          <td>${fmt0(s.totalCost)}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>`:`<div class="empty-state">No supplier data<br><button class="btn ghost" style="margin-top:10px;font-size:12px" onclick="openEntry()">+ Add Receiving</button></div>`}
+    </section>
+
+    <!-- BUYER TABLE -->
+    <section class="panel">
+      <h3>🛒 Buyer Performance</h3>
+      ${buyers.length?`<div class="table-wrap"><table>
+        <thead><tr><th>Buyer</th><th>Trips</th><th>Net MT</th><th>Revenue</th><th>EGP/MT</th><th>Avg Disc%</th></tr></thead>
+        <tbody>${buyers.map((b,i)=>`<tr ${i===0?'style="background:rgba(0,166,81,0.06);font-weight:600"':''}>
+          <td><b>${b.name}</b></td>
+          <td>${b.trips}</td>
+          <td>${fmt(b.netKg/1000,2)}</td>
+          <td>${fmt0(b.revenue)}</td>
+          <td><span class="badge ${b.revPerMT>=(m.priceAfterDiscount/(m.paymentKg/1000||1))*1.1?'green':'yellow'}">${fmt0(b.revPerMT)}</span></td>
+          <td>${fmt(b.avgDisc,1)}%</td>
+        </tr>`).join('')}</tbody>
+      </table></div>`:`<div class="empty-state">No buyer data<br><button class="btn ghost" style="margin-top:10px;font-size:12px" onclick="openEntry()">+ Add Sale</button></div>`}
+    </section>
+  </div>
+
+  <div class="grid-2 mt">
+    <section class="panel">
+      <h3>Supplier Share — Net MT Received</h3>
+      <div class="chart-wrap"><canvas id="intlSupPieChart"></canvas></div>
+    </section>
+    <section class="panel">
+      <h3>Revenue by Buyer</h3>
+      <div class="chart-wrap"><canvas id="intlBuyBarChart"></canvas></div>
+    </section>
+  </div>
+  <div class="grid-2 mt">
+    <section class="panel">
+      <h3>Cost per MT by Supplier (EGP)</h3>
+      <div class="chart-wrap"><canvas id="intlSupCostChart"></canvas></div>
+    </section>
+    <section class="panel">
+      <h3>Revenue per MT by Buyer (EGP)</h3>
+      <div class="chart-wrap"><canvas id="intlBuyRevChart"></canvas></div>
+    </section>
+  </div>`;
+
+  // Charts
+  const colors5=[C.green,C.teal,C.blue,C.purple,C.amber];
+  if(suppliers.length){
+    drawDoughnut('intlSupPieChart',suppliers.map(s=>s.name),suppliers.map(s=>s.netKg/1000),colors5);
+    drawBar('intlSupCostChart',suppliers.map(s=>s.name),[{label:'Cost/MT',data:suppliers.map(s=>s.costPerMT),color:C.amber}]);
+  }else{eb('intlSupPieChart','No data');ec('intlSupCostChart','No data');}
+  if(buyers.length){
+    drawBar('intlBuyBarChart',buyers.map(b=>b.name),[{label:'Revenue',data:buyers.map(b=>b.revenue),color:C.blue}]);
+    drawBar('intlBuyRevChart',buyers.map(b=>b.name),[{label:'EGP/MT',data:buyers.map(b=>b.revPerMT),color:C.green}]);
+  }else{ec('intlBuyBarChart','No data');ec('intlBuyRevChart','No data');}
 }
 
 /* ════════════════════════════════════════════════════
@@ -1426,7 +1746,7 @@ async function saveEntry(e){
 /* ── EXPORT ── */
 function exportCsv(){
   const f=state.filtered;
-  const sets={summary:f.shifts,production:f.shifts,receiving:f.receivings,sales:f.sales,quality:f.ph,boilerph:f.boilers,waste:f.waste,reports:[...f.shifts,...f.receivings,...f.downtimes,...f.boilers,...f.ph,...f.waste,...f.sales,...f.utilities]};
+  const sets={summary:f.shifts,production:f.shifts,receiving:f.receivings,sales:f.sales,quality:f.ph,boilerph:f.boilers,waste:f.waste,shifts:f.shifts,intelligence:[...f.receivings,...f.sales],reports:[...f.shifts,...f.receivings,...f.downtimes,...f.boilers,...f.ph,...f.waste,...f.sales,...f.utilities]};
   const rows=(sets[state.page]||f.shifts)||[];
   if(!rows.length){showToast('No data to export','warn');return;}
   const cols=Object.keys(rows[0]);
@@ -1441,12 +1761,12 @@ function render(){
   document.body.classList.toggle('dark',state.dark);
   $$('#brandLogo').forEach(img=>img.src=state.dark?'assets/logo-environ-adapt-white.png':'assets/logo-environ-adapt-light.png');
   $$('[data-i18n]').forEach(el=>el.textContent=i18n[state.lang][el.dataset.i18n]||el.textContent);
-  const titles={summary:'Executive Summary',production:'Production & Yield',receiving:'Receiving',sales:'Sales & Revenue',quality:'Quality Control',boilerph:'Boiler & PH',reports:'Raw Data'};
+  const titles={summary:'Executive Summary',production:'Production & Yield',receiving:'Receiving',sales:'Sales & Revenue',quality:'Quality Control',boilerph:'Boiler & PH',shifts:'Shift Comparison',intelligence:'Intelligence',reports:'Raw Data'};
   $('#pageTitle').textContent=tr(titles[state.page]||'Dashboard');
   const subtitle=$('#pageSubTitle'); if(subtitle) subtitle.textContent=tr('PET Flakes Washing Intelligence');
   const live=$('#liveText'); if(live) live.textContent=tr('Live from Google Sheets');
   const langBtn=$('#langBtn'); if(langBtn) langBtn.textContent=state.lang==='ar'?'EN':'AR';
-  const fn={summary:renderSummary,production:renderProduction,receiving:renderReceiving,sales:renderSales,quality:renderQuality,boilerph:renderBoilerPH,reports:renderReports}[state.page]||renderSummary;
+  const fn={summary:renderSummary,production:renderProduction,receiving:renderReceiving,sales:renderSales,quality:renderQuality,boilerph:renderBoilerPH,shifts:renderShiftComparison,intelligence:renderIntelligence,reports:renderReports}[state.page]||renderSummary;
   fn();
   translateDashboardText(document);
 }
