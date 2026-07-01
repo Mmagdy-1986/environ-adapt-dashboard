@@ -1508,7 +1508,17 @@ function renderEntryForm(){
   if(state.entryType==='receiving') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('supplierName','Supplier')}${inp('region','Region')}${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}${inp('balesCount','Bales Count','number')}${inp('pricePerTonThousand','Price / Ton (×1000)','number')}${inp('karteNumber','Karte No.')}${inp('grossWeightKg','Gross Weight (kg)','number')}${inp('tareWeightKg','Tare Weight (kg)','number')}${inp('discountPercent','Discount %','number')}<div id='netPreview' style='grid-column:1/-1;padding:10px 14px;background:var(--green-dim);border-radius:8px;font-size:13px;color:var(--green-dark)'>Net Weight: — kg &nbsp;|&nbsp; After Discount: — kg</div>${inp('notes','Notes')}`;
   if(state.entryType==='downtime') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('stopFromTime','Stop From','time')}${inp('stopToTime','Stop To','time')}${inp('downtimeReason','Reason')}${inp('notes','Notes')}`;
   if(state.entryType==='waste') html=wasteForm(d,t);
-  if(state.entryType==='sale') html=`${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}${inp('buyerFactoryName','Buyer Factory')}${inp('buyerFactoryLocation','Location')}${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}${inp('netTripWeightKg','Net Weight (kg)','number')}${inp('discountPercent','Discount %','number')}${inp('flexPricePerTonThousand','Price / Ton (×1000)','number')}${inp('notes','Notes')}`;
+  if(state.entryType==='sale') html=`
+    ${inp('date','Date','date',d)}${inp('entryTime','Time','time',t)}
+    ${inp('buyerFactoryName','Buyer Factory')}${inp('buyerFactoryLocation','Location')}
+    ${inp('vehicleNumber','Vehicle')}${inp('driverName','Driver')}
+    ${inp('netTripWeightKg','Net Weight (kg)','number')}
+    ${inp('discountPercent','Discount % (0 if none)','number')}
+    ${inp('flexPricePerTonThousand','Price / Ton (×1000 EGP)','number')}
+    <div id="salePreview" style="grid-column:1/-1;padding:10px 14px;background:var(--green-dim);border-radius:8px;font-size:13px;color:var(--green-dark);display:none">
+      Sale Price: <b id="saleTotal">—</b> EGP &nbsp;|&nbsp; After Discount: <b id="saleAfter">—</b> EGP
+    </div>
+    ${inp('notes','Notes')}`;
   if(state.entryType==='boiler') html=boilerBatchForm(d,t);
   if(state.entryType==='ph') html=phBatchForm(d,t);
   if(state.entryType==='utilities') html=utilitiesForm(d,t);
@@ -1519,6 +1529,7 @@ function renderEntryForm(){
   if(state.entryType==='boiler')wireBoilerForm();
   if(state.entryType==='waste')wireWasteForm();
   if(state.entryType==='utilities')wireUtilitiesForm();
+  if(state.entryType==='sale')wireSaleForm();
   if(state.entryType==='receiving'){
     const calcNet=()=>{
       const el=$('#entryForm');
@@ -1633,6 +1644,30 @@ function utilitiesForm(d,t){
   <label style="grid-column:1/-1">Notes<input name="notes" type="text"></label>`;
 }
 
+function wireSaleForm(){
+  const calc=()=>{
+    const el=$('#entryForm');if(!el)return;
+    const net=num(el.querySelector('[name=netTripWeightKg]')?.value);
+    const disc=num(el.querySelector('[name=discountPercent]')?.value);
+    const priceK=num(el.querySelector('[name=flexPricePerTonThousand]')?.value);
+    const preview=$('#salePreview');
+    if(!preview)return;
+    if(net>0&&priceK>0){
+      const priceEGP=priceK*1000;
+      const discKg=net*disc/100;
+      const afterKg=net-discKg;
+      const total=net/1000*priceEGP;
+      const after=afterKg/1000*priceEGP;
+      $('#saleTotal').textContent=fmt0(total)+' EGP ('+fmt(net/1000,2)+' MT × '+fmt0(priceEGP)+')';
+      $('#saleAfter').textContent=fmt0(after)+' EGP'+(disc>0?' (−'+fmt(disc,1)+'% = −'+fmt0(total-after)+')':'');
+      preview.style.display='block';
+    }else{preview.style.display='none';}
+  };
+  const el=$('#entryForm');if(!el)return;
+  ['netTripWeightKg','discountPercent','flexPricePerTonThousand'].forEach(name=>{
+    el.querySelector(`[name=${name}]`)?.addEventListener('input',calc);
+  });
+}
 function wireWasteForm(){
   const form=$('#entryForm'); if(!form)return;
   const update=()=>{
@@ -1722,10 +1757,28 @@ async function saveEntry(e){
     }else{
       const data=Object.fromEntries(new FormData(form).entries());
       const action={shift:'saveShift',receiving:'saveReceiving',downtime:'saveDowntime',waste:'saveWaste',sale:'saveSale',utilities:'saveUtilities'}[state.entryType];
+      if(!action)throw new Error('Unknown entry type: '+state.entryType);
+      // Client-side validation for sale
+      if(state.entryType==='sale'){
+        const weight=Number(data.netTripWeightKg||0), price=Number(data.flexPricePerTonThousand||0);
+        if(weight<=0)throw new Error('Net Weight must be greater than zero');
+        if(price<=0)throw new Error('Price per Ton must be greater than zero');
+      }
+      // Client-side validation for receiving
+      if(state.entryType==='receiving'){
+        const gross=Number(data.grossWeightKg||0), tare=Number(data.tareWeightKg||0);
+        if(gross<=0)throw new Error('Gross Weight must be greater than zero');
+        if(tare<=0)throw new Error('Tare Weight must be greater than zero');
+        if(tare>=gross)throw new Error('Tare Weight must be less than Gross Weight');
+      }
       res=await jsonp(action,{payload:JSON.stringify(data)},{timeoutMs:90000});
     }
 
     showToast(`✓ Saved ${res.count||1} record${(res.count||1)>1?'s':''} to Google Sheets`);
+    // If GAS returned a validation warning (e.g. weight=0 or price=0), show it as a yellow warning
+    if(res.validation && res.validation!=='OK'){
+      setTimeout(()=>showToast('⚠ Warning: '+res.validation,'warn'),600);
+    }
     $('#entryModal').classList.add('hidden');state.boilerDraft={};state.phDraft={};
 
     // V23: do not mark the save as failed if the post-save refresh is slow.
