@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeCI_nmUg5llBZHrmRWnVlHlwXaTGLR0RNuK_5B-2MkDmZte88GPFXb3XmvneLGLCr4g/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec';
 const APP_VERSION = 'FLAKES_V24_MANUAL_SODA_RATE';
 
 const $ = (s,r=document)=>r.querySelector(s);
@@ -250,6 +250,39 @@ function hideAppLoader(){
   }, wait);
 }
 startAppLoaderSimulation();
+
+/* ── POST SAVE (bypasses JSONP URL-length limit) ── */
+// JSONP uses GET — large payloads (shift, utilities) silently exceed the ~2000 char URL limit.
+// postToGAS uses fetch POST. Falls back to JSONP automatically if fetch fails.
+async function postToGAS(action, data, options={}){
+  const timeoutMs = options.timeoutMs || 90000;
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(), timeoutMs);
+  try {
+    const resp = await fetch(APPS_SCRIPT_URL, {
+      method:'POST', signal:controller.signal, redirect:'follow',
+      headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({action, payload: data})
+    });
+    clearTimeout(timer);
+    const text = await resp.text();
+    let result;
+    try { result = JSON.parse(text); }
+    catch(e) {
+      const m = text.match(/^\w+\((.+)\);?\s*$/s);
+      if(m) result = JSON.parse(m[1]);
+      else throw new Error('Unexpected GAS response: '+text.slice(0,200));
+    }
+    if(result && result.ok===false) throw new Error(result.error||'GAS returned error');
+    return result;
+  } catch(err) {
+    clearTimeout(timer);
+    if(err.name==='AbortError') throw new Error('Timeout ('+Math.round(timeoutMs/1000)+'s)');
+    console.warn('POST failed, JSONP fallback:', err.message);
+    return jsonp(action, {payload:JSON.stringify(data)}, {timeoutMs});
+  }
+}
+
 
 /* ── JSONP ── */
 function jsonp(action,params={},options={}){
@@ -1746,13 +1779,13 @@ async function saveEntry(e){
       const data={date:state.boilerDraft.date,entryTime:state.boilerDraft.entryTime,readings:[]};
       [1,2].forEach(b=>{const obj=state.boilerDraft[b]||{};Object.keys(obj).forEach(m=>{const r=obj[m];if(r.pv!==''||r.sv!==''||r.currentAmpere!=='')data.readings.push({boilerNumber:b,meterNumber:Number(m),currentTemperaturePV:r.pv,setTemperatureSV:r.sv,currentAmpere:r.currentAmpere});});});
       if(!data.readings.length)throw new Error('Enter at least one reading');
-      res=await jsonp('saveBoilerBatch',{payload:JSON.stringify(data)},{timeoutMs:90000});
+      res=await postToGAS('saveBoilerBatch', data, {timeoutMs:90000});
     }else if(state.entryType==='ph'){
       savePHDraft();
       const areas=['Boiler','Sand Filter','Rinse Tank'];
       const readings=areas.filter(a=>state.phDraft[a]?.phReading!=='').map(a=>({date:state.phDraft.date,entryTime:state.phDraft.entryTime,area:a,phReading:state.phDraft[a]?.phReading||'',notes:state.phDraft[a]?.notes||''}));
       if(!readings.length)throw new Error('Enter at least one PH reading');
-      let count=0;for(const r of readings){await jsonp('savePH',{payload:JSON.stringify(r)},{timeoutMs:90000});count++;}
+      let count=0;for(const r of readings){await postToGAS('savePH', r, {timeoutMs:90000});count++;}
       res={count};
     }else{
       const data=Object.fromEntries(new FormData(form).entries());
@@ -1771,7 +1804,7 @@ async function saveEntry(e){
         if(tare<=0)throw new Error('Tare Weight must be greater than zero');
         if(tare>=gross)throw new Error('Tare Weight must be less than Gross Weight');
       }
-      res=await jsonp(action,{payload:JSON.stringify(data)},{timeoutMs:90000});
+      res=await postToGAS(action, data, {timeoutMs:90000});
     }
 
     showToast(`✓ Saved ${res.count||1} record${(res.count||1)>1?'s':''} to Google Sheets`);
