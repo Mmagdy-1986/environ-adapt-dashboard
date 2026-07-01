@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLnb2avucZNZtn7OZ8VFUCgEfC1tzyyM1z9RcNSHHnOASSUiB9SfXgb39pKBDeelQYQA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeCI_nmUg5llBZHrmRWnVlHlwXaTGLR0RNuK_5B-2MkDmZte88GPFXb3XmvneLGLCr4g/exec';
 const APP_VERSION = 'FLAKES_V24_MANUAL_SODA_RATE';
 
 const $ = (s,r=document)=>r.querySelector(s);
