@@ -1944,3 +1944,97 @@ td { font-variant-numeric: tabular-nums; }
 @keyframes ea20BgMove{0%{transform:scale(1.05) translate3d(-1%,0,0)}100%{transform:scale(1.12) translate3d(2%,-1.5%,0)}}@keyframes ea20Scan{0%,35%{transform:translateX(-120%)}75%,100%{transform:translateX(120%)}}@keyframes ea20FloatFlake{0%{transform:translate3d(0,40px,0) scale(.65);opacity:0}15%{opacity:.8}100%{transform:translate3d(28px,-115vh,0) scale(1.15);opacity:0}}@keyframes ea20Shine{to{transform:translateX(140%)}}@keyframes ea20Spin{to{transform:rotate(360deg)}}@keyframes ea20SoftFloat{0%,100%{transform:translateY(-34px) scale(1)}50%{transform:translateY(-44px) scale(1.05)}}@keyframes ea20BottleBob{0%,100%{transform:translateY(46px) rotate(-1deg)}50%{transform:translateY(34px) rotate(1deg)}}@keyframes ea20Liquid{0%,100%{transform:translateX(-2px) rotate(-1deg)}50%{transform:translateX(3px) rotate(1deg)}}@keyframes ea20CardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@keyframes ea20PipeFlow{to{stroke-dashoffset:-38}}
 @media (max-width:860px){.ea20-loader{position:fixed;overflow:auto;padding:18px 0}.ea20-shell{width:min(100vw - 24px,520px);min-height:auto;grid-template-columns:1fr;gap:16px}.ea20-left{padding:22px;border-radius:23px}.ea20-right{min-height:420px;border-radius:23px}.ea20-stage{height:410px}.ea20-title-wrap h1{font-size:29px}.ea20-stats{grid-template-columns:1fr 1fr 1fr}.ea20-data-card{min-width:116px;padding:9px 10px}.ea20-data-card.c1{left:2px;top:34px}.ea20-data-card.c2{right:2px;top:72px}.ea20-data-card.c3{left:8px;bottom:58px}.ea20-data-card.c4{right:6px;bottom:58px}.ea20-orbit{width:270px;height:270px}.ea20-orbit.ea20-o2{width:210px;height:210px}.ea20-pipe{width:300px}.ea20-caption{bottom:14px;font-size:11px}.ea20-brand-logo{height:34px;max-width:180px}.ea20-dawar-logo{width:36px;height:36px}}
 @media (prefers-reduced-motion:reduce){.ea20-loader *{animation-duration:.001ms !important;transition:none !important}}
+
+/* V22 shift entry cleanup: auto average bale weight + fixed package weights */
+.entry-section{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  border-radius:18px;
+  padding:14px;
+  box-shadow:var(--shadow-sm);
+}
+.entry-section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:12px;
+  color:var(--text);
+}
+.entry-section-head b{display:block;font-size:14px;font-weight:850;color:var(--green-dark)}
+.entry-section-head small{display:block;margin-top:3px;color:var(--muted);font-size:11.5px;line-height:1.45}
+.entry-section-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.readonly-metric{
+  border:1px dashed rgba(0,166,81,.28);
+  background:var(--green-dim);
+  color:var(--green-dark);
+  border-radius:14px;
+  padding:11px 12px;
+  min-height:68px;
+}
+.readonly-metric small{display:block;color:var(--muted);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.readonly-metric b{display:block;font-size:18px;font-weight:900;color:var(--green-dark)}
+.readonly-metric span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.package-weight-strip{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:2px;
+}
+.package-weight-strip span{
+  border:1px solid var(--line);
+  background:var(--panel2);
+  border-radius:12px;
+  padding:10px 12px;
+  color:var(--muted);
+  font-size:12px;
+}
+.package-weight-strip b{color:var(--text);font-weight:900}
+.entry-total-preview{
+  grid-column:1/-1;
+  padding:13px 16px;
+  background:var(--green-dim);
+  border:1px solid rgba(0,166,81,.18);
+  border-radius:14px;
+  font-size:13px;
+  color:var(--green-dark);
+  line-height:1.7;
+}
+@media (max-width: 900px){
+  .entry-section-grid{grid-template-columns:1fr}
+  .package-weight-strip{grid-template-columns:1fr}
+}
+
+/* V24 manual soda rate improvements */
+.utility-table .inline-inputs{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(95px,1fr));
+  gap:8px;
+  align-items:center;
+}
+.utility-table .inline-inputs input{min-width:0;}
+.auto-summary em{
+  display:block;
+  margin-top:4px;
+  font-style:normal;
+  color:var(--green);
+  font-size:11px;
+  font-weight:800;
+}
+@media(max-width:760px){
+  .utility-table .inline-inputs{grid-template-columns:1fr;}
+}
+
+/* ── SHIFT COMPARISON & INTELLIGENCE PAGES ── */
+.cmp-table { width:100%; border-collapse:collapse; font-size:13px; }
+.cmp-table th { background:var(--panel2); padding:8px 10px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); border-bottom:1px solid var(--line); }
+.cmp-table td { padding:9px 10px; border-bottom:1px solid var(--line); }
+.cmp-table tr:last-child td { border-bottom:none; }
+.cmp-label { color:var(--muted); font-size:12.5px; }
+.cmp-val { font-weight:700; font-variant-numeric:tabular-nums; text-align:right; }
+.cmp-val.cmp-win { color:var(--green); background:rgba(0,166,81,.07); border-radius:6px; }
+.cmp-diff { text-align:right; font-size:12px; font-variant-numeric:tabular-nums; color:var(--muted); }
+.cmp-diff.pos { color:var(--green); }
+.cmp-diff.neg { color:var(--danger); }
+.chart-wrap.tall { height:340px; }
